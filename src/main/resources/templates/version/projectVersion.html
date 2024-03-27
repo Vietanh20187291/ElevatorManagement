@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Project Version Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script th:src="@{../static/js/DeleteConfirmation.js}" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <style>
+        .no-underline {
+            text-decoration: none !important;
+            color: #000 !important;
+        }
+        .no-underline:hover {
+            color: #000 !important;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <h1>Project Version Details</h1>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div>
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 th:text="${projectVersion.project.projectName}"></h5>
+                <h5 th:text="${projectVersion.version}"></h5>
+                <div>
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-success rounded-right mr-1" th:href="@{/version/{projectVersionId}/add-feature(projectVersionId=${projectVersion.projectVersionId})}">
+                            Add Feature
+                        </a>
+                        <a class="btn btn-primary rounded-left rounded-right mr-1" th:href="@{/version/{projectVersionId}/edit(projectVersionId=${projectVersion.projectVersionId})}">
+                            Edit
+                        </a>
+                        <form th:action="@{'/version/' + ${projectVersionId} + '/disable'}" method="post" onsubmit="return confirmDelete(event)">
+                            <button type="submit" class="btn btn-danger">Disable</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                <div class="col-md-6">
+                <p> Version Description: <span th:text="${projectVersion.versionDescription}"></span></p>
+                    <p> Estimated End Date: <span class="estimated-end-date" th:text="${projectVersion.estimatedEndDate}" th:attr="data-project-version-id=${projectVersion.projectVersionId}"></span></p>
+
+                    <p> Progress: <span th:text="${projectVersion.progress}"></span>%</p>
+
+                </div>
+<!--                <div class="row">-->
+                    <div class="col-md-5">
+                        <a th:href="@{'/version/' + ${projectVersion.projectVersionId} + '/attendees'}" class="no-underline">
+
+                        <p class="mb-2">Attendee(s): <span th:each="attendee : ${attendees}" class="d-inline" th:text="${attendee.username} + ' '"></span></p>
+                        </a>
+<!--                    <div class="col-md-5">-->
+                        <form th:action="@{/version/{projectVersionId}/add-attendee(projectVersionId=${projectVersion.projectVersionId})}" method="post">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" for="userDropdown">Select User</label>
+                                </div>
+                                <select class="custom-select" id="userDropdown" name="userId">
+                                    <option selected disabled>Choose...</option>
+                                    <option th:each="user : ${users}" th:value="${user.userId}" th:text="${user.username}"></option>
+                                </select>
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-outline-secondary">Add Attendee</button>
+                                </div>
+                            </div>
+                        </form>
+<!--                    </div>-->
+
+                </div>
+            </div>
+
+
+
+                <ul class="list-group">
+                    <li th:each="feature : ${features}" class="list-group-item">
+                        <a th:href="@{/feature/{id}(id=${feature.feature.id})}" class="no-underline">
+                            <h5>Feature: <span th:text="${feature.feature.name}"></span></h5>
+
+                                <div th:replace="fragments/progressbar :: div(progress=${feature.feature.progress})"></div>
+
+                        </a>
+
+<!--                        <p>Start date: <span th:text="${feature.feature.startDate}"></span></p>-->
+<!--                        <p>End date: <span th:text="${feature.feature.endDate}"></span></p>-->
+<!--                        <p>Estimated end date: <span th:text="${feature.feature.estimatedEndDate}"></span></p>-->
+<!--                        <p>Status: <span th:text="${feature.feature.status}"></span></p>-->
+
+                        <ul class="list-group">
+                            <li th:each="task : ${feature.task}" class="list-group-item">
+<!--                                <p>Task ID: <span th:text="${task.taskId}"></span></p>-->
+
+                                <a th:href="@{/task/{id}(id=${task.taskId})}" class="no-underline">
+                                <div class="d-flex justify-content-between">
+                                    <p><span th:text="${task.taskName}"></span></p>
+                                    <p><span th:text="'Progress: ' + ${task.progress}"></span></p>
+                                </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <a class="btn btn-secondary float-right" th:href="@{/project/{projectId}(projectId=${projectVersion.project.projectId})}">
+        Back
+    </a>
+    <a th:href="@{/version/{projectVersionId}/kaban-board(projectVersionId=${projectVersion.projectVersionId})}"
+       class="btn btn-success float-right mr-1">Kaban Board</a>
+    <a th:href="@{/analysis/pie-chart/user-task/version/{projectVersionId}(projectVersionId=${projectVersion.projectVersionId})}"
+       class="btn btn-info float-right mr-1">Task Coordination</a>
+
+</div>
+<script>
+    var now = new Date();
+    var estimatedEndDateElements = document.querySelectorAll(".estimated-end-date");
+
+    estimatedEndDateElements.forEach(function(element) {
+        var estimatedEndDateText = element.textContent;
+        var estimatedEndDate = new Date(estimatedEndDateText);
+        var projectVersionId = element.getAttribute("data-project-version-id");
+
+        var formattedEstimatedEndDate = estimatedEndDate.toLocaleDateString('en-GB'); // Định dạng ngày thành "dd-MM-yyyy"
+
+        if (estimatedEndDate < now) {
+            element.style.color = "red";
+            var daysLate = Math.floor((now - estimatedEndDate) / (1000 * 60 * 60 * 24));
+            element.textContent = formattedEstimatedEndDate + " (" + daysLate + " days late)";
+            console.log("Project Version ID " + projectVersionId + " exceeded estimated end date by " + daysLate + " days.");
+        } else {
+            var daysLeft = Math.floor((estimatedEndDate - now) / (1000 * 60 * 60 * 24));
+            if (daysLeft === 1) {
+                element.textContent = formattedEstimatedEndDate + " (" + daysLeft + " day left)";
+            } else {
+                element.textContent = formattedEstimatedEndDate + " (" + daysLeft + " days left)";
+            }
+            element.style.color = "green"; // Đổi màu chữ thành xanh nếu còn thời gian
+            console.log("Project Version ID " + projectVersionId + " has " + daysLeft + " days left.");
+        }
+    });
+</script>
+
+
+<!--<script>-->
+<!--    var now = new Date();-->
+<!--    var estimatedEndDateElements = document.querySelectorAll(".estimated-end-date");-->
+
+<!--    estimatedEndDateElements.forEach(function(element) {-->
+<!--        var estimatedEndDate = new Date(element.textContent);-->
+<!--        var projectVersionId = element.getAttribute("data-project-version-id");-->
+
+<!--        if (estimatedEndDate < now) {-->
+<!--            element.style.color = "red";-->
+<!--            console.log("Project Version ID " + projectVersionId + " exceeded estimated end date.");-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
+
+
+</body>
+</html>

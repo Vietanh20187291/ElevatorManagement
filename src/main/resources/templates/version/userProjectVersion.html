@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Project Versions</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script th:src="@{../static/js/DeleteConfirmation.js}" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <style>
+        .no-underline {
+            text-decoration: none !important;
+            color: #000 !important;
+        }
+        .no-underline:hover {
+            color: #000 !important;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <h1>User Project Versions</h1>
+
+    <div th:replace="fragments/message :: div"></div>
+
+    <div th:each="projectVersionDTO : ${projectVersionDTOs}">
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 th:text="${projectVersionDTO.projectVersion.project.projectName}"></h5>
+                <h5 th:text="${projectVersionDTO.projectVersion.version}"></h5>
+                <div>
+                    <div class="btn-group" role="group">
+                        <a th:if="${projectVersionDTO.upv.featureModification}" class="btn btn-success rounded-right mr-1" th:href="@{/version/{projectVersionId}/add-feature(projectVersionId=${projectVersionDTO.projectVersion.projectVersionId})}">
+                            Add Feature
+                        </a>
+                        <a th:if="${projectVersionDTO.upv.versionModification}" class="btn btn-primary rounded-left rounded-right mr-1" th:href="@{/version/{projectVersionId}/edit(projectVersionId=${projectVersionDTO.projectVersion.projectVersionId})}">
+                            Edit
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <p>Version Description: <span th:text="${projectVersionDTO.projectVersion.versionDescription}"></span></p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-0">Attendee(s): <span th:each="attendee : ${projectVersionDTO.attendees}" class="d-inline" th:text="${attendee.username} + ' '"></span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <form th:action="@{/version/{projectVersionId}/add-attendee(projectVersionId=${projectVersionDTO.projectVersion.projectVersionId})}" method="post">
+                        </form>
+                    </div>
+                </div>
+                <ul class="list-group">
+                    <li th:each="feature : ${projectVersionDTO.features}" class="list-group-item">
+                        <a th:href="@{/feature/{id}(id=${feature.feature.id})}" class="no-underline">
+                            <h5>Feature: <span th:text="${feature.feature.name}"></span></h5>
+                            <div th:replace="fragments/progressbar :: div(progress=${feature.feature.progress})"></div>
+                        </a>
+                        <ul class="list-group">
+                            <li th:each="task : ${feature.task}" class="list-group-item">
+                                <a th:href="@{/task/{id}(id=${task.taskId})}" class="no-underline">
+                                    <div class="d-flex justify-content-between">
+                                        <p><span th:text="${task.taskName}"></span></p>
+                                        <p><span th:text="'Progress: ' + ${task.progress}"></span></p>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

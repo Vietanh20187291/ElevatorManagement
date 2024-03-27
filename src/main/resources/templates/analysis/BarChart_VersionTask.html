@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Version Analysis</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <canvas id="projectVersionChart"></canvas>
+        </div>
+        <div class="col-md-10 mx-auto">
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Project</th>
+                    <th onclick="sortTable(1)">Version</th>
+                    <th onclick="sortTable(2)">Total Tasks</th>
+                    <th onclick="sortTable(3)">Processing Tasks</th>
+                    <th onclick="sortTable(4)">Completed Tasks</th>
+                    <th onclick="sortTable(5)">Pending Tasks</th>
+                    <th onclick="sortTable(6)">Postponed Tasks</th>
+                    <th onclick="sortTable(7)">Overdue Tasks</th>
+                    <th onclick="sortTable(8)">Avg Days Overdue</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="projectVersionAnalysis : ${projectVersionAnalyses}">
+                    <td th:text="${projectVersionAnalysis.projectName}"></td>
+                    <td th:text="${projectVersionAnalysis.version}"></td>
+                    <td th:text="${projectVersionAnalysis.totalTasks}"></td>
+                    <td th:text="${projectVersionAnalysis.processingTasks}"></td>
+                    <td th:text="${projectVersionAnalysis.completedTasks}"></td>
+                    <td th:text="${projectVersionAnalysis.pendingTasks}"></td>
+                    <td th:text="${projectVersionAnalysis.postponedTasks}"></td>
+                    <td th:text="${projectVersionAnalysis.overdueTasks}"></td>
+                    <td th:text="${projectVersionAnalysis.averageDaysOverdue}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <a th:href="@{/analysis}" class="btn btn-secondary float-right">Back</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+<script th:inline="javascript">
+    var projectVersionData = [[${projectVersionAnalyses}]];
+    var versions = [];
+    var totalTasks = [];
+    var processingTasks = [];
+    var completedTasks = [];
+    var pendingTasks = [];
+    var postponedTasks = [];
+    var overdueTasks = [];
+    var avgDaysOverdue = [];
+
+    /* Populate data arrays */
+    for (var i = 0; i < projectVersionData.length; i++) {
+        versions.push(projectVersionData[i].projectName +"("+ projectVersionData[i].version +")");
+        totalTasks.push(projectVersionData[i].totalTasks);
+        processingTasks.push(projectVersionData[i].processingTasks);
+        completedTasks.push(projectVersionData[i].completedTasks);
+        pendingTasks.push(projectVersionData[i].pendingTasks);
+        postponedTasks.push(projectVersionData[i].postponedTasks);
+        overdueTasks.push(projectVersionData[i].overdueTasks);
+        avgDaysOverdue.push(projectVersionData[i].averageDaysOverdue / 10);
+    }
+
+    var ctx = document.getElementById('projectVersionChart').getContext('2d');
+    var projectVersionChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: versions,
+            datasets: [{
+                label: 'Total Tasks',
+                data: totalTasks,
+                backgroundColor: 'orange',
+                borderWidth: 1
+            }, {
+                label: 'Processing Tasks',
+                data: processingTasks,
+                backgroundColor: '#28a745',
+                borderWidth: 1
+            }, {
+                label: 'Completed Tasks',
+                data: completedTasks,
+                backgroundColor: 'purple',
+                borderWidth: 1
+            }, {
+                label: 'Pending Tasks',
+                data: pendingTasks,
+                backgroundColor: 'pink',
+                borderWidth: 1
+            }, {
+                label: 'Postponed Tasks',
+                data: postponedTasks,
+                backgroundColor: '#17a2b8',
+                borderWidth: 1
+            }, {
+                label: 'Overdue Tasks',
+                data: overdueTasks,
+                backgroundColor: 'red',
+                borderWidth: 1
+            }, {
+                label: 'Avg Days Overdue (x10)',
+                data: avgDaysOverdue,
+                backgroundColor: 'black',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+
+    function sortTable(column) {
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.querySelector(".table-striped");
+
+        switching = true;
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+
+            for (i = 1; i < rows.length - 1; i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("TD")[column];
+                y = rows[i + 1].getElementsByTagName("TD")[column];
+
+                if (column === 0) { // Sort version alphabetically
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else { // Sort other columns numerically
+                    if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+    }
+
+    // Sort table rows based on column clicked
+    var sortButtons = document.querySelectorAll("th[onclick^='sortTable']");
+    sortButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            var column = this.cellIndex;
+            sortTable(column);
+        });
+    });
+</script>
+</body>
+</html>

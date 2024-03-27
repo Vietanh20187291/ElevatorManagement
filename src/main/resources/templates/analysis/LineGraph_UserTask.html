@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Number of Tasks completed by users</title>
+    <!-- Thư viện Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Thư viện Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container">
+    <h1 class="text-center">Number of Tasks completed by users</h1>
+    <!-- Hiển thị biểu đồ -->
+    <div class="d-flex justify-content-center">
+        <canvas id="myChart" style="max-height: calc(100vh - 200px);"></canvas>
+    </div>
+    <div class="d-flex justify-content-center mt-1 mb-5">
+        <h5>Chart depicting the number of Tasks completed by users</h5>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Username</th>
+            <!-- Add headers for each MonthYear -->
+            <th th:each="entry : ${lineGraphDataList[0].completeTask.keySet()}"
+                th:text="${entry}"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Loop through the list of LineGraphEmployeeTaskAnalysis -->
+        <tr th:each="data : ${lineGraphDataList}">
+            <td th:text="${data.username}"></td>
+            <!-- Loop through the completeTask map and display the task count, replace null with 0 -->
+            <td th:each="taskCount : ${data.completeTask.values()}"
+                th:text="${taskCount != null ? taskCount : 0}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/analysis}" class="btn btn-secondary float-right">Back</a>
+</div>
+</div>
+</div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    // Lấy dữ liệu từ Spring Boot controller và chuyển thành JavaScript
+    const lineGraphDataList = /*[[${lineGraphDataList}]]*/;
+
+    // Tạo mảng chứa các tháng từ completeTask của bản ghi đầu tiên
+    const labels = (() => {
+        const firstData = lineGraphDataList[0];
+        const completeTaskKeys = firstData.completeTask ? Object.keys(firstData.completeTask) : [];
+        return completeTaskKeys;
+    })();
+
+    // Tạo biến lưu dữ liệu biểu đồ
+    const data = {
+        labels: labels,
+        datasets: []
+    };
+
+    // Chuyển dữ liệu từ Spring Boot vào biểu đồ
+    lineGraphDataList.forEach((lineGraphData, index) => {
+        const employeeData = {
+            label: lineGraphData.username,
+            data: getTaskDataArray(lineGraphData.completeTask),
+            fill: false,
+            borderColor: getColor(index +1)
+        };
+        data.datasets.push(employeeData);
+    });
+
+    // Hàm chuyển dữ liệu từ completeTask thành mảng số liệu cho biểu đồ
+    function getTaskDataArray(completeTask) {
+        const dataArray = [];
+        labels.forEach(label => {
+            dataArray.push(completeTask[label] || 0);
+        });
+        return dataArray;
+    }
+
+    // Hàm sinh màu ngẫu nhiên cho biểu đồ
+    function getColor(id) {
+        const colors = [
+            'red', 'blue', 'green', 'orange', 'purple', 'yellow', 'cyan', 'magenta', 'lime', 'teal'
+        ];
+
+        // Chuyển số id thành index trong mảng colors bằng cách trừ đi 1
+        const index = (id - 1) % colors.length;
+
+        return colors[index];
+    }
+
+    // Tìm giá trị cao nhất trong dữ liệu
+    const maxDataValue = (() => {
+        let max = 0;
+        lineGraphDataList.forEach((lineGraphData) => {
+            const values = Object.values(lineGraphData.completeTask);
+            values.forEach(value => {
+                max = Math.max(max, value);
+            });
+        });
+        return max;
+    })();
+
+    // Tạo biểu đồ
+    const config = {
+        type: 'line',
+        data: data,
+        options: {
+            responsive: true,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        stepSize: maxDataValue === 0 ? 1 : Math.ceil(maxDataValue / 5), // Đặt bước tăng giá trị trục tung là maxDataValue / 5
+                        max: maxDataValue + 2 // Đặt giá trị tối đa của trục tung là maxDataValue + 2
+                    }
+                }]
+            }
+        }
+    };
+
+    var myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+    );
+    /*]]>*/
+</script>
+
+</body>
+</html>

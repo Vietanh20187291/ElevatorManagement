@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Edit Feature</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container mt-5">
+    <h1>Edit Feature</h1>
+    <div th:replace="fragments/message :: div"></div>
+    <form th:action="@{/feature/{featureId}/edit(featureId=${feature.id})}" method="post">
+
+        <div class="form-group" style="display: none;">
+            <label for="featureProgress">Progress:</label>
+            <input type="number" class="form-control" id="featureProgress" name="featureProgress" th:field="*{feature.progress}">
+        </div>
+
+        <div class="form-group" style="display: none;">
+            <label for="featureEnable">Enable:</label>
+            <input type="hidden" id="featureEnable" name="featureEnable" th:field="*{feature.enable}">
+        </div>
+        <div class="form-group">
+            <input type="text" name="projectVersion.projectVersionId" th:value="${feature.projectVersion.projectVersionId}" th:attr="value=${feature.projectVersion.projectVersionId}, hidden=true">
+        </div>
+<!--        <div class="form-group">-->
+<!--            <input type="text" name="feature.enable" th:value="${feature.enable}" th:attr="value=${feature.enable}, hidden=true">-->
+<!--        </div>-->
+
+        <div class="form-group">
+            <label for="featureName">Feature Name:</label>
+            <input type="text" class="form-control" id="featureName" name="featureName" th:field="*{feature.name}" required>
+        </div>
+        <div class="form-group">
+            <label for="featureDescription">Feature Description:</label>
+            <textarea class="form-control" id="featureDescription" name="featureDescription" th:field="*{feature.description}" rows="3" required></textarea>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" class="form-control" id="startDate" name="startDate" th:field="${feature.startDate}" required>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="estimatedEndDate">Estimated End Date:</label>
+                    <input type="date" class="form-control" id="estimatedEndDate" name="estimatedEndDate" th:field="${feature.estimatedEndDate}" required>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <select class="form-control" id="status" name="status" required>
+                <option value="PROCESSING" th:selected="${feature.status == 'PROCESSING'}">Processing</option>
+<!--                <option value="COMPLETED" th:selected="${feature.status == 'COMPLETED'}">Completed</option>-->
+                <option value="PENDING" th:selected="${feature.status == 'PENDING'}">Pending</option>
+                <option value="POSTPONED" th:selected="${feature.status == 'POSTPONED'}">Postponed</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a th:href="@{/feature/{featureId}(featureId=${feature.id})}" class="btn btn-secondary">Back</a>
+    </form>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

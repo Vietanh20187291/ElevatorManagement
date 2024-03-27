@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Task List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .no-underline {
+            text-decoration: none !important;
+            color: #000 !important;
+        }
+
+        .no-underline:hover {
+            color: #000 !important;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container mt-5">
+    <h1>Upcoming Tasks</h1>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Choose Number of Days</h5>
+            <form method="get" th:action="@{/task/upcoming-days}">
+                <div class="form-row align-items-center">
+                    <div class="col-auto">
+                        <label class="sr-only" for="days">Choose number of days:</label>
+                        <select class="form-control mb-2" id="days" name="days">
+                            <option value="7">1 week</option>
+                            <option value="14">2 weeks</option>
+                            <option value="30">1 month</option>
+                            <option value="60">2 months</option>
+                            <option value="365">1 year</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-primary mb-2" type="submit">Get Tasks</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Task list -->
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">Tasks Due</h5>
+            <ul class="list-group">
+                <li th:each="task : ${tasks}" class="list-group-item" th:id="${'task-' + task.taskId}">
+                    <a th:href="@{/task/{taskId}(taskId=${task.taskId})}" class="no-underline">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <p>Status: <span th:text="${task.status}"></span></p>
+                            <p th:attr="id=${'endDateText-' + task.taskId}">End Date: <span th:text="${task.endDate}" th:attr="id=${'endDate-' + task.taskId}"></span></p>
+                            <p>Estimated End Date: <span th:text="${task.estimatedEndDate}" th:attr="id=${'estEndDate-' + task.taskId}"></span></p>
+                        </div>
+                        <p>Task: <span th:text="${task.taskName}"></span></p>
+                        <p>Description: <span th:text="${task.taskDescription}"></span></p>
+                        <p>Assign: <span  th:text="${task.assignedTo != null ? task.assignedTo.username : 'Unassigned'}"></span></p>
+                        <div th:replace="fragments/progressbar :: div(progress=${task.progress})"></div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Format dates and handle overdue/remaining days
+        var tasks = document.querySelectorAll("[id^='task-']");
+        tasks.forEach(function (task) {
+            var taskId = task.id.split('-')[1];
+            var endDate = document.getElementById('endDate-' + taskId);
+            var estEndDate = document.getElementById('estEndDate-' + taskId);
+            var endDateText = document.getElementById('endDateText-' + taskId);
+
+            var estEndDateValue = estEndDate.textContent.trim();
+            var endDateValue = endDate.textContent.trim();
+
+            console.log(endDateValue)
+            var estEndDateObj = new Date(estEndDateValue);
+            var endDateObj = new Date(endDateValue);
+
+            if (endDateValue == '') {
+                var now = new Date();
+                var diffInDays = Math.ceil((estEndDateObj - now) / (1000 * 60 * 60 * 24));
+
+                var formattedEstEndDate = estEndDateObj.toLocaleDateString('en-GB');
+
+
+                estEndDate.textContent = formattedEstEndDate;
+                endDateText.innerHTML = ''
+
+                if (diffInDays > 0) {
+                    estEndDate.innerHTML += ' <span style="color: green;">(' + diffInDays + ' days left)</span>';
+                } else if (diffInDays < 0) {
+                    estEndDate.innerHTML += ' <span style="color: red;">(' + Math.abs(diffInDays) + ' days late)</span>';
+                }
+            } else {
+                var formattedEndDate = endDateObj.toLocaleDateString('en-GB');
+                var formattedEstEndDate = estEndDateObj.toLocaleDateString('en-GB');
+
+                endDate.textContent = formattedEndDate
+                estEndDate.textContent = formattedEstEndDate;
+            }
+        });
+    });
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Add Issue</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container mt-5">
+    <h1>Add Issue</h1>
+    <div th:replace="fragments/message :: div"></div>
+    <form th:action="@{/task/{taskId}/add-issue(taskId=${taskId})}" method="post">
+
+        <div class="form-group">
+            <label for="issueType">Issue Type:</label>
+            <select class="form-control" id="issueType" name="issueType" required>
+                <option value="REQUEST">Request</option>
+                <option value="COMMENT">Comment</option>
+                <option value="NOTE">Note</option>
+                <option value="BUG">Bug</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="priority">Priority:</label>
+            <select class="form-control" id="priority" name="priority" required>
+                <option value="CRITICAL">Critical</option>
+                <option value="HIGH">High</option>
+                <option value="MEDIUM">Medium</option>
+                <option value="LOW">Low</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="summary">Summary:</label>
+            <input type="text" class="form-control" id="summary" name="summary" required>
+        </div>
+
+<!--        <div class="form-group">-->
+<!--            <label for="reporter">Reporter:</label>-->
+<!--            <input type="text" class="form-control" id="reporter" name="reporter" required>-->
+<!--        </div>-->
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a th:href="@{/task/{taskId}(taskId=${taskId})}" class="btn btn-secondary">Back</a>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

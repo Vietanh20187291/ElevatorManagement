@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Edit Issue</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container mt-5">
+    <h1>Edit Issue</h1>
+    <div th:replace="fragments/message :: div"></div>
+    <form th:action="@{/issue/{issueId}/edit(issueId=${issue.issueId})}" method="post" th:object="${issue}">
+        <input type="text" class="form-control" id="taskId" name="taskId" th:field="*{task.taskId}" hidden="hidden">
+
+        <div class="form-group">
+            <label for="issueType">Issue Type:</label>
+            <select class="form-control" id="issueType" name="issueType" th:field="*{issueType}" required>
+                <option value="REQUEST" th:selected="${issue.issueType == 'REQUEST'}">Request</option>
+                <option value="COMMENT" th:selected="${issue.issueType == 'COMMENT'}">Comment</option>
+                <option value="NOTE" th:selected="${issue.issueType == 'NOTE'}">Note</option>
+                <option value="BUG" th:selected="${issue.issueType == 'BUG'}">Bug</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="priority">Priority:</label>
+            <select class="form-control" id="priority" name="priority"th:field="*{priority}" required>
+                <option value="CRITICAL" th:selected="${issue.priority == 'CRITICAL'}">Critical</option>
+                <option value="HIGH" th:selected="${issue.priority == 'HIGH'}">High</option>
+                <option value="MEDIUM" th:selected="${issue.priority == 'MEDIUM'}">Medium</option>
+                <option value="LOW" th:selected="${issue.priority == 'LOW'}">Low</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="summary">Summary:</label>
+            <input type="text" class="form-control" id="summary" name="summary" required th:field="*{summary}" >
+        </div>
+
+        <!-- Additional form fields can be added here -->
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a th:href="@{/task/{taskId}(taskId=${issue.task.taskId})}" class="btn btn-secondary">Back</a>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

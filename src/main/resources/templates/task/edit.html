@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Edit Task</title>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container mt-5">
+    <h1>Edit Task</h1>
+    <div th:replace="fragments/message :: div"></div>
+    <form th:action="@{/task/{taskId}/edit(taskId=${task.taskId})}" method="post">
+
+            <input type="text" class="form-control" id="taskId" name="taskId" th:field="*{task.taskId}" hidden="hidden">
+        <div class="form-group">
+            <label for="taskName">Task Name:</label>
+            <input type="text" class="form-control" id="taskName" name="taskName" th:field="*{task.taskName}" required>
+        </div>
+        <div class="form-group">
+            <label for="taskDescription">Task Description:</label>
+            <textarea class="form-control" id="taskDescription" name="taskDescription" th:field="*{task.taskDescription}" rows="3" required></textarea>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="startDate">Start Date:</label>
+                    <input type="date" class="form-control" id="startDate" name="startDate" th:value="${#dates.format(task.startDate, 'yyyy-MM-dd')}" required>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="form-group">
+                    <label for="estimatedEndDate">Estimated End Date:</label>
+                    <input type="date" class="form-control" id="estimatedEndDate" name="estimatedEndDate" th:value="${#dates.format(task.estimatedEndDate, 'yyyy-MM-dd')}" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <select class="form-control" id="status" name="status" required>
+                <option value="PROCESSING" th:selected="${task.status == 'PROCESSING'}">Processing</option>
+<!--                <option value="COMPLETED" th:selected="${task.status == 'COMPLETED'}">Completed</option>-->
+                <option value="PENDING" th:selected="${task.status == 'PENDING'}">Pending</option>
+                <option value="POSTPONED" th:selected="${task.status == 'POSTPONED'}">Postponed</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="priority">Priority:</label>
+                    <select class="form-control" id="priority" name="priority" required>
+                        <option value="CRITICAL" th:selected="${task.priority == 'CRITICAL'}">Critical</option>
+                        <option value="HIGH" th:selected="${task.priority == 'HIGH'}">High</option>
+                        <option value="MEDIUM" th:selected="${task.priority == 'MEDIUM'}">Medium</option>
+                        <option value="LOW" th:selected="${task.priority == 'LOW'}">Low</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="progress">Progress:</label>
+                    <select class="form-control" id="progress" name="progress" th:field="*{task.progress}" required>
+                        <option value="0">0%</option>
+                        <option value="10">10%</option>
+                        <option value="20">20%</option>
+                        <option value="30">30%</option>
+                        <option value="40">40%</option>
+                        <option value="50">50%</option>
+                        <option value="60">60%</option>
+                        <option value="70">70%</option>
+                        <option value="80">80%</option>
+                        <option value="90">90%</option>
+                        <option value="100">100%</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a th:href="@{/task/{taskId}(taskId=${task.taskId})}" class="btn btn-secondary">Back</a>
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+

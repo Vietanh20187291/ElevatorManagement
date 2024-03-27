@@ -1,0 +1,11 @@
+{
+  "product_id": "PR020",
+  "category_id": "CAT002",
+  "warehouse_id": "WH004",
+  "product_name": "Samsung Galaxy Note 9",
+  "price": 15000000,
+  "product_description": "Mô tả Điện thoại Samsung Galaxy Note 9",
+  "image_url": "https://example.com/images/samsung-galaxy-note-9.jpg",
+  "quantity_of_product": 30,
+  "quantity_sold": 10
+}

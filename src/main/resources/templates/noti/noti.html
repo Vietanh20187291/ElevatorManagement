@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <!-- Link tới thư viện Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container mt-4">
+    <h1>Notifications</h1>
+
+    <!-- Card chứa danh sách chưa đọc -->
+    <div class="card mt-4" th:if="${unreadNotiList.size() != 0}">
+        <div class="card-header">
+            UNREAD NOTIFICATIONS
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item" th:each="noti : ${unreadNotiList}">
+                    <p th:text="${noti.content}"></p>
+                    <small th:text="${#dates.format(noti.timestamp, 'dd-MM-yyyy HH:mm:ss')}"></small>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Card chứa danh sách đã đọc -->
+    <div class="card mt-4">
+        <div class="card-header">
+            READ NOTIFICATIONS
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item" th:each="noti : ${readNotiList}">
+                    <p th:text="${noti.content}"></p>
+                    <small th:text="${#dates.format(noti.timestamp, 'dd-MM-yyyy HH:mm:ss')}"></small>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Link tới thư viện Bootstrap JS (bao gồm jQuery) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

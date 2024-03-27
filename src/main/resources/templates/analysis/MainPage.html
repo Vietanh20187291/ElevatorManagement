@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analysis</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+      .card {
+          width: 100%;
+      }
+      .card-img-container {
+          height: 200px!important; /* Set your desired fixed height for the card */
+          overflow: hidden;
+      }
+    .card-img {
+        width: 100%!important;
+        height: 100%!important;
+        object-fit: cover;
+    }
+    .card-text{
+        height: 36px!important;
+    }
+  </style>
+</head>
+
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+  <h1 class="mt-4">Analysis</h1>
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="card">
+          <div class="card-img-container">
+        <img src="/images/bar-chart/user-task" alt="Bar Chart" class="card-img">
+          </div>
+        <div class="card-body">
+          <h5 class="card-title">Bar Chart(User-Task)</h5>
+          <p class="card-text">This bar chart provides information about the distribution of users in Project Versions.</p>
+          <a href="/analysis/bar-chart/user-task" class="btn btn-primary">View Chart</a>
+        </div>
+      </div>
+    </div>
+<!--    <div class="col-md-6">-->
+<!--      <div class="card">-->
+<!--          <div class="card-img-container">-->
+<!--                <img src="/images/pie-chart/user-task" alt="Pie Chart" class="card-img">-->
+<!--          </div>-->
+<!--       <div class="card-body">-->
+<!--          <h5 class="card-title">Pie Chart(User-Task)</h5>-->
+<!--          <p class="card-text">This pie chart provides an analysis of tasks categorized by users.</p>-->
+<!--          <a href="/analysis/pie-chart/user-task" class="btn btn-primary">View Chart</a>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+    <div class="col-md-6 mt-3">
+      <div class="card">
+        <div class="card-img-container">
+          <img src="/images/bar-chart/version-task" alt="Pie Chart" class="card-img img-fluid" style="object-fit: contain;">
+        </div>
+          <div class="card-body">
+          <h5 class="card-title">Bar Chart(Version-Task)</h5>
+          <p class="card-text">This bar chart provides an analysis of tasks in Project Versions.</p>
+          <a href="/analysis/bar-chart/version-task" class="btn btn-primary">View Chart</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mt-3">
+      <div class="card">
+          <div class="card-img-container">
+        <img src="/images/line-graph/user-task" alt="Bar Chart" class="card-img">
+          </div>
+        <div class="card-body">
+          <h5 class="card-title">Line Graph(User-Task)</h5>
+          <p class="card-text">This line graph provides information about the task distribution of different users.</p>
+          <a href="/analysis/line-graph/user-task" class="btn btn-primary">View Chart</a>
+        </div>
+      </div>
+      </div>
+      <div class="col-md-6 mt-3">
+        <div class="card">
+          <div class="card-img-container">
+            <img src="https://marketingai.vn/wp-content/uploads/2019/08/Report-1.jpg" alt="Bar Chart" class="card-img">
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Report</h5>
+            <p class="card-text">This report provides information about the task distribution of different users.</p>
+            <a th:href="@{/report}" class="btn btn-primary">Get Report</a>
+          </div>
+  </div>
+</div>
+
+
+</div>
+</div>
+<!-- Bootstrap JS -->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+</body>
+
+</html>

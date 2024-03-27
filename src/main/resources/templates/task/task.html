@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Task Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script th:src="@{../static/js/DeleteConfirmation.js}" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <style>
+        .no-underline {
+            text-decoration: none !important;
+            color: #000 !important;
+        }
+        .no-underline:hover {
+            color: #000 !important;
+        }
+        .priority-critical {
+            color: red;
+        }
+
+        .priority-high {
+            color: orange;
+        }
+
+        .priority-medium {
+            color: yellow;
+        }
+
+        .priority-low {
+            color: green;
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <h1>Task Details</h1>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div>
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 th:text="'Task: '+${task.taskName}"></h5>
+                <div th:if="${role == 'MANAGER'}">
+                    <a class="btn btn-primary" th:href="@{/task/{taskId}/edit(taskId=${task.taskId})}">
+                        Edit
+                    </a>
+                    <form th:action="@{/task/{taskId}/delete(taskId=${task.taskId})}" method="post" class="d-inline" onsubmit="return confirmDelete(event)">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    <a class="btn btn-success" th:href="@{/task/{taskId}/add-issue(taskId=${task.taskId})}">
+                        Add Issue
+                    </a>
+                </div>
+                <div th:if="${role == 'USER'}">
+                    <a th:if="${upv.taskModification == true}" class="btn btn-primary" th:href="@{/task/{taskId}/edit(taskId=${task.taskId})}">
+                        Edit
+                    </a>
+                    <form th:if="${upv.taskModification == true}" th:action="@{/task/{taskId}/delete(taskId=${task.taskId})}" method="post" class="d-inline" onsubmit="return confirmDelete(event)">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    <a class="btn btn-success" th:href="@{/task/{taskId}/add-issue(taskId=${task.taskId})}">
+                        Add Issue
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="ml-3" th:text="${task.taskDescription}"></p>
+                <p class="ml-3" th:text="${task.status}"></p>
+                <p class=" ml-3">Progress: <span  th:text="${task.progress}"></span>%</p>
+                <p class=" ml-3"  th:attr="id=${'endDateText'}">End Date: <span th:text="${task.endDate}" th:attr="id=${'endDate'}"></span></p>
+                <p class=" ml-3">Estimated End Date: <span th:text="${task.estimatedEndDate}" th:attr="id=${'estEndDate'}"></span></p>
+
+                <p class="mb-2 ml-3">Assign: <span  th:text="${task.assignedTo != null ? task.assignedTo.username : 'Unassigned'}"></span></p>
+                <form th:if="${role == 'MANAGER'}" class="col-md-4" th:action="@{/task/{taskId}/assign(taskId=${task.taskId})}" method="post">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="userDropdown">Select User</label>
+                        </div>
+                        <select class="custom-select" id="userDropdown" name="userId">
+                            <option selected disabled>Choose...</option>
+                            <option th:each="user : ${attendees}" th:value="${user.userId}" th:text="${user.username}"></option>
+                        </select>
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-outline-secondary">Assign</button>
+                        </div>
+                    </div>
+                </form>
+                <h4 class="text-center mb-2">Task Issues:</h4>
+                <ul class="list-group">
+                    <li th:each="issue : ${issues}" class="list-group-item">
+                        <a class="no-underline" th:href="@{/issue/{issueId}/edit(issueId=${issue.issueId})}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <p>Type: <span th:text="${issue.issueType}"></span></p>
+                            <p>Priority: <span th:attr="id=${'prioritySpan_' + issue.issueId}" th:text="${issue.priority}"></span></p>
+                        </div>
+                        <p>Summary: <span th:text="${issue.summary}"></span></p>
+                        <p>Reporter: <span th:text="${issue.reporter.username}"></span> </p>
+                        </a>
+                    </li>
+                </ul>
+
+
+            </div>
+        </div>
+        <a class="btn btn-secondary float-right" th:href="@{/feature/{featureId}(featureId=${task.feature.id})}">
+            Back
+        </a>
+
+    </div>
+</div>
+</body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Format dates and handle overdue/remaining days
+
+
+        var endDate = document.getElementById('endDate');
+        var estEndDate = document.getElementById('estEndDate');
+        var endDateText = document.getElementById('endDateText');
+
+        var estEndDateValue = estEndDate.textContent.trim();
+        var endDateValue = endDate.textContent.trim();
+
+        var estEndDateObj = new Date(estEndDateValue);
+        var endDateObj = new Date(endDateValue);
+
+        if (endDateValue == '') {
+            var now = new Date();
+            var diffInDays = Math.ceil((estEndDateObj - now) / (1000 * 60 * 60 * 24));
+
+            var formattedEstEndDate = estEndDateObj.toLocaleDateString('en-GB');
+
+
+            estEndDate.textContent = formattedEstEndDate;
+            endDateText.innerHTML = ''
+
+            if (diffInDays > 0) {
+                estEndDate.innerHTML += ' <span style="color: green;">(' + diffInDays + ' days left)</span>';
+            } else if (diffInDays < 0) {
+                estEndDate.innerHTML += ' <span style="color: red;">(' + Math.abs(diffInDays) + ' days late)</span>';
+            }
+        } else {
+            var formattedEndDate = endDateObj.toLocaleDateString('en-GB');
+            var formattedEstEndDate = estEndDateObj.toLocaleDateString('en-GB');
+
+            endDate.textContent = formattedEndDate
+            estEndDate.textContent = formattedEstEndDate;
+        }
+    });
+
+
+
+</script>
+
+<script>
+    function setPriorityColor(issueId, priority) {
+        var color;
+        switch (priority) {
+            case "CRITICAL":
+                color = "red";
+                break;
+            case "HIGH":
+                color = "orange";
+                break;
+            case "MEDIUM":
+                color = "yellow";
+                break;
+            case "LOW":
+                color = "green";
+                break;
+            default:
+                color = "black";
+        }
+
+        var prioritySpan = document.getElementById("prioritySpan_" + issueId);
+        prioritySpan.style.color = color;
+    }
+
+    var issues = /* Lấy danh sách issue từ dữ liệu */;
+    issues.forEach(function(issue) {
+        setPriorityColor(issue.issueId, issue.priority);
+    });
+</script>
+</html>

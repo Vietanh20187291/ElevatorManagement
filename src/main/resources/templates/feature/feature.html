@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Feature Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <script th:src="@{../static/js/DeleteConfirmation.js}" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <style>
+        .no-underline {
+            text-decoration: none !important;
+            color: #000 !important;
+        }
+        .no-underline:hover {
+            color: #000 !important;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <h1>Feature Details</h1>
+
+    <div th:replace="fragments/message :: div"></div>
+    <div>
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 th:text="'Feature: ' + ${feature.name}"></h5>
+                <div  th:if="${role == 'MANAGER'}">
+                    <a class="btn btn-primary" th:href="@{/feature/{featureId}/edit(featureId=${feature.id})}">
+                        Edit
+                    </a>
+                    <form th:action="@{/feature/{featureId}/delete(featureId=${feature.id})}" method="post" class="d-inline" onsubmit="return confirmDelete(event)">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    <a class="btn btn-success" th:href="@{/feature/{featureId}/add-task(featureId=${feature.id})}">
+                        Add Task
+                    </a>
+                </div>
+                <div th:if="${role == 'USER'}">
+                        <a th:if="${upv.featureModification == true}" class="btn btn-primary" th:href="@{/feature/{featureId}/edit(featureId=${feature.id})}">
+                            Edit
+                        </a>
+                        <form th:if="${upv.featureModification == true}" th:action="@{/feature/{featureId}/delete(featureId=${feature.id})}" method="post" class="d-inline" onsubmit="return confirmDelete(event)">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                        <a th:if="${upv.taskModification == true}" class="btn btn-success" th:href="@{/feature/{featureId}/add-task(featureId=${feature.id})}">
+                            Add Task
+                        </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <p th:text="${feature.description}"></p>
+                <h6>Feature Tasks:</h6>
+                <ul class="list-group">
+                    <li th:each="task : ${tasks}" class="list-group-item task-item" th:id="${'task-' + task.taskId}">
+                        <div class="d-flex justify-content-between align-items-center task-summary">
+<!--                            <div class="d-flex">-->
+                                <a th:href="@{/task/{taskId}(taskId=${task.taskId})}" class="no-underline">
+                                    <p><span th:text="${task.taskName}" th:attr="id=${'taskName-' + task.taskId}"></span></p>
+                                </a>
+<!--                            <p th:attr="id=${'endDateText-' + task.taskId}">End Date: <span th:text="${task.endDate}" th:attr="id=${'endDate-' + task.taskId}"></span></p>-->
+                            <p th:attr="id=${'endDateText-' + task.taskId}">End Date: <span th:text="${task.endDate}" th:attr="id=${'endDate-' + task.taskId}"></span></p>
+<!--                            </div>-->
+                            <button class="btn btn-secondary btn-toggle-info">More</button>
+                        </div>
+                        <div class="info-section" style="display: none;">
+<!--                            <p>End Date: <span th:text="${task.endDate}"></span></p>-->
+                            <p th:attr="id=${'estEndDateText-' + task.taskId}">Estimated End Date: <span th:text="${task.estimatedEndDate}" th:attr="id=${'estEndDate-' + task.taskId}"></span></p>
+                            <p>Status: <span th:text="${task.status}"></span></p>
+                            <p>Description: <span th:text="${task.taskDescription}"></span></p>
+                            <p>Assign: <span th:text="${task.assignedTo != null ? task.assignedTo.username : 'Unassigned'}"></span></p>
+                            <div th:replace="fragments/progressbar :: div(progress=${task.progress})"></div>
+                        </div>
+                    </li>
+
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <a th:if="${role == 'MANAGER'}" class="btn btn-secondary float-right" th:href="@{/version/{projectVersionId}(projectVersionId=${feature.projectVersion.projectVersionId})}">
+        Back
+    </a>
+    <a th:if="${role == 'USER'}" class="btn btn-secondary float-right" th:href="@{/version/user/{userId}(userId=${userId})}">
+        Back
+    </a>
+
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Format dates and handle overdue/remaining days
+        var tasks = document.querySelectorAll("[id^='task-']");
+        tasks.forEach(function(task) {
+            var taskId = task.id.split('-')[1];
+            var endDate = document.getElementById('endDate-' + taskId);
+            var estEndDate = document.getElementById('estEndDate-' + taskId);
+            var endDateText = document.getElementById('endDateText-' + taskId);
+            var estEndDateText = document.getElementById('estEndDateText-' + taskId);
+            var taskName  = document.getElementById('taskName-' + taskId);
+
+            var estEndDateValue = estEndDate.textContent.trim();
+            var endDateValue = endDate.textContent.trim();
+
+            console.log(endDateValue)
+            var estEndDateObj = new Date(estEndDateValue);
+            var endDateObj = new Date(endDateValue);
+
+            if(endDateValue == '') {
+                var now = new Date();
+                var diffInDays = Math.ceil((estEndDateObj - now) / (1000 * 60 * 60 * 24));
+
+                var formattedEstEndDate = estEndDateObj.toLocaleDateString('en-GB');
+
+
+                // estEndDate.textContent = formattedEstEndDate;
+                // estEndDateText.innerHTML =''
+                endDateText.innerHTML =''
+
+                if (diffInDays > 0) {
+                    // estEndDate.innerHTML = ' <span style="color: green;">(' + diffInDays + ' days left)</span>';
+                    // estEndDateText.innerHTML = ' <span style="color: green;">' + diffInDays + ' days left</span>';
+                taskName.innerHTML += ' <span style="color: green;">(' + diffInDays + ' days left)</span>';
+                    // estEndDate.innerHTML += ' <span style="color: green;">(' + diffInDays + ' days left)</span>';
+                } else if (diffInDays < 0) {
+                    // estEndDate.innerHTML = ' <span style="color: red;">(' + Math.abs(diffInDays) + ' days late)</span>';
+                    // estEndDateText.innerHTML = ' <span style="color: red;">' + Math.abs(diffInDays) + ' days late</span>';
+                    taskName.innerHTML += ' <span style="color: red;">(' + Math.abs(diffInDays) + ' days late)</span>';
+                }
+            }else {
+                var formattedEndDate = endDateObj.toLocaleDateString('en-GB');
+                var formattedEstEndDate = estEndDateObj.toLocaleDateString('en-GB');
+
+                endDate.textContent = formattedEndDate
+                estEndDate.textContent = formattedEstEndDate;
+            }
+        });
+    });
+
+
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var toggleButtons = document.querySelectorAll(".btn-toggle-info");
+
+        toggleButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                var infoSection = this.parentElement.nextElementSibling;
+                infoSection.style.display = infoSection.style.display === "none" ? "block" : "none";
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

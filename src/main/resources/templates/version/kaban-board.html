@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kanban Board</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@glidejs/glide"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.board').hide().slideDown(500);
+        });
+    </script>
+    <style>
+        .no-underline {
+            text-decoration: none !important;
+            color: #000 !important;
+        }
+        .no-underline:hover {
+            color: #000 !important;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .card-header {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .list-group-item {
+            padding: 10px;
+        }
+        .board {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <div class="row mt-4">
+        <div class="col">
+            <h1>Kanban Board</h1>
+        </div>
+    </div>
+    <div class="board bg-light">
+    <div class="row m-2">
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    To Do
+                </div>
+                <ul class="list-group list-group-flush">
+
+                    <li th:each="task : ${toDoTasks}" class="list-group-item">
+                        <a class="no-underline" th:href="@{/task/{taskId}(taskId=${task.taskId})}">
+                        <strong th:text="${task.taskName}"></strong>
+                        <p th:text="${task.assignedTo != null ? task.assignedTo.username : 'Unassigned'}"></p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-header bg-warning text-white">
+                    In Progress
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li th:each="task : ${inProgressTasks}" class="list-group-item">
+                        <a class="no-underline" th:href="@{/task/{taskId}(taskId=${task.taskId})}">
+                            <strong th:text="${task.taskName}"></strong>
+                            <p th:text="${task.assignedTo != null ? task.assignedTo.username : 'Unassigned'}"></p>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    Done
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li th:each="task : ${doneTasks}" class="list-group-item">
+                        <a class="no-underline" th:href="@{/task/{taskId}(taskId=${task.taskId})}">
+                        <strong th:text="${task.taskName}"></strong>
+                        <p th:text="${task.assignedTo != null ? task.assignedTo.username : 'Unassigned'}"></p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    </div>
+    <a th:href="@{/version/{projectVersionId}(projectVersionId=${projectVersion.projectVersionId})}"
+       class="btn btn-secondary float-right mt-1">Back</a>
+</div>
+</body>
+</html>
