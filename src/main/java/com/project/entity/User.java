@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity
 @Table(name = "user")
 @Getter
 @Setter
@@ -29,7 +28,9 @@ public class User {
     @Column(name = "active", nullable = false)
     private boolean active;
 
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "building_id")
+    private Building building;
 
 
 }

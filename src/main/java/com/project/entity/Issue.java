@@ -9,7 +9,7 @@ import lombok.ToString;
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity
+
 @Table(name = "issue")
 @Getter
 @Setter

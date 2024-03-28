@@ -6,11 +6,9 @@ import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
 
-@Entity
+
 @Table(name = "feature")
 @Getter
 @Setter
