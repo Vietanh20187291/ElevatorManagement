@@ -40,7 +40,6 @@ public class UserService {
 
     public boolean checkLogin(User user) {
         User userFromDB = null;
-//        startConnect();
         try {
             userFromDB = userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
         } catch (Exception e) {
@@ -138,89 +137,6 @@ public class UserService {
 //        return true;
 
     }
-//    public static void startConnect() {
-//
-//        //        String host = "tkevn.ddns.net";  // hostname or IP address
-////        int port = 8000;
-////        String clientId = MqttAsyncClient.generateClientId();
-////        String topic = "test/topic";
-////        String content = "Hello";
-////        int qos = 0;
-////        String protocol = "ssl://";
-////
-////        String username = "user1";
-////        String password = "minh";
-//        String host = "tkevn.ddns.net";
-//        int port = 8001;
-//        String path = "/mqtt";
-//        boolean useTLS = false;
-//        String username = "user1";
-//        String password = "minh";
-//        boolean cleansession = true;
-//        int reconnectTimeout = 3000;
-//
-//        if (username == null || password == null) {
-//            throw new IllegalArgumentException("Username or password is not set!");
-//        }
-//
-//        try {
-//            MqttClient mqttClient = new MqttClient("tcp://" + host + ":" + port, "web_" + (int) (Math.random() * 100), new MemoryPersistence());
-//            MqttConnectOptions options = new MqttConnectOptions();
-//            options.setConnectionTimeout(3);
-//            options.setKeepAliveInterval(60);
-//            options.setCleanSession(cleansession);
-//            options.setUserName(username);
-//            options.setPassword(password.toCharArray());
-//            options.setSSLProperties(null); // Uncomment and set SSL properties if using SSL
-//
-//            mqttClient.setCallback(new MqttCallback() {
-//                @Override
-//                public void connectionLost(Throwable cause) {
-//                    System.out.println("Connection lost: " + cause.getMessage());
-//                    System.out.println("Retrying...");
-//                    // You can add retry logic here if needed
-//                }
-//
-//                @Override
-//                public void messageArrived(String topic, MqttMessage message) throws Exception {
-//                    System.out.println("Message arrived on topic: " + topic + ", message: " + new String(message.getPayload()));
-//                }
-//
-//                @Override
-//                public void deliveryComplete(IMqttDeliveryToken token) {
-//                    // Not used in this example
-//                }
-//            });
-//
-//            mqttClient.connect(options);
-//
-//            for (int i = 0; i < 8; i++) {
-//                String subscribetopicdisplay = "P" + (i + 1) + "/display";
-//                mqttClient.subscribe(subscribetopicdisplay, 0);
-//                System.out.println("Subscribed to topic: " + subscribetopicdisplay);
-//
-//                String subscribetopicdoorstatus = "P" + (i + 1) + "/doorstatus";
-//                mqttClient.subscribe(subscribetopicdoorstatus, 0);
-//                System.out.println("Subscribed to topic: " + subscribetopicdoorstatus);
-//
-//                String subscribetopicdirection = "P" + (i + 1) + "/direction";
-//                mqttClient.subscribe(subscribetopicdirection, 0);
-//                System.out.println("Subscribed to topic: " + subscribetopicdirection);
-//
-//                String subscribetopiconoff = "P" + (i + 1) + "/onoff";
-//                mqttClient.subscribe(subscribetopiconoff, 0);
-//                System.out.println("Subscribed to topic: " + subscribetopiconoff);
-//
-//                String subscribetopicliftstatus = "P" + (i + 1) + "/liftstatus";
-//                mqttClient.subscribe(subscribetopicliftstatus, 0);
-//                System.out.println("Subscribed to topic: " + subscribetopicliftstatus);
-//            }
-//        } catch (MqttException e) {
-//            System.out.println("Connection failed: " + e.getMessage());
-//            // Print the detailed reason for connection failure
-//            e.printStackTrace();
-//        }
-//    }
 
     public User getUserByUsername(String username){
         Optional<User> user = userRepository.getUserByUsername(username);

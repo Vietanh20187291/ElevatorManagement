@@ -28,8 +28,8 @@ import java.util.Map;
 import static org.jvnet.fastinfoset.EncodingAlgorithmIndexes.UUID;
 @Component
 @Controller
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/admin/user")
+public class AdminUserController {
 
     @Autowired
     private UserService userService;
@@ -43,24 +43,21 @@ public class UserController {
         cookieHelper.addCookieAttributes(request, model);
         User userRequest = new User();
         model.addAttribute("userRequest", userRequest);
-        return "user/add";
+        return "user/admin/add";
     }
 
     @PostMapping("/add")
     public String addUser(HttpServletRequest request, @ModelAttribute("userRequest") User userRequest, RedirectAttributes redirectAttributes) {
         try {
-            if(userRequest.getRole() == UserRole.ADMIN || userRequest.getRole() == UserRole.MANAGER){
-                throw new Exception("You do not right to create Admin or Manager account");
-            }
-            User user = userService.addUser(userRequest.getUsername(), userRequest.getPassword(), UserRole.USER);
+            User user = userService.addUser(userRequest.getUsername(), userRequest.getPassword(), userRequest.getRole());
             redirectAttributes.addFlashAttribute("message", "User has been added successfully");
             redirectAttributes.addFlashAttribute("message", "Added successfully");
             redirectAttributes.addFlashAttribute("messageType","success");
-            return "redirect:/user";
+            return "redirect:/admin/user";
         } catch (Exception e) {
             String errorMessage = e.getMessage();
             redirectAttributes.addFlashAttribute("message", errorMessage);
-            return "redirect:/user";
+            return "redirect:/admin/user";
         }
     }
 
@@ -69,33 +66,30 @@ public class UserController {
                                  @RequestParam("newRole") UserRole newRole,
                                  RedirectAttributes redirectAttributes) {
         try {
-            if(newRole == UserRole.ADMIN){
-                throw new Exception("Access Denied");
-            }
             User updatedUser = userService.updateUserRole(id, newRole);
             redirectAttributes.addFlashAttribute("message", "User role has been updated successfully");
             redirectAttributes.addFlashAttribute("messageType","success");
-            return "redirect:/user";
+            return "redirect:/admin/user";
         } catch (Exception e) {
             String errorMessage = e.getMessage();
             redirectAttributes.addFlashAttribute("message", errorMessage);
             redirectAttributes.addFlashAttribute("messageType","error");
-            return "redirect:/user";
+            return "redirect:/admin/user";
         }
     }
     @GetMapping("/password")
     public String showChangePasswordForm(Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
         model.addAttribute("password");
-        return "user/password";
+        return "user/admin/password";
     }
     @PostMapping("/password")
     public String updateUserPassword(@RequestParam("oldPass") String oldPass,
-                                                @RequestParam("newPass") String newPass,
+                                     @RequestParam("newPass") String newPass,
                                      RedirectAttributes redirectAttributes, HttpServletRequest request) throws Exception {
-    String token = jwtTokenService.getTokenFromRequest(request);
-    User user = jwtTokenService.getUserFromToken(token);
-    user.setPassword(oldPass);
+        String token = jwtTokenService.getTokenFromRequest(request);
+        User user = jwtTokenService.getUserFromToken(token);
+        user.setPassword(oldPass);
         boolean isAuthenticated = userService.checkLogin(user);
         if (isAuthenticated) {
             // Gọi hàm updatePassword với id là 1 và password mới
@@ -119,7 +113,7 @@ public class UserController {
 //            String errorMessage = e.getMessage();
 //            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 //        }
-        return "redirect:/user/password";
+        return "redirect:/user/admin/password";
     }
 //    @GetMapping
 //    public String getAllUsers(Model model, HttpServletRequest request) {
@@ -134,7 +128,7 @@ public class UserController {
         cookieHelper.addCookieAttributes(request, model);
         List<UserDTO> users = userService.getAllUsers();
         model.addAttribute("users", users);
-        return "user/users";
+        return "user/admin/users";
     }
     @PostMapping("/deactivate/{id}")
     public String deleteUser(HttpServletRequest request, @PathVariable Integer id, RedirectAttributes redirectAttributes) {
@@ -143,12 +137,12 @@ public class UserController {
             userService.deactivateUser(id);
             redirectAttributes.addFlashAttribute("message", "User has been deactivated successfully");
             redirectAttributes.addFlashAttribute("messageType","success");
-            return "redirect:/user";
+            return "redirect:/admin/user";
         } catch (Exception e) {
             String errorMessage = e.getMessage();
             redirectAttributes.addFlashAttribute("message", errorMessage);
             redirectAttributes.addFlashAttribute("messageType","success");
-            return "redirect:/user";
+            return "redirect:/admin/user";
         }
     }
 
