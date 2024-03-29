@@ -29,7 +29,7 @@
                 <td th:text="${user.username}"></td>
                 <td th:text="${user.role}"></td>
                 <td>
-                    <form method="POST" th:action="@{/user/update-role/{id}(id=${user.userId})}" class="mt-n1">
+                    <form method="POST" th:action="@{/admin/user/update-role/{id}(id=${user.userId})}" class="mt-n1">
                         <div class="d-flex align-items-center">
                             <select class="form-control" name="newRole">
                                 <option selected disabled>Choose...</option>
@@ -42,7 +42,7 @@
 
                 </td>
                 <td>
-                    <form method="POST" th:action="@{/user/deactivate/{id}(id=${user.userId})}" onsubmit="return confirmDelete(event)">
+                    <form method="POST" th:action="@{/admin/user/deactivate/{id}(id=${user.userId})}" onsubmit="return confirmDelete(event)">
                         <button class="btn btn-danger mt-n1" type="submit" name="userId" th:value="${user.userId}">Delete</button>
                     </form>
 
@@ -51,7 +51,7 @@
             </tbody>
         </table>
 
-        <button class="btn btn-success" onclick="window.location.href='/user/add'" type="button">Add User</button>
+        <button class="btn btn-success" onclick="window.location.href='/admin/user/add'" type="button">Add User</button>
 
 
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

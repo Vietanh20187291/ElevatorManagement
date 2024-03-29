@@ -53,11 +53,11 @@ public class AdminUserController {
             redirectAttributes.addFlashAttribute("message", "User has been added successfully");
             redirectAttributes.addFlashAttribute("message", "Added successfully");
             redirectAttributes.addFlashAttribute("messageType","success");
-            return "redirect:/admin/user";
+            return "redirect:/admin/user/";
         } catch (Exception e) {
             String errorMessage = e.getMessage();
             redirectAttributes.addFlashAttribute("message", errorMessage);
-            return "redirect:/admin/user";
+            return "redirect:/admin/user/";
         }
     }
 
@@ -69,12 +69,12 @@ public class AdminUserController {
             User updatedUser = userService.updateUserRole(id, newRole);
             redirectAttributes.addFlashAttribute("message", "User role has been updated successfully");
             redirectAttributes.addFlashAttribute("messageType","success");
-            return "redirect:/admin/user";
+            return "redirect:/admin/user/";
         } catch (Exception e) {
             String errorMessage = e.getMessage();
             redirectAttributes.addFlashAttribute("message", errorMessage);
             redirectAttributes.addFlashAttribute("messageType","error");
-            return "redirect:/admin/user";
+            return "redirect:/admin/user/";
         }
     }
     @GetMapping("/password")
@@ -113,7 +113,7 @@ public class AdminUserController {
 //            String errorMessage = e.getMessage();
 //            return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 //        }
-        return "redirect:/user/admin/password";
+        return "redirect:/admin/user/password";
     }
 //    @GetMapping
 //    public String getAllUsers(Model model, HttpServletRequest request) {

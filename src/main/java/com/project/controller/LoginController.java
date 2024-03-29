@@ -86,9 +86,9 @@ public class LoginController {
                 response.addCookie(userCookie);
                 response.addCookie(roleCookie);
                 if (userDetail.getRole().equals(UserRole.ADMIN)) {
-                    return "redirect:/user";
+                    return "redirect:/admin/user";
                 } else if (userDetail.getRole().equals(UserRole.MANAGER)) {
-                    return "redirect:/project";
+                    return "redirect:/user";
                 } else {
                     return "redirect:/version/user/" + userDetail.getUserId();
                 }
