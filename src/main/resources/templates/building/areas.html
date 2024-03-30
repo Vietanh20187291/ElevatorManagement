@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Building and Areas</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your other stylesheets and scripts -->
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <h1>Building Details</h1>
+
+    <div th:replace="fragments/message :: div"></div>
+
+    <!-- Building Information Card -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5 th:text="${building.name}"></h5>
+        </div>
+        <div class="card-body">
+            <p th:text="${building.description}"></p>
+            <div class="row">
+                <!-- Loop through areas -->
+                <div class="col-md-4" th:each="area : ${areas}">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 th:text="${area.name}"></h5>
+                        </div>
+                        <div class="card-body">
+                            <p th:text="${area.description}"></p>
+                            <a class="btn btn-primary" th:href="@{/area/{areaId}(areaId=${area.id})}">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="mt-3">
+        <div class="float-right">
+            <a class="btn btn-success" th:href="@{/building/{buildingId}/add-area(buildingId=${building.id})}">Add Area</a>
+            <a class="btn btn-primary" th:href="@{/building/{buildingId}/edit(buildingId=${building.id})}">Update Building</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

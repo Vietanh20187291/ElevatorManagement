@@ -24,12 +24,12 @@ public class BuildingController {
     @Autowired
     private AreaService areaService;
 
-    @GetMapping("/{buildingId}")
-    public String getBuildingById(@PathVariable Integer buildingId, Model model, HttpServletRequest request) {
-        Building building = buildingService.getBuildingById(buildingId);
-        model.addAttribute("building", building);
-        return "building/detail";
-    }
+//    @GetMapping("/{buildingId}")
+//    public String getBuildingById(@PathVariable Integer buildingId, Model model, HttpServletRequest request) {
+//        Building building = buildingService.getBuildingById(buildingId);
+//        model.addAttribute("building", building);
+//        return "building/detail";
+//    }
 
     @GetMapping("/name/{name}")
     public String getBuildingByName(@PathVariable String name, Model model, HttpServletRequest request) {
@@ -74,7 +74,7 @@ public class BuildingController {
         area.setBuilding(building);
         model.addAttribute("area", area);
 
-        return "building/add_area";
+        return "area/add";
     }
 
     @PostMapping("/{buildingId}/add-area")
@@ -110,6 +110,16 @@ public class BuildingController {
         // Điều hướng trở lại trang thêm khu vực nếu có lỗi xảy ra
         return "redirect:/building/" + buildingId + "/add-area";
     }
+
+    @GetMapping("/{buildingId}")
+    public String showAreasByBuildingId(@PathVariable Integer buildingId, Model model) {
+        Building building = buildingService.getBuildingById(buildingId);
+        List<Area> areas = areaService.getAreasByBuildingId(buildingId);
+        model.addAttribute("building", building);
+        model.addAttribute("areas", areas);
+        return "building/areas";
+    }
+
 
 }
 

@@ -46,7 +46,7 @@ public class AreaController {
         List<Elevator> elevators = elevatorService.getElevatorsByAreaId(areaId);
         model.addAttribute("area", area);
         model.addAttribute("elevators", elevators);
-        return "area/details";
+        return "area/findById";
     }
 
     @GetMapping("/{areaId}/add-elevator")

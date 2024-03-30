@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Area Details</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Your other stylesheets and scripts -->
+</head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+<div class="container">
+    <h1>Area Details</h1>
+
+    <div th:replace="fragments/message :: div"></div>
+
+    <!-- Area Information Card -->
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5 th:text="${area.name}"></h5>
+        </div>
+        <div class="card-body">
+            <p th:text="${area.description}"></p>
+
+            <!-- Action Buttons for Area -->
+            <div class="mt-3">
+                <a class="btn btn-danger mr-2" th:href="@{/area/{areaId}/delete(areaId=${area.id})}">Delete Area</a>
+                <a class="btn btn-primary mr-2" th:href="@{/area/{areaId}/edit(areaId=${area.id})}">Update Area</a>
+                <a class="btn btn-success" th:href="@{/area/{areaId}/add-elevator(areaId=${area.id})}">Add Elevator</a>
+            </div>
+
+            <!-- Elevator Information -->
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5>Elevators</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Loop through elevators -->
+                        <div class="col-md-4" th:each="elevator : ${elevators}">
+                            <div class="card mb-3">
+                                <div class="card-header">
+                                    <h6 th:text="${elevator.code}"></h6>
+                                </div>
+                                <div class="card-body">
+                                    <p>Number of Floors: <span th:text="${elevator.numFloors}"></span></p>
+                                    <!-- Add Get Info Button -->
+                                    <a class="btn btn-primary btn-sm" th:href="@{/elevator/{elevatorId}(elevatorId=${elevator.id})}">Get Info</a>
+                                    <!-- Add Delete Elevator Button -->
+                                    <a class="btn btn-danger btn-sm" th:href="@{/elevator/{elevatorId}/delete(elevatorId=${elevator.id})}">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="container mt-3">
+    <div class="float-right">
+        <a class="btn btn-secondary" th:href="@{/building/{buildingId}(buildingId=${area.building.id})}">Back</a>
+    </div>
+</div>
+
+</body>
+</html>
