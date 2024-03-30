@@ -168,42 +168,10 @@ public class TaskController {
         return "redirect:/task/" + taskId;
     }
 
-//    @GetMapping("/upcoming-days")
-//    public String getTasksDueInDays(@RequestParam(required = false) Integer days, Model model, HttpServletRequest request) throws Exception {
-//        cookieHelper.addCookieAttributes(request, model);
-//        System.out.println("1");
-//        if (days == null) {
-//            days = 365; // Nếu days không được truyền vào, mặc định là 7
-//        }
-//        try {
-////            List<Task> tasks = taskService.findTasksDueInDays(days);
-//            List<Task> tasks = taskService.findTasksByUserId(3);
-//            for (int i = 0; i < tasks.size(); i++) {
-//                System.out.println(tasks.get(i).toString());
-//
-//            }
-//            model.addAttribute("tasks", tasks);
-//        }catch (Exception e)
-//        {
-//            System.out.println(e.getMessage());
-//        }
-//        System.out.println("hi");
-//        return "task/findByUserId";
-//    }
-
-//    List<Task> tasks;
-//    tasks = taskService.findTasksByUserId(userId);
-//
-//        model.addAttribute("tasks", tasks);
-//        return "task/findByUserId";
     @GetMapping("/upcoming-days")
     public String getTasksDueInDays(@RequestParam(required = false) Integer days, Model model, HttpServletRequest request) throws Exception {
         cookieHelper.addCookieAttributes(request, model);
             List<Task> tasks;
-    //    tasks = taskService.findTasksByUserId(userId);
-    //
-    //        model.addAttribute("tasks", tasks);
-    //        return "task/findByUserId";
         System.out.println("1");
         if (days == null) {
             days = 365; // Nếu days không được truyền vào, mặc định là 7
