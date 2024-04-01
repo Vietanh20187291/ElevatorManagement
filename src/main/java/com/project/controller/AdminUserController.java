@@ -45,21 +45,22 @@ public class AdminUserController {
         model.addAttribute("userRequest", userRequest);
         return "user/admin/add";
     }
+//Sửa lại thêm phần building id vào
 
-    @PostMapping("/add")
-    public String addUser(HttpServletRequest request, @ModelAttribute("userRequest") User userRequest, RedirectAttributes redirectAttributes) {
-        try {
-            User user = userService.addUser(userRequest.getUsername(), userRequest.getPassword(), userRequest.getRole());
-            redirectAttributes.addFlashAttribute("message", "User has been added successfully");
-            redirectAttributes.addFlashAttribute("message", "Added successfully");
-            redirectAttributes.addFlashAttribute("messageType","success");
-            return "redirect:/admin/user/";
-        } catch (Exception e) {
-            String errorMessage = e.getMessage();
-            redirectAttributes.addFlashAttribute("message", errorMessage);
-            return "redirect:/admin/user/";
-        }
-    }
+//    @PostMapping("/add")
+//    public String addUser(HttpServletRequest request, @ModelAttribute("userRequest") User userRequest, RedirectAttributes redirectAttributes) {
+//        try {
+//            User user = userService.addUser(userRequest.getUsername(), userRequest.getPassword(), userRequest.getRole());
+//            redirectAttributes.addFlashAttribute("message", "User has been added successfully");
+//            redirectAttributes.addFlashAttribute("message", "Added successfully");
+//            redirectAttributes.addFlashAttribute("messageType","success");
+//            return "redirect:/admin/user/";
+//        } catch (Exception e) {
+//            String errorMessage = e.getMessage();
+//            redirectAttributes.addFlashAttribute("message", errorMessage);
+//            return "redirect:/admin/user/";
+//        }
+//    }
 
     @PostMapping("/update-role/{id}")
     public String updateUserRole(HttpServletRequest request, @PathVariable Integer id,
