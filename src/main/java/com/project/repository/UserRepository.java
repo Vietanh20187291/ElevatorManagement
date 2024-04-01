@@ -31,6 +31,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     int deactivateUser(@Param("userId") int userId);
 
 
+    @Query("SELECT u FROM User u WHERE u.building.id = :buildingId AND u.active = true")
+    List<User> getUsersByBuildingId(@Param("buildingId") int buildingId);
+
 
 }
 

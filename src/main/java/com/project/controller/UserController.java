@@ -52,7 +52,10 @@ public class UserController {
             if(userRequest.getRole() == UserRole.ADMIN || userRequest.getRole() == UserRole.MANAGER){
                 throw new Exception("You do not right to create Admin or Manager account");
             }
-            User user = userService.addUser(userRequest.getUsername(), userRequest.getPassword(), UserRole.USER);
+            String token = jwtTokenService.getTokenFromRequest(request);
+            User managerAdd = jwtTokenService.getUserFromToken(token);
+            User manager = userService.getUserById(managerAdd.getUserId());
+            userService.addUser(userRequest.getUsername(), userRequest.getPassword(), UserRole.USER, manager.getBuilding().getId());
             redirectAttributes.addFlashAttribute("message", "User has been added successfully");
             redirectAttributes.addFlashAttribute("message", "Added successfully");
             redirectAttributes.addFlashAttribute("messageType","success");
@@ -121,18 +124,15 @@ public class UserController {
 //        }
         return "redirect:/user/password";
     }
-//    @GetMapping
-//    public String getAllUsers(Model model, HttpServletRequest request) {
-//        cookieHelper.addCookieAttributes(request, model);
-//        List<UserDTO> users = userService.getAllUsers();
-//        model.addAttribute("users", users);
-//        return "user/users";
-//    }
+
 
     @GetMapping()
-    public String getAllUsers(Model model, HttpServletRequest request) {
+    public String getUsersByBuildingId(Model model, HttpServletRequest request) throws Exception {
+        String token = jwtTokenService.getTokenFromRequest(request);
+        User user = jwtTokenService.getUserFromToken(token);
+        User userDetail = userService.getUserById(user.getUserId());
         cookieHelper.addCookieAttributes(request, model);
-        List<UserDTO> users = userService.getUsersForManagers();
+        List<UserDTO> users = userService.getUsersByBuildingId(userDetail.getBuilding().getId());
         model.addAttribute("users", users);
         return "user/users";
     }

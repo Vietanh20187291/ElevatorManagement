@@ -156,14 +156,13 @@ public class UserService {
         }
     }
 
-    public User addUser(String username, String password, UserRole role) {
+    public void addUser(String username, String password, UserRole role, int buildingId) {
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
         user.setRole(role);
         user.setActive(true);
-
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
 
@@ -187,12 +186,12 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public List<UserDTO> getUsersForManagers() {
-        List<User> users = userRepository.findAll();
+    public List<UserDTO> getUsersByBuildingId(int buildingId) {
+        List<User> users = userRepository.getUsersByBuildingId(buildingId);
         List<UserDTO> userDTOs = new ArrayList<>();
 
         for (User user : users) {
-            if (user.getRole() != UserRole.ADMIN || user.getRole() != UserRole.MANAGER) {
+            if (user.getRole() != UserRole.ADMIN && user.getRole() != UserRole.MANAGER) {
                 if (user.isActive()) {
                     UserDTO userDTO = new UserDTO(user.getUserId(), user.getUsername(), user.getRole());
                     userDTOs.add(userDTO);
