@@ -16,17 +16,20 @@ public class Elevator {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "code", nullable = false, unique = true)
-    private String code;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "num_floors", nullable = false)
     private int numFloors;
 
-    @Column(name = "area_id")
+    @Column(name = "area_id", nullable = false)
     private int areaId;
 
+    @Column(name = "topic", nullable = false, unique = true)
+    private String topic;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "area_id", insertable = false, updatable = false)
+    @JoinColumn(name = "area_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Area area;
 
 }

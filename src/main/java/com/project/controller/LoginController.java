@@ -88,7 +88,8 @@ public class LoginController {
                 if (userDetail.getRole().equals(UserRole.ADMIN)) {
                     return "redirect:/admin/user";
                 } else if (userDetail.getRole().equals(UserRole.MANAGER)) {
-                    return "redirect:/user";
+//                    return "redirect:/user";
+                    return "redirect:/building/1";
                 } else {
                     return "redirect:/version/user/" + userDetail.getUserId();
                 }

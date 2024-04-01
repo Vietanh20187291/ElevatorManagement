@@ -132,7 +132,7 @@ public class UserController {
     @GetMapping()
     public String getAllUsers(Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
-        List<UserDTO> users = userService.getAllUsers();
+        List<UserDTO> users = userService.getUsersForManagers();
         model.addAttribute("users", users);
         return "user/users";
     }

@@ -17,8 +17,7 @@ public interface ProjectVersionRepository extends JpaRepository<ProjectVersion, 
     @Query("SELECT pv FROM ProjectVersion pv WHERE pv.enable = true")
     List<ProjectVersion> findAll();
 
-    @Query("SELECT pv FROM ProjectVersion pv WHERE pv.enable = true AND pv.projectVersionId = :projectVersionId")
-    Optional<ProjectVersion> findById(@Param("projectVersionId") Integer projectVersionId);
+
 
     @Query("SELECT pv FROM ProjectVersion pv WHERE pv.project.projectId = :projectId AND pv.enable = true")
     List<ProjectVersion> getProjectVersionByProjectId(@Param("projectId") Integer projectId);

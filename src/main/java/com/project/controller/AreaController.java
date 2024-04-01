@@ -4,10 +4,7 @@ import com.project.entity.*;
 import com.project.entity.enums.UserRole;
 import com.project.helper.CookieHelper;
 import com.project.helper.NotiHelper;
-import com.project.service.AreaService;
-import com.project.service.ElevatorService;
-import com.project.service.JwtTokenService;
-import com.project.service.UserService;
+import com.project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,7 +25,7 @@ public class AreaController {
     private ElevatorService elevatorService;
 
     @Autowired
-    private UserService userService;
+    private BuildingService buildingService;
 
     @Autowired
     private CookieHelper cookieHelper;
@@ -38,6 +35,8 @@ public class AreaController {
 
     @Autowired
     private NotiHelper notiHelper;
+    @Autowired
+    private ProjectVersionService projectVersionService;
 
     @GetMapping("/{areaId}")
     public String getAreaById(@PathVariable Integer areaId, Model model, HttpServletRequest request) {
@@ -53,8 +52,10 @@ public class AreaController {
     public String showAddElevatorForm(@PathVariable Integer areaId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
         Elevator elevator = new Elevator();
+        Area area = areaService.getAreaById(areaId);
         model.addAttribute("elevator", elevator);
-        return "area/add_elevator";
+        model.addAttribute("area", area);
+        return "elevator/add";
     }
 
     @PostMapping("/{areaId}/add-elevator")
@@ -76,6 +77,9 @@ public class AreaController {
     public String showEditAreaForm(@PathVariable Integer areaId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
         Area area = areaService.getAreaById(areaId);
+        System.out.println("PV id"+projectVersionService.getProjectVersionById(1).getProject().getProjectId());
+        System.out.println("building id"+area.getBuilding().getName());
+        area.setBuilding(buildingService.getBuildingById(1));
         model.addAttribute("area", area);
         return "area/edit";
     }
@@ -83,9 +87,20 @@ public class AreaController {
     @PostMapping("/{areaId}/edit")
     public String updateArea(@PathVariable Integer areaId,
                              @ModelAttribute("area") Area area,
-                             RedirectAttributes redirectAttributes, HttpServletRequest request) {
+                             RedirectAttributes redirectAttributes, HttpServletRequest request) throws Exception {
+
         int actor = Integer.valueOf(cookieHelper.getUserId(request));
-        notiHelper.createNotiForAllManagers(actor,"updated area with id: " + areaId);
+        notiHelper.createNotiForAllManagers(actor, "updated area " + area.getName() + " with ID " + area.getId());
+
+        String token = jwtTokenService.getTokenFromRequest(request);
+        User user = jwtTokenService.getUserFromToken(token);
+        String redirectLink = "";
+
+        if (user.getRole().equals(UserRole.MANAGER)) {
+            redirectLink = "redirect:/area/" + areaId;
+        } else if (user.getRole().equals(UserRole.USER)) {
+            redirectLink = "redirect:/area/user/" + user.getUserId();
+        }
 
         try {
             area.setId(areaId);
@@ -95,9 +110,9 @@ public class AreaController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
             redirectAttributes.addFlashAttribute("messageType", "error");
-            return "redirect:/area/" + areaId + "/edit";
+            return redirectLink;
         }
-        return "redirect:/area/" + areaId;
+        return redirectLink;
     }
 
 }

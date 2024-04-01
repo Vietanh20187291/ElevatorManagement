@@ -138,7 +138,7 @@ public class UserService {
 
     }
 
-    public User getUserByUsername(String username){
+    public User getUserByUsername(String username) {
         Optional<User> user = userRepository.getUserByUsername(username);
         if (user.isPresent()) {
             return user.get();
@@ -147,7 +147,7 @@ public class UserService {
         }
     }
 
-    public User getUserById(int id){
+    public User getUserById(int id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             return user.get();
@@ -155,6 +155,7 @@ public class UserService {
             throw new RuntimeException("User not found");
         }
     }
+
     public User addUser(String username, String password, UserRole role) {
         User user = new User();
         user.setUsername(username);
@@ -166,11 +167,10 @@ public class UserService {
     }
 
 
-
-
-    public void deactivateUser(int userId){
+    public void deactivateUser(int userId) {
         userRepository.deactivateUser(userId);
     }
+
     public User updateUserRole(int userId, UserRole newRole) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -186,12 +186,13 @@ public class UserService {
 
         return userRepository.save(user);
     }
-    public List<UserDTO> getAllUsers() {
+
+    public List<UserDTO> getUsersForManagers() {
         List<User> users = userRepository.findAll();
         List<UserDTO> userDTOs = new ArrayList<>();
 
         for (User user : users) {
-            if(user.getRole() != UserRole.ADMIN) {
+            if (user.getRole() != UserRole.ADMIN || user.getRole() != UserRole.MANAGER) {
                 if (user.isActive()) {
                     UserDTO userDTO = new UserDTO(user.getUserId(), user.getUsername(), user.getRole());
                     userDTOs.add(userDTO);
@@ -203,5 +204,22 @@ public class UserService {
     }
 
 
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserDTO> userDTOs = new ArrayList<>();
+
+        for (User user : users) {
+            if (user.getRole() != UserRole.ADMIN || user.getRole() != UserRole.ADMIN) {
+                if (user.isActive()) {
+                    UserDTO userDTO = new UserDTO(user.getUserId(), user.getUsername(), user.getRole());
+                    userDTOs.add(userDTO);
+                }
+            }
+        }
+
+        return userDTOs;
+    }
+
 
 }
+

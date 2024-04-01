@@ -23,7 +23,7 @@ public class AreaService {
     }
 
     public void updateArea(Area area) {
-        areaRepository.save(area);
+        areaRepository.updateArea(area);
     }
 
     public void addArea(Area area) {

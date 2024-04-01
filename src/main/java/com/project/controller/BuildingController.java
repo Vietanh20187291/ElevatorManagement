@@ -24,12 +24,6 @@ public class BuildingController {
     @Autowired
     private AreaService areaService;
 
-//    @GetMapping("/{buildingId}")
-//    public String getBuildingById(@PathVariable Integer buildingId, Model model, HttpServletRequest request) {
-//        Building building = buildingService.getBuildingById(buildingId);
-//        model.addAttribute("building", building);
-//        return "building/detail";
-//    }
 
     @GetMapping("/name/{name}")
     public String getBuildingByName(@PathVariable String name, Model model, HttpServletRequest request) {
