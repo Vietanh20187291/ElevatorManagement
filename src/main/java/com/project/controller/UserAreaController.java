@@ -2,7 +2,6 @@ package com.project.controller;
 
 import com.project.entity.UserArea;
 import com.project.entity.Area;
-import com.project.entity.User;
 import com.project.entity.UserDTO;
 import com.project.service.UserAreaService;
 import com.project.service.AreaService;
@@ -21,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
-@RequestMapping("/user-area")
+@RequestMapping("/permission")
 public class UserAreaController {
 
     @Autowired
@@ -36,7 +35,7 @@ public class UserAreaController {
     @Autowired
     private JwtTokenService jwtTokenService;
 
-    @GetMapping("/permission")
+    @GetMapping
     public String managePermissions(Model model, HttpServletRequest request) {
         try {
             String token = jwtTokenService.getTokenFromRequest(request);
@@ -56,7 +55,7 @@ public class UserAreaController {
             model.addAttribute("areas", areas);
             model.addAttribute("users", users);
 
-            return "userarea/permissions";
+            return "/userarea/permission";
         } catch (Exception e) {
             System.out.println(e.getMessage());
             model.addAttribute("errorMessage", "An error occurred while processing your request.");
