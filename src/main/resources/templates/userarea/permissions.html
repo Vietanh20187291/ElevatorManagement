@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Permissions</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .card {
+            margin-bottom: 20px;
+        }
+        .user-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .user-list li {
+            margin-bottom: 5px;
+        }
+        .user-list li .btn {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Manage Permissions</h2>
+    <div class="row">
+        <div th:each="area : ${areas}" class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 th:text="${area.name}"></h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="attendee-section">
+                                <span>Attendee: </span>
+                                <span th:each="userArea : ${userAreas}" th:if="${userArea.area.id == area.id}">
+                                    <span th:text="${userArea.user.username}" class="font-weight-bold"></span><span>, </span>
+                                </span>
+                            </div>
+                            <form th:action="@{/user-area/permission/delete}" method="post">
+                                <input type="hidden" name="areaId" th:value="${area.id}">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="userDropdown">Select User</label>
+                                    </div>
+                                    <select class="custom-select" id="userDropdown" name="userId">
+                                        <option selected disabled>Choose...</option>
+                                        <option th:each="user : ${users}" th:value="${user.userId}" th:text="${user.username}"></option>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-danger">Delete From Area</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <form th:action="@{/user-area/permission/add}" method="post">
+                                <input type="hidden" name="areaId" th:value="${area.id}">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" for="userDropdown">Select User</label>
+                                    </div>
+                                    <select class="custom-select" id="userDropdown" name="userId">
+                                        <option selected disabled>Choose...</option>
+                                        <option th:each="user : ${users}" th:value="${user.userId}" th:text="${user.username}"></option>
+                                    </select>
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-primary">Add User</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

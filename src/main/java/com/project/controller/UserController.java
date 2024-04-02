@@ -53,9 +53,8 @@ public class UserController {
                 throw new Exception("You do not right to create Admin or Manager account");
             }
             String token = jwtTokenService.getTokenFromRequest(request);
-            User managerAdd = jwtTokenService.getUserFromToken(token);
-            User manager = userService.getUserById(managerAdd.getUserId());
-            userService.addUser(userRequest.getUsername(), userRequest.getPassword(), UserRole.USER, manager.getBuilding().getId());
+            int buildingId = jwtTokenService.getBuildingIdFromToken(token);
+            userService.addUser(userRequest.getUsername(), userRequest.getPassword(), UserRole.USER, buildingId);
             redirectAttributes.addFlashAttribute("message", "User has been added successfully");
             redirectAttributes.addFlashAttribute("message", "Added successfully");
             redirectAttributes.addFlashAttribute("messageType","success");

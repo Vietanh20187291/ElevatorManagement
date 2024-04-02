@@ -23,14 +23,17 @@ public class JwtTokenService {
     @Autowired
     private UserService userService;
 
-    public String generateToken(int userId, UserRole role) {
+    public String generateToken(int userId, UserRole role, int buildingId) {
         return Jwts.builder()
                 .setSubject(String.valueOf(userId))
                 .claim("role", role)
+                .claim("buildingId", buildingId)
                 .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
     }
+
+
 
     public boolean validateToken(String token) {
         try {
@@ -69,4 +72,13 @@ public class JwtTokenService {
         Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
         return UserRole.valueOf(claims.get("role").toString());
     }
+    public int getBuildingIdFromToken(String token) throws Exception {
+        try {
+            Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+            return (int) claims.get("buildingId");
+        } catch (Exception e) {
+            throw new Exception("Failed to extract buildingId from token: " + e.getMessage());
+        }
+    }
+
 }

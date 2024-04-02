@@ -44,7 +44,6 @@ public class UserService {
             userFromDB = userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
         } catch (Exception e) {
             System.out.println(e.getMessage());
-
         }
         if (userFromDB != null && userFromDB.isActive()) {
             return true;
@@ -208,7 +207,7 @@ public class UserService {
         List<UserDTO> userDTOs = new ArrayList<>();
 
         for (User user : users) {
-            if (user.getRole() != UserRole.ADMIN || user.getRole() != UserRole.ADMIN) {
+            if (user.getRole() != UserRole.ADMIN || user.getRole() != UserRole.MANAGER) {
                 if (user.isActive()) {
                     UserDTO userDTO = new UserDTO(user.getUserId(), user.getUsername(), user.getRole());
                     userDTOs.add(userDTO);

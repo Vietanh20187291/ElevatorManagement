@@ -60,7 +60,7 @@ public class LoginController {
             if (isAuthenticated) {
 
                 User userDetail = userService.getUserByUsername(user.getUsername());
-                String jwtToken = jwtTokenService.generateToken(userDetail.getUserId(), userDetail.getRole());
+                String jwtToken = jwtTokenService.generateToken(userDetail.getUserId(), userDetail.getRole(),userDetail.getBuilding().getId());
                 System.out.println("User "+userDetail.getUsername());
                 System.out.println("Role " + userDetail.getRole());
                 // Tạo cookie chứa token
@@ -101,10 +101,9 @@ public class LoginController {
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
-    return null;
-        }
+        return null;
     }
-
+}
 
 
 
