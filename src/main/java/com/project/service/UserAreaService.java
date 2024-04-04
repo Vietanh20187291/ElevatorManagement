@@ -31,8 +31,14 @@ public class UserAreaService {
         }
     }
 
-    @Transactional
     public void addUserArea(UserArea userArea) {
+        int userId = userArea.getUser().getUserId();
+        int areaId = userArea.getArea().getId();
+
+        if (userAreaRepository.checkDuplicates(userId, areaId)) {
+            throw new RuntimeException("Duplicate: User ID " + userId + " 's permission with Area ID " + areaId + " already exist.");
+        }
+
         userAreaRepository.save(userArea);
     }
 

@@ -47,13 +47,10 @@ public class UserAreaController {
             // Lấy danh sách người dùng theo buildingId
             List<UserDTO> users = userService.getUsersByBuildingId(buildingId);
 
-            UserArea userAreaAdd = new UserArea();
-
             // Đưa các danh sách vào model
             model.addAttribute("userAreas", userAreas);
             model.addAttribute("areas", areas);
             model.addAttribute("users", users);
-            model.addAttribute("userAreaAdd", userAreaAdd);
 
             return "/userarea/permission";
         } catch (Exception e) {
@@ -84,7 +81,7 @@ public class UserAreaController {
         try {
             // Tạo một UserArea từ userId và areaId và thực hiện thêm quyền
             UserArea userArea = new UserArea();
-            userArea.setUser(userService.getUserById(userId)); // Đây là giả sử userService.getUserById(userId) trả về đối tượng User tương ứng với userId
+            userArea.setUser(userService.getUserById(userId));
             userArea.setArea(areaService.getAreaById(areaId)); // Giả sử areaService.getAreaById(areaId) trả về đối tượng Area tương ứng với areaId
             userAreaService.addUserArea(userArea);
             redirectAttributes.addFlashAttribute("message", "Permission added successfully.");

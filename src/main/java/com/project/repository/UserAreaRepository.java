@@ -24,4 +24,7 @@ public interface UserAreaRepository extends JpaRepository<UserArea, Integer> {
     @Query("SELECT ua FROM UserArea ua INNER JOIN ua.user u WHERE u.building.id = :buildingId AND u.active = true AND u.role = 'USER'")
     List<UserArea> getUserAreaByBuildingId(@Param("buildingId") int buildingId);
 
+    @Query("SELECT CASE WHEN COUNT(ua) > 0 THEN true ELSE false END FROM UserArea ua WHERE ua.user.userId = :userId AND ua.area.id = :areaId")
+    boolean checkDuplicates(@Param("userId") int userId, @Param("areaId") int areaId);
+
 }
