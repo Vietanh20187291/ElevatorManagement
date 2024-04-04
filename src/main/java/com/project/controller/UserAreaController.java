@@ -76,4 +76,30 @@ public class UserAreaController {
         }
         return "redirect:/user-area/permission";
     }
+
+    @PostMapping("/add")
+    public String addPermission(@RequestParam("userArea") UserArea userArea,
+                                RedirectAttributes redirectAttributes) {
+        try {
+            userAreaService.addUserArea(userArea);
+            redirectAttributes.addFlashAttribute("message", "Permission added successfully.");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", "An error occurred while adding permission.");
+        }
+        return "redirect:/permission"; // Điều hướng đến trang quản lý permissions
+    }
+
+    @PostMapping("/delete")
+    public String deletePermission(@RequestParam("userAreaId") int userAreaId,
+                                   RedirectAttributes redirectAttributes) {
+        try {
+            userAreaService.deleteById(userAreaId);
+            redirectAttributes.addFlashAttribute("message", "Permission deleted successfully.");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", "An error occurred while deleting permission.");
+        }
+        return "redirect:/permission"; // Điều hướng đến trang quản lý permissions
+    }
 }

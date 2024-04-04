@@ -40,22 +40,27 @@
                                     <span th:text="${userArea.user.username}" class="font-weight-bold"></span><span>  </span>
                                 </span>
                             </div>
-                            <form th:action="@{/user-area/permission/delete}" method="post">
-                                <input type="hidden" name="areaId" th:value="${area.id}">
+                            <form th:action="@{/permission/delete}" method="post">
+<!--                                <input type="hidden" name="userAreaId" th:value="${userAreaId}">-->
+<!--                                <input type="hidden" name="areaId" th:value="${area.id}">-->
                                 <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <label class="input-group-text" for="userDropdownDelete">Select User</label>
-                                    </div>
-                                    <select class="custom-select" id="userDropdownDelete" name="userId">
-                                        <option selected disabled>Choose...</option>
-                                        <option th:each="userArea : ${userAreas}" th:if="${userArea.area.id == area.id}" th:value="${userArea.user.userId}" th:text="${userArea.user.username}"></option>
-                                    </select>
-                                    <div class="input-group-append">
-                                        <button type="submit" class="btn btn-danger">Delete Permission</button>
-                                    </div>
+                                    <form th:action="@{/permission/delete}" method="post">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text" for="userDropdownDelete">Select User</label>
+                                        </div>
+                                        <select class="custom-select" id="userDropdownDelete" name="userAreaId">
+                                            <option selected disabled>Choose...</option>
+                                            <option th:each="userArea : ${userAreas}" th:if="${userArea.area.id == area.id}" th:value="${userArea.id}" th:text="${userArea.user.username}"></option>
+                                        </select>
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-danger">Delete Permission</button>
+                                        </div>
+                                    </form>
+
                                 </div>
-                            </form>
-                            <form th:action="@{/user-area/permission/add}" method="post">
+
+
+                            <form th:action="@{/permission/add}" method="post">
                                 <input type="hidden" name="areaId" th:value="${area.id}">
                                 <div class="input-group mb-3">
                                     <div class="input-group-prepend">

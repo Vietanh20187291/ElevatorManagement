@@ -30,4 +30,14 @@ public class UserAreaService {
             userAreaRepository.saveAll(userAreas);
         }
     }
+
+    @Transactional
+    public void addUserArea(UserArea userArea) {
+        userAreaRepository.save(userArea);
+    }
+
+    @Transactional
+    public void deleteById(int userAreaId) {
+        userAreaRepository.deleteById(userAreaId);
+    }
 }
