@@ -1,5 +1,6 @@
 package com.project.service;
 
+import com.project.entity.Building;
 import com.project.entity.User;
 import com.project.entity.UserDTO;
 import com.project.entity.enums.UserRole;
@@ -155,11 +156,12 @@ public class UserService {
         }
     }
 
-    public void addUser(String username, String password, UserRole role, int buildingId) {
+    public void addUser(String username, String password, UserRole role, Building building) {
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
         user.setRole(role);
+        user.setBuilding(building);
         user.setActive(true);
         userRepository.save(user);
     }

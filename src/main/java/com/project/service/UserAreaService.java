@@ -36,7 +36,7 @@ public class UserAreaService {
         int areaId = userArea.getArea().getId();
 
         if (userAreaRepository.checkDuplicates(userId, areaId)) {
-            throw new RuntimeException("Duplicate: User ID " + userId + " 's permission with Area ID " + areaId + " already exist.");
+            throw new RuntimeException("Duplicate: User ID " + userId + "'s permission with Area ID " + areaId + " already exist.");
         }
 
         userAreaRepository.save(userArea);

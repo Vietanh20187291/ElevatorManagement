@@ -1,10 +1,12 @@
 package com.project.controller;
 
+import com.project.entity.Building;
 import com.project.entity.JwtResponse;
 import com.project.entity.User;
 import com.project.entity.UserDTO;
 import com.project.entity.enums.UserRole;
 import com.project.helper.CookieHelper;
+import com.project.service.BuildingService;
 import com.project.service.JwtTokenService;
 import com.project.service.UserService;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
@@ -37,6 +39,8 @@ public class UserController {
     JwtTokenService jwtTokenService;
     @Autowired
     private CookieHelper cookieHelper;
+    @Autowired
+    private BuildingService buildingService;
 
     @GetMapping("/add")
     public String addUser(Model model, HttpServletRequest request) {
@@ -54,7 +58,8 @@ public class UserController {
             }
             String token = jwtTokenService.getTokenFromRequest(request);
             int buildingId = jwtTokenService.getBuildingIdFromToken(token);
-            userService.addUser(userRequest.getUsername(), userRequest.getPassword(), UserRole.USER, buildingId);
+            Building building = buildingService.getBuildingById(buildingId);
+            userService.addUser(userRequest.getUsername(), userRequest.getPassword(), UserRole.USER, building);
             redirectAttributes.addFlashAttribute("message", "User has been added successfully");
             redirectAttributes.addFlashAttribute("message", "Added successfully");
             redirectAttributes.addFlashAttribute("messageType","success");
