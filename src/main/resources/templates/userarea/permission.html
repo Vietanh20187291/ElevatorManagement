@@ -41,8 +41,8 @@
                                 </span>
                             </div>
                             <form th:action="@{/permission/delete}" method="post">
-<!--                                <input type="hidden" name="userAreaId" th:value="${userAreaId}">-->
-<!--                                <input type="hidden" name="areaId" th:value="${area.id}">-->
+                                <!--                                <input type="hidden" name="userAreaId" th:value="${userAreaId}">-->
+                                <!--                                <input type="hidden" name="areaId" th:value="${area.id}">-->
                                 <div class="input-group mb-3">
                                     <form th:action="@{/permission/delete}" method="post">
                                         <div class="input-group-prepend">
@@ -60,23 +60,23 @@
                                 </div>
 
 
-                            <form th:action="@{/permission/add}" method="post">
-                                <input type="hidden" name="areaId" th:value="${area.id}">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <label class="input-group-text" for="userDropdownAdd">Select User</label>
+                                <!-- Form Add -->
+                                <form th:action="@{/permission/add}" method="post">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text" for="userDropdownAdd">Select User</label>
+                                        </div>
+                                        <select class="custom-select" id="userDropdownAdd" name="userId">
+                                            <option selected disabled>Choose...</option>
+                                            <option th:each="user : ${users}" th:value="${user.userId}" th:text="${user.username}"></option>
+                                        </select>
+                                        <input type="hidden" name="areaId" th:value="${area.id}" />
+                                        <button type="submit" class="btn btn-success">Add Permission</button>
                                     </div>
-                                    <select class="custom-select" id="userDropdownAdd" name="userId">
-                                        <option selected disabled>Choose...</option>
-                                        <th:block th:each="user : ${users}">
-                                            <option th:value="${user.userId}" th:text="${user.username}"></option>
-                                        </th:block>
-                                    </select>
-                                    <div class="input-group-append">
-                                        <button type="submit" class="btn btn-primary">Add Permission</button>
-                                    </div>
-                                </div>
-                            </form>
+                                </form>
+
+
+
 
                         </div>
                     </div>
