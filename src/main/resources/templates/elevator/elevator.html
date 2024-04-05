@@ -57,6 +57,12 @@
         #connectStatus {
             width: 100px;
         }
+        .input-info{
+            width: auto; /* Cho phép input mở rộng tự động theo nội dung bên trong */
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
@@ -100,12 +106,14 @@
                 <h3 class="card-title my-4">Elevator Info:</h3>
                 <div class="card">
                     <div class="card-body">
-                        <input id="numFloors" name="elevator" readonly th:value="${elevator.numFloors}" hidden>
                         <div class="text-start mb-3">
-                            Elevator: <input id="elevator" name="elevator" readonly th:value="${elevator.name}">
+                            Elevator: <input id="elevator" class="input-info" name="elevator" readonly th:value="${elevator.name}">
                         </div>
                         <div class="text-start mb-3">
-                            Status: <input id="connectStatus" name="connectStatus" readonly value="Disconnected">
+                            Number of Floors: <input class="input-info" id="numFloors" name="elevator" readonly th:value="${elevator.numFloors}">
+                        </div>
+                        <div class="text-start mb-3">
+                            Status: <input id="connectStatus" class="input-info" name="connectStatus" readonly value="Disconnected">
                         </div>
                         <div class="text-center">
                             <button class="btn btn-primary btn-lg mr-2" id="btnConnect" onclick="startConnect()"
