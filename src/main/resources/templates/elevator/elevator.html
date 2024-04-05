@@ -60,10 +60,15 @@
     </style>
 </head>
 <body>
-<div id="head-title">TKE Monitoring & Controlling System</div>
-<div class="container" id="elevator-panel">
-    <input id="messages" readonly>
+<div th:replace="fragments/header :: header"></div>
 
+<div class="container" id="elevator-panel"style="margin-top: 0; padding-top: 0;">
+    <input id="messages" readonly>
+    <div class="row">
+        <div class="col text-center">
+            <h1>Elevator Controlling</h1>
+        </div>
+    </div>
     <div class="table-responsive">
         <h3 class="card-title my-4">Elevator Status:</h3>
         <table class="table table-bordered text-center">
@@ -95,8 +100,9 @@
                 <h3 class="card-title my-4">Elevator Info:</h3>
                 <div class="card">
                     <div class="card-body">
+                        <input id="numFloors" name="elevator" readonly th:value="${elevator.numFloors}" hidden>
                         <div class="text-start mb-3">
-                            Elevator: <input id="elevator" name="elevator" readonly value="P1">
+                            Elevator: <input id="elevator" name="elevator" readonly th:value="${elevator.name}">
                         </div>
                         <div class="text-start mb-3">
                             Status: <input id="connectStatus" name="connectStatus" readonly value="Disconnected">
@@ -121,7 +127,7 @@
                             <table class="table table-bordered mx-auto">
                                 <thead>
                                 <tr>
-                                    <th class="text-center">Select Floor</th>
+                                    <th class="text-center">Enter Floor</th>
                                     <th class="text-center">Action</th>
                                 </tr>
                                 </thead>
@@ -130,13 +136,7 @@
                                     <td class="text-center">
                                         <div class="input-group justify-content-center"> <!-- Thêm justify-content-center để căn giữa -->
                                             <div class="input-group-prepend">
-                                                <select class="form-select form-select-lg" id="callup" name="callup">
-                                                    <option selected>Select Floor</option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                    <!-- Add more options for additional floors -->
-                                                </select>
+                                                <input type="number" class="form-control input-floor-nums" id="callup" name="callup" min="1" max="${elevator.numFloors}" required>
                                             </div>
                                         </div>
                                     </td>
@@ -151,13 +151,7 @@
                                     <td class="text-center">
                                         <div class="input-group justify-content-center">
                                             <div class="input-group-prepend">
-                                                <select class="form-select form-select-lg" id="calldn" name="calldn">
-                                                    <option selected>Select Floor</option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                    <!-- Add more options for additional floors -->
-                                                </select>
+                                                <input type="number" class="form-control input-floor-nums" id="calldn" name="calldn" min="1" max="${elevator.numFloors}" required>
                                             </div>
                                         </div>
                                     </td>
@@ -172,13 +166,7 @@
                                     <td class="text-center">
                                         <div class="input-group justify-content-center">
                                             <div class="input-group-prepend">
-                                                <select class="form-select form-select-lg" id="carcall" name="carcall">
-                                                    <option selected>Select Floor</option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                    <!-- Add more options for additional floors -->
-                                                </select>
+                                                <input type="number" class="form-control input-floor-nums" id="carcall" name="carcall" min="1" max="${elevator.numFloors}" required>
                                             </div>
                                         </div>
                                     </td>
@@ -208,9 +196,14 @@
         </div>
 
     </div>
+    <div class="text-end">
+        <a class="btn btn-secondary" th:href="@{/area/{areaid}(areaid=${elevator.areaId})}">
+            Back
+        </a>
+    </div>
 </div>
 <script type="text/javascript">
-    var host = 'tkevn.ddns.net';	// hostname or IP address
+    var host = 'tkevn.ddns.net';
     var port = 8001;
     var useTLS = false;
     var username = "user1";
@@ -218,6 +211,9 @@
     cleansession = true;
     var mqtt;
     var reconnectTimeout = 2000;
+    var elevator = document.getElementById("elevator").value;
+    var numFloors = parseInt(document.getElementById("numFloors").value);
+    console.log(elevator);
 
     function startConnect() {
         if (typeof path == "undefined") {
@@ -266,26 +262,26 @@
         $('#connectStatus').val('Connected');//status "+ host + ':' + port + path"
 
         // Connection succeeded; subscribe to lift of topic:display
-        for (var i = 0; i < 8; i++) {
+        // for (var i = 0; i < 8; i++) {
 
-            var subscribetopicdisplay = "P" + (i + 1).toString().toUpperCase() + "/display1";
+            var subscribetopicdisplay = elevator + "/display";
             mqtt.subscribe(subscribetopicdisplay, {qos: 0});
             console.log(subscribetopicdisplay)
             $('#subscribetopic').val(subscribetopicdisplay);
-            var subscribetopicdoorstatus = "P" + (i + 1).toString().toUpperCase() + "/doorstatus";
+            var subscribetopicdoorstatus = elevator + "/doorstatus";
             mqtt.subscribe(subscribetopicdoorstatus, {qos: 0});
             console.log(subscribetopicdisplay)
             $('#subscribetopicdisplay').val(subscribetopicdoorstatus);
-            var subscribetopicdirection = "P" + (i + 1).toString().toUpperCase() + "/direction";
+            var subscribetopicdirection = elevator + "/direction";
             mqtt.subscribe(subscribetopicdirection, {qos: 0});
             $('#subscribetopic').val(subscribetopicdirection);
-            var subscribetopiconoff = "P" + (i + 1).toString().toUpperCase() + "/onoff";
+            var subscribetopiconoff = elevator + "/onoff";
             mqtt.subscribe(subscribetopiconoff, {qos: 0});
             $('#subscribetopic').val(subscribetopiconoff);
-            var subscribetopicliftstatus = "P" + (i + 1).toString().toUpperCase() + "/liftstatus";
+            var subscribetopicliftstatus = elevator + "/liftstatus";
             mqtt.subscribe(subscribetopicliftstatus, {qos: 0});
             $('#subscribetopic').val(subscribetopicliftstatus);
-        }
+        // }
         /*
          // Connection succeeded; subscribe to lift of topic:doorstatus
         mqtt.subscribe(doorstatusp, {qos: 0});
@@ -312,14 +308,14 @@
 
         var topic = message.destinationName;
         var payload = message.payloadString;
-        if (topic == document.getElementById("elevator").value + "/doorstatus") //
+        if (topic == elevator + "/doorstatus") //
         {
             if (payload.toUpperCase() == "CLOSED") {
                 $('#doorstatus').val(payload.toUpperCase());
             } else if (payload.toUpperCase() == "OPENED") {
                 $('#doorstatus').val(payload.toUpperCase());
             }
-        } else if (topic == document.getElementById("elevator").value + "/display1") {
+        } else if (topic == elevator + "/display") {
             if (payload.toUpperCase() == "1" || payload.toUpperCase() == "2" || payload.toUpperCase() == "3" || payload.toUpperCase() == "4" || payload.toUpperCase() == "5" ||
                 payload.toUpperCase() == "6" || payload.toUpperCase() == "7" || payload.toUpperCase() == "8" || payload.toUpperCase() == "9" || payload.toUpperCase() == "10" ||
                 payload.toUpperCase() == "11" || payload.toUpperCase() == "12" || payload.toUpperCase() == "13" || payload.toUpperCase() == "14" || payload.toUpperCase() == "15" ||
@@ -333,7 +329,7 @@
                 $('#display').val(payload.toUpperCase());
             }
 
-        } else if (topic == document.getElementById("elevator").value + "/direction") {
+        } else if (topic == elevator + "/direction") {
             if (payload.toUpperCase() == "UP") {
                 $('#direction').val('\u2191')
             } else if (payload.toUpperCase() == "DN") {
@@ -341,7 +337,7 @@
             } else if (payload.toUpperCase() == "STP") {
                 $('#direction').val('_')
             }
-        } else if (topic == document.getElementById("elevator").value + "/onoff") {
+        } else if (topic == elevator + "/onoff") {
             if (payload.toUpperCase() == "STP") {
                 $('#direction').val('LIFT-OFF')
             } else if (payload.toUpperCase() == "ON") {
@@ -351,7 +347,7 @@
                 $('#onoff').val('OFF')
 
             }
-        } else if (topic == document.getElementById("elevator").value + "/liftstatus") {
+        } else if (topic == elevator + "/liftstatus") {
             if (payload.toUpperCase() == "JU" || payload.toUpperCase() == "IF" || payload.toUpperCase() == "AUTO" || payload.toUpperCase() == "FULL" ||
                 payload.toUpperCase() == "FIRE" || payload.toUpperCase() == "OVERLOAD" || payload.toUpperCase() == "--" || payload.toUpperCase() == "ATT"
                 || payload.toUpperCase() == "PAK")
@@ -388,15 +384,15 @@
     //function in clycle
     function myTimer() {
         var msg1 = i.toString();
-        var topic1 = "P1/display";
+        var topic1 = elevator+ "/display";
         var msg2 = "up";
-        var topic2 = "P1/direction";
+        var topic2 = elevator+ "/direction";
         var msg3 = "on";
-        var topic3 = "P1/onoff";
+        var topic3 = elevator+ "/onoff";
         var msg4 = "closed";
-        var topic4 = "P1/doorstatus";
+        var topic4 = elevator+ "/doorstatus";
         var msg5 = "auto";
-        var topic5 = "P1/liftstatus";
+        var topic5 = elevator+ "/liftstatus";
         if (i % 3 == 0) msg4 = "opened";
         Message1 = new Paho.MQTT.Message(msg1);
         Message1.destinationName = topic1;
@@ -419,7 +415,7 @@
 
     function attClick() {
         var msg = "att activation";
-        var topic = document.getElementById("elevator").value + "/" + "att";
+        var topic = elevator + "/" + "att";
         Message = new Paho.MQTT.Message(msg);
         Message.destinationName = topic;
         mqtt.send(Message);
@@ -428,7 +424,7 @@
 
     function opendoor() {
         var msg = "door is opened";
-        var topic = document.getElementById("elevator").value + "/" + "dooropened";
+        var topic = elevator + "/" + "dooropened";
         Message = new Paho.MQTT.Message(msg);
         Message.destinationName = topic;
         mqtt.send(Message);
@@ -437,7 +433,7 @@
 
     function closedoor() {
         var msg = "door is closed";
-        var topic = document.getElementById("elevator").value + "/" + "doorclosed";
+        var topic = elevator + "/" + "doorclosed";
         Message = new Paho.MQTT.Message(msg);
         Message.destinationName = topic;
         mqtt.send(Message);
@@ -446,7 +442,14 @@
 
     function carcallClick() {
         var msg = document.getElementById("carcall").value;
-        var topic = document.getElementById("elevator").value + "/" + "carcall";
+        var topic = elevator + "/" + "carcall";
+
+        var value = parseInt(msg);
+        if (isNaN(value) || value < 0 || value > numFloors) {
+            alert('Invalid Floor Number');
+            return;
+        }
+
         Message = new Paho.MQTT.Message(msg);
         Message.destinationName = topic;
         mqtt.send(Message);
@@ -455,7 +458,14 @@
 
     function callupClick() {
         var msg = document.getElementById("callup").value;
-        var topic = document.getElementById("elevator").value + "/" + "callup";
+        var topic = elevator + "/" + "callup";
+
+        var value = parseInt(msg);
+        if (isNaN(value) || value < 0 || value > numFloors){
+            alert('Invalid Floor Number');
+            return;
+        }
+
         Message = new Paho.MQTT.Message(msg);
         Message.destinationName = topic;
         mqtt.send(Message);
@@ -464,12 +474,33 @@
 
     function calldnClick() {
         var msg = document.getElementById("calldn").value;
-        var topic = document.getElementById("elevator").value + "/" + "calldn";
+        var topic = elevator + "/" + "calldn";
+
+        var value = parseInt(msg);
+        if (isNaN(value) || value < 0 || value > numFloors) {
+            alert('Invalid Floor Number');
+            return;
+        }
+
         Message = new Paho.MQTT.Message(msg);
         Message.destinationName = topic;
         mqtt.send(Message);
         document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var inputFloorNums = document.getElementById('input-floor-nums');
+
+        inputFloorNums.addEventListener('input', function() {
+            var value = parseInt(inputFloorNums.value);
+
+            if (isNaN(value) || value > 50) {
+                inputFloorNums.value = '';
+                alert('Vui lòng nhập số không vượt quá 50');
+            }
+        });
+    });
+
 </script>
 <script crossorigin="anonymous"
         integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5/9gG0G5HQpO/pL3E9wKmODFFPng5G0yJGoi6S9D"
