@@ -69,7 +69,7 @@
 <div th:replace="fragments/header :: header"></div>
 
 <div class="container" id="elevator-panel"style="margin-top: 0; padding-top: 0;">
-    <input id="messages" readonly>
+<!--    <input id="messages" readonly>-->
     <div class="row">
         <div class="col text-center">
             <h1>Elevator Controlling</h1>
@@ -93,7 +93,10 @@
                 <td><input id="display" name="display" readonly type="text" value="1"></td>
                 <td><input id="direction" name="direction" readonly type="text" value="↑"></td>
                 <td><input id="onoff" name="onoff" readonly type="text" value="ON"></td>
-                <td><input id="doorstatus" name="doorstatus" readonly type="text" value="Open"></td>
+                <td>
+<!--                    <input id="doorstatus" name="doorstatus" readonly type="text" value="Open">-->
+                    <img id="doorImage" src="/images/dooropen" alt="Door Status" style="height: 2em; width: auto;">
+                </td>
                 <td><input id="liftstatus" name="liftstatus" readonly type="text" value="Auto"></td>
                 <td><input id="att" onclick="attClick()" readonly type="text" value="Active"></td>
                 <!-- Add more rows for additional floors -->
@@ -319,9 +322,11 @@
         if (topic == elevator + "/doorstatus") //
         {
             if (payload.toUpperCase() == "CLOSED") {
-                $('#doorstatus').val(payload.toUpperCase());
+                document.getElementById("doorImage").src = "/images/doorclose";
+                // $('#doorstatus').val(payload.toUpperCase());
             } else if (payload.toUpperCase() == "OPENED") {
-                $('#doorstatus').val(payload.toUpperCase());
+                document.getElementById("doorImage").src = "/images/dooropen";
+                // $('#doorstatus').val(payload.toUpperCase());
             }
         } else if (topic == elevator + "/display") {
             if (payload.toUpperCase() == "1" || payload.toUpperCase() == "2" || payload.toUpperCase() == "3" || payload.toUpperCase() == "4" || payload.toUpperCase() == "5" ||
@@ -339,9 +344,11 @@
 
         } else if (topic == elevator + "/direction") {
             if (payload.toUpperCase() == "UP") {
-                $('#direction').val('\u2191')
+                // $('#direction').val('\u2191')
+                 $('#direction').val('▲')
             } else if (payload.toUpperCase() == "DN") {
-                $('#direction').val('\u2193')
+                // $('#direction').val('\u2193')
+                $('#direction').val('▼')
             } else if (payload.toUpperCase() == "STP") {
                 $('#direction').val('_')
             }

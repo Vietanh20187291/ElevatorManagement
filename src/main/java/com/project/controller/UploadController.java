@@ -33,6 +33,14 @@ public class UploadController {
         uploadImage(response, "templates/images/PieChart_UserTask.jpg");
     }
 
+    @GetMapping("/images/dooropen")
+    public void uploadBarChartUserTask1(HttpServletResponse response) throws IOException {
+        uploadImage(response, "templates/image/open.png");
+    }
+    @GetMapping("/images/doorclose")
+    public void uploadBarChartUserTask2(HttpServletResponse response) throws IOException {
+        uploadImage(response, "templates/image/close.jpg");
+    }
     private void uploadImage(HttpServletResponse response, String imagePath) throws IOException {
         // Đọc hình ảnh từ resources
         Resource resource = new ClassPathResource(imagePath);

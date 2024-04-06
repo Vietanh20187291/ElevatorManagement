@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elevator Simulation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-+MgZVeNi5d9c4IZ0tSA5V7EyMzlbk5CiSd1e4vDo29yCSppx5bm6R3wMvHJ2TbQ4" crossorigin="anonymous">
+
+    <style>
+        .elevator {
+            width: 50px;
+            height: 50px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            line-height: 50px;
+            position: absolute;
+            transition: top 0.5s ease;
+        }
+        .floor {
+            height: 100px;
+            border: 1px solid #ccc;
+            text-align: center;
+            line-height: 100px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div id="elevator" class="elevator">▲</div>
+        </div>
+        <div class="col-md-4">
+            <h3>Floors</h3>
+            <div id="floorNumber">1</div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    <td class="floor">15</td>
+                </tr>
+                <tr>
+                    <td class="floor">14</td>
+                </tr>
+                <tr>
+                    <td class="floor">13</td>
+                </tr>
+                <tr>
+                    <td class="floor">12</td>
+                </tr>
+                <tr>
+                    <td class="floor">11</td>
+                </tr>
+                <tr>
+                    <td class="floor">10</td>
+                </tr>
+                <tr>
+                    <td class="floor">9</td>
+                </tr>
+                <tr>
+                    <td class="floor">8</td>
+                </tr>
+                <tr>
+                    <td class="floor">7</td>
+                </tr>
+                <tr>
+                    <td class="floor">6</td>
+                </tr>
+                <tr>
+                    <td class="floor">5</td>
+                </tr>
+                <tr>
+                    <td class="floor">4</td>
+                </tr>
+                <tr>
+                    <td class="floor">3</td>
+                </tr>
+                <tr>
+                    <td class="floor">2</td>
+                </tr>
+                <tr>
+                    <td class="floor">1</td>
+                </tr>
+                </tbody>
+            </table>
+            <i class="fas fa-door-open"></i> <!-- Biểu tượng cửa thang máy mở -->
+            <i class="fas fa-door-closed"></i> <!-- Biểu tượng cửa thang máy đóng -->
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const elevator = document.getElementById('elevator');
+        const floorNumber = document.getElementById('floorNumber');
+        const floors = document.querySelectorAll('.floor');
+
+        let currentFloor = 1;
+        let goingUp = true;
+        let isMoving = false;
+
+        function moveElevator() {
+            if (goingUp) {
+                currentFloor++;
+                if (currentFloor > 15) {
+                    currentFloor = 15;
+                    goingUp = false;
+                }
+            } else {
+                currentFloor--;
+                if (currentFloor < 1) {
+                    currentFloor = 1;
+                    goingUp = true;
+                }
+            }
+
+            if (currentFloor === 10) {
+                openDoor();
+            }
+
+            let targetFloor = floors[15 - currentFloor];
+            let targetPosition = targetFloor.offsetTop;
+            elevator.style.top = targetPosition + 'px';
+            floorNumber.textContent = currentFloor;
+
+            // Update elevator icon
+            if (goingUp) {
+                elevator.textContent = '▲';
+            } else {
+                elevator.textContent = '▼';
+            }
+        }
+
+        function openDoor() {
+            elevator.textContent = '⇅'; // Open door icon
+            setTimeout(closeDoor, 2000); // Close the door after 2 seconds
+        }
+
+        function closeDoor() {
+            elevator.textContent = '▬'; // Close door icon
+        }
+
+        setInterval(moveElevator, 3000); // Move elevator every 3 seconds
+    });
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elevator Simulation</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-+MgZVeNi5d9c4IZ0tSA5V7EyMzlbk5CiSd1e4vDo29yCSppx5bm6R3wMvHJ2TbQ4" crossorigin="anonymous">
+
+    <style>
+        .elevator {
+            width: 50px;
+            height: 50px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            line-height: 50px;
+            position: absolute;
+            transition: top 0.5s ease;
+        }
+        .floor {
+            height: 100px;
+            border: 1px solid #ccc;
+            text-align: center;
+            line-height: 100px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div id="elevator" class="elevator">▲</div>
+        </div>
+        <div class="col-md-4">
+            <h3>Floors</h3>
+            <div id="floorNumber">1</div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    <td class="floor">15</td>
+                </tr>
+                <tr>
+                    <td class="floor">14</td>
+                </tr>
+                <tr>
+                    <td class="floor">13</td>
+                </tr>
+                <tr>
+                    <td class="floor">12</td>
+                </tr>
+                <tr>
+                    <td class="floor">11</td>
+                </tr>
+                <tr>
+                    <td class="floor">10</td>
+                </tr>
+                <tr>
+                    <td class="floor">9</td>
+                </tr>
+                <tr>
+                    <td class="floor">8</td>
+                </tr>
+                <tr>
+                    <td class="floor">7</td>
+                </tr>
+                <tr>
+                    <td class="floor">6</td>
+                </tr>
+                <tr>
+                    <td class="floor">5</td>
+                </tr>
+                <tr>
+                    <td class="floor">4</td>
+                </tr>
+                <tr>
+                    <td class="floor">3</td>
+                </tr>
+                <tr>
+                    <td class="floor">2</td>
+                </tr>
+                <tr>
+                    <td class="floor">1</td>
+                </tr>
+                </tbody>
+            </table>
+            <i class="fas fa-door-open"></i> <!-- Biểu tượng cửa thang máy mở -->
+            <i class="fas fa-door-closed"></i> <!-- Biểu tượng cửa thang máy đóng -->
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const elevator = document.getElementById('elevator');
+        const floorNumber = document.getElementById('floorNumber');
+        const floors = document.querySelectorAll('.floor');
+
+        let currentFloor = 1;
+        let goingUp = true;
+        let isMoving = false;
+
+        function moveElevator() {
+            if (goingUp) {
+                currentFloor++;
+                if (currentFloor > 15) {
+                    currentFloor = 15;
+                    goingUp = false;
+                }
+            } else {
+                currentFloor--;
+                if (currentFloor < 1) {
+                    currentFloor = 1;
+                    goingUp = true;
+                }
+            }
+
+            if (currentFloor === 10) {
+                openDoor();
+            }
+
+            let targetFloor = floors[15 - currentFloor];
+            let targetPosition = targetFloor.offsetTop;
+            elevator.style.top = targetPosition + 'px';
+            floorNumber.textContent = currentFloor;
+
+            // Update elevator icon
+            if (goingUp) {
+                elevator.textContent = '▲';
+            } else {
+                elevator.textContent = '▼';
+            }
+        }
+
+        function openDoor() {
+            elevator.textContent = '⇅'; // Open door icon
+            setTimeout(closeDoor, 2000); // Close the door after 2 seconds
+        }
+
+        function closeDoor() {
+            elevator.textContent = '▬'; // Close door icon
+        }
+
+        setInterval(moveElevator, 3000); // Move elevator every 3 seconds
+    });
+</script>
+
+</body>
+</html>
