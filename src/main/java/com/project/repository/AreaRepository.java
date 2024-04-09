@@ -27,4 +27,9 @@ public interface AreaRepository extends JpaRepository<Area, Integer> {
     @Query("UPDATE Area a SET a.name = :#{#area.name}, a.description = :#{#area.description} WHERE a.id = :#{#area.id}")
     void updateArea(@Param("area") Area area);
 
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Area a WHERE a.id = :areaId")
+    void deleteById(@Param("areaId") Integer areaId);
+
 }

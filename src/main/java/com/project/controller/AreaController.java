@@ -66,13 +66,28 @@ public class AreaController {
         return "redirect:/area/" + areaId;
     }
 
-    @PostMapping("/{areaId}/delete")
+    @PostMapping("/delete/{areaId}")
     public String deleteArea(@PathVariable Integer areaId, RedirectAttributes redirectAttributes, HttpServletRequest request) {
-        int actor = Integer.valueOf(cookieHelper.getUserId(request));
-        notiHelper.createNotiForAllManagers(actor, "deleted area with id: " + areaId);
-        areaService.deleteArea(areaId);
-        return "redirect:/area";
+
+        try {
+            int actor = Integer.valueOf(cookieHelper.getUserId(request));
+            Area area = areaService.getAreaById(areaId);
+            int buildingId = area.getBuilding().getId();
+            areaService.deleteArea(areaId);
+            redirectAttributes.addFlashAttribute("message", "Area has been deleted successfully");
+            redirectAttributes.addFlashAttribute("messageType","success");
+            return "redirect:/building/"+buildingId;
+        } catch (Exception e) {
+            String errorMessage = e.getMessage();
+            redirectAttributes.addFlashAttribute("message", errorMessage);
+            redirectAttributes.addFlashAttribute("messageType","error");
+            return "redirect:/area/"+areaId;
+        }
+//        notiHelper.createNotiForAllManagers(actor, "deleted area with id: " + areaId);
+//        areaService.deleteArea(areaId);
+//        return "redirect:/area";
     }
+
     @GetMapping("/{areaId}/edit")
     public String showEditAreaForm(@PathVariable Integer areaId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
