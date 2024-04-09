@@ -39,7 +39,7 @@
     </div>
 
     <!-- Action Buttons -->
-    <div class="mt-3">
+    <div  th:if="${role == 'ADMIN' || role == 'MANAGER'}" class="mt-3">
         <div class="float-right">
             <a class="btn btn-success" th:href="@{/building/{buildingId}/add-area(buildingId=${building.id})}">Add Area</a>
             <a class="btn btn-primary" th:href="@{/building/{buildingId}/edit(buildingId=${building.id})}">Update Building</a>

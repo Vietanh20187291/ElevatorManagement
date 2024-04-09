@@ -25,7 +25,7 @@
             <p th:text="${area.description}"></p>
 
             <!-- Action Buttons for Area -->
-                <div class="mt-3 d-flex">
+                <div th:if="${role == 'ADMIN' || role == 'MANAGER'}" class="mt-3 d-flex">
                     <form method="POST" th:action="@{/area/delete/{id}(id=${area.id})}" onsubmit="return confirmDelete(event)">
                         <button class="btn btn-danger mr-2" type="submit" name="areaId" th:value="${area.id}">Delete</button>
                     </form>
@@ -52,7 +52,7 @@
                                     <div class="d-flex">
                                     <a class="btn btn-primary mr-2" th:href="@{/elevator/{elevatorId}(elevatorId=${elevator.id})}">Get Info</a>
                                     <!-- Add Delete Elevator Button -->
-                                    <form method="POST" th:action="@{/elevator/delete/{id}(id=${elevator.id})}" onsubmit="return confirmDelete(event)">
+                                    <form  th:if="${role == 'ADMIN' || role == 'MANAGER'}" method="POST" th:action="@{/elevator/delete/{id}(id=${elevator.id})}" onsubmit="return confirmDelete(event)">
                                         <button class="btn btn-danger" type="submit" name="elevatorId" th:value="${elevator.id}">Delete</button>
                                     </form>
                                     </div>
