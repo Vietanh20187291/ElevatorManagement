@@ -1,7 +1,7 @@
 function confirmResetPassword(event) {
     event.preventDefault(); // Prevent form submission
     Swal.fire({
-        title: 'Are you sure to reset to default password (TKE@123)?',
+        title: 'Do you want to reset to default password (tke@123)?',
         // text: "This action cannot be undone!",
         icon: 'warning',
         showCancelButton: true,

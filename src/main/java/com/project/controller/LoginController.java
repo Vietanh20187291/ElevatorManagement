@@ -89,10 +89,11 @@ public class LoginController {
                 if (userDetail.getRole().equals(UserRole.ADMIN)) {
                     return "redirect:/admin/user";
                 } else if (userDetail.getRole().equals(UserRole.MANAGER)) {
-//                    return "redirect:/user";
-                    return "redirect:/building/1";
+                    return "redirect:/user";
+//                    return "redirect:/building/"+userDetail.getBuilding().getId();
                 } else {
-                    return "redirect:/version/user/" + userDetail.getUserId();
+                    return "redirect:/building/"+userDetail.getBuilding().getId();
+//                    return "redirect:/version/user/" + userDetail.getUserId();
                 }
             } else {
                 model.addAttribute("message", "Invalid username or password");

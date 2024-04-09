@@ -143,7 +143,7 @@ public class UserController {
 
     @PostMapping("/{userId}/reset-password")
     public String resetPassword(@PathVariable("userId") int userId, RedirectAttributes redirectAttributes) {
-        String defaultPassword = "TKE@123";
+        String defaultPassword = "tke@123";
 
         try {
             userService.updatePassword(userId, defaultPassword);
