@@ -140,6 +140,24 @@ public class UserController {
         model.addAttribute("users", users);
         return "user/users";
     }
+
+    @PostMapping("/{userId}/reset-password")
+    public String resetPassword(@PathVariable("userId") int userId, RedirectAttributes redirectAttributes) {
+        String defaultPassword = "TKE@123";
+
+        try {
+            userService.updatePassword(userId, defaultPassword);
+            redirectAttributes.addFlashAttribute("message", "Password reset successfully.");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+        } catch (Exception e) {
+            String errorMessage = "Failed to reset password: " + e.getMessage();
+            redirectAttributes.addFlashAttribute("message", errorMessage);
+            redirectAttributes.addFlashAttribute("messageType", "error");
+        }
+
+        return "redirect:/user"; // Điều hướng lại đến trang gốc của form
+    }
+
     @PostMapping("/deactivate/{id}")
     public String deleteUser(HttpServletRequest request, @PathVariable Integer id, RedirectAttributes redirectAttributes) {
         System.out.println("delete");
