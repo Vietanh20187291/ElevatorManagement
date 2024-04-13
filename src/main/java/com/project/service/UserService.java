@@ -156,14 +156,23 @@ public class UserService {
         }
     }
 
-    public void addUser(String username, String password, UserRole role, Building building) {
+    public void addUser(String username, String password, UserRole role, Building building) throws Exception {
+        if (userRepository.getUserByUsername(username).isPresent()) {
+            throw new RuntimeException("Username already exists");
+        }
+
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
         user.setRole(role);
         user.setBuilding(building);
         user.setActive(true);
-        userRepository.save(user);
+
+        try {
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
 

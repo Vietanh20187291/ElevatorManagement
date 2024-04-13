@@ -67,7 +67,8 @@ public class UserController {
         } catch (Exception e) {
             String errorMessage = e.getMessage();
             redirectAttributes.addFlashAttribute("message", errorMessage);
-            return "redirect:/user";
+            redirectAttributes.addFlashAttribute("messageType","error");
+            return "redirect:/user/add";
         }
     }
 

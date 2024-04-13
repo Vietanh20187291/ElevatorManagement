@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.jvnet.fastinfoset.EncodingAlgorithmIndexes.UUID;
 @Component
@@ -59,7 +60,7 @@ public class LoginController {
         try {
             boolean isAuthenticated = userService.checkLogin(user);
             if (isAuthenticated) {
-
+//                addToBlacklistAllUserTokens(user.getUserId());
                 User userDetail = userService.getUserByUsername(user.getUsername());
                 String jwtToken = jwtTokenService.generateToken(userDetail.getUserId(), userDetail.getRole(),userDetail.getBuilding().getId());
                 System.out.println("User "+userDetail.getUsername());
@@ -105,6 +106,18 @@ public class LoginController {
         }
         return null;
     }
+
+//    public void addToBlacklistAllUserTokens(int userId) {
+//        Set<String> allTokens = jwtTokenService.getUserTokens(userId); // Lấy danh sách tất cả các token của người dùng từ nguồn dữ liệu phù hợp
+//
+//        for (String t : allTokens) {
+//            System.out.println("delete"+t);
+//        }
+//        for (String token : allTokens) {
+//            jwtTokenService.addToBlacklist(token);
+//        }
+//    }
+
 }
 
 
