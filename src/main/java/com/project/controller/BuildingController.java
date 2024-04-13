@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.entity.Area;
 import com.project.entity.Building;
+import com.project.helper.CookieHelper;
 import com.project.service.AreaService;
 import com.project.service.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +24,12 @@ public class BuildingController {
 
     @Autowired
     private AreaService areaService;
-
+    @Autowired
+    private CookieHelper cookieHelper;
 
     @GetMapping("/name/{name}")
     public String getBuildingByName(@PathVariable String name, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         Optional<Building> building = buildingService.getBuildingByName(name);
         if (building.isPresent()) {
             model.addAttribute("building", building.get());
@@ -39,6 +42,7 @@ public class BuildingController {
 
     @GetMapping("/{buildingId}/edit")
     public String showEditBuildingForm(@PathVariable Integer buildingId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         Building building = buildingService.getBuildingById(buildingId);
         model.addAttribute("building", building);
         return "building/edit";
@@ -61,6 +65,7 @@ public class BuildingController {
 
     @GetMapping("/{buildingId}/add-area")
     public String showAddAreaForm(@PathVariable Integer buildingId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         Building building = buildingService.getBuildingById(buildingId);
         model.addAttribute("building", building);
         Area area = new Area();
@@ -106,7 +111,8 @@ public class BuildingController {
     }
 
     @GetMapping("/{buildingId}")
-    public String showAreasByBuildingId(@PathVariable Integer buildingId, Model model) {
+    public String showAreasByBuildingId(@PathVariable Integer buildingId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         Building building = buildingService.getBuildingById(buildingId);
         List<Area> areas = areaService.getAreasByBuildingId(buildingId);
         model.addAttribute("building", building);

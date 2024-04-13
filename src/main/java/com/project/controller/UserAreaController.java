@@ -3,6 +3,7 @@ package com.project.controller;
 import com.project.entity.UserArea;
 import com.project.entity.Area;
 import com.project.entity.UserDTO;
+import com.project.helper.CookieHelper;
 import com.project.service.UserAreaService;
 import com.project.service.AreaService;
 import com.project.service.UserService;
@@ -31,9 +32,12 @@ public class UserAreaController {
 
     @Autowired
     private JwtTokenService jwtTokenService;
+    @Autowired
+    private CookieHelper cookieHelper;
 
     @GetMapping
     public String managePermissions(Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         try {
             String token = jwtTokenService.getTokenFromRequest(request);
             int buildingId = jwtTokenService.getBuildingIdFromToken(token);

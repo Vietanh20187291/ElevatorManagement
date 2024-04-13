@@ -22,7 +22,8 @@ public class ElevatorController {
     private CookieHelper cookieHelper;
 
     @GetMapping("/{elevatorId}")
-    public String getElevatorById(@PathVariable int elevatorId, Model model) {
+    public String getElevatorById(@PathVariable int elevatorId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         Elevator elevator = elevatorService.getElevatorById(elevatorId);
         model.addAttribute("elevator", elevator);
         return "elevator/elevator";
@@ -30,7 +31,8 @@ public class ElevatorController {
 
 
     @GetMapping("/{elevatorId}/edit")
-    public String showEditElevatorForm(@PathVariable int elevatorId, Model model) {
+    public String showEditElevatorForm(@PathVariable int elevatorId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
         Elevator elevator = elevatorService.getElevatorById(elevatorId);
         model.addAttribute("elevator", elevator);
         return "elevator/edit";
