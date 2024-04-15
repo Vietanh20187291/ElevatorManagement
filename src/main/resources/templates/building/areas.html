@@ -20,7 +20,9 @@
             <h5 th:text="${building.name}"></h5>
         </div>
         <div class="card-body">
-            <p th:text="${building.description}"></p>
+            <p><strong>City: </strong><span th:text="${building.city}"></span></p>
+            <p><strong>Country: </strong><span th:text="${building.country}"></span></p>
+
             <div class="row">
                 <!-- Loop through areas -->
                 <div class="col-md-4" th:each="area : ${areas}">

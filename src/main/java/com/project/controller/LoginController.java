@@ -52,7 +52,7 @@ public class LoginController {
     public String getLoginPage1() {
 //        return "login";
 //        return "mqtt/main";
-        return "elevator/test";
+        return "elevator/test1";
     }
 
     @PostMapping

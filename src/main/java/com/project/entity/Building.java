@@ -19,8 +19,15 @@ public class Building {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description", nullable = false)
-    private String description;
+
+    @Column(name = "country")
+    private String country;
+
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "note")
+    private String note;
 
     @OneToMany(mappedBy = "building", cascade = CascadeType.ALL)
     private List<User> users;
