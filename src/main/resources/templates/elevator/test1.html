@@ -6,67 +6,46 @@
     <title>Giao diện ví dụ</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        .box {
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            font-size: 18px;
+        .table-custom {
+            border-collapse: separate;
+            border-spacing: 10px;
+        }
+        .table-custom td {
+            padding: 10px;
+            border-radius: 5px;
             font-weight: bold;
             text-align: center;
         }
         .arrow {
-            font-size: 24px;
+            font-size: 20px;
             cursor: pointer;
-        }
-        .dropdown-toggle::after {
-            display: inline-block;
-            margin-left: 0.255em;
-            vertical-align: 0.255em;
-            content: "";
-            border-top: 0.3em solid;
-            border-right: 0.3em solid transparent;
-            border-bottom: 0;
-            border-left: 0.3em solid transparent;
         }
     </style>
 </head>
 <body>
-<div class="container my-5">
-    <div class="row justify-content-center mb-3">
-        <div class="col-md-6">
-            <div class="dropdown">
-                <div class="bg-dark text-white p-2 d-flex justify-content-between align-items-center dropdown-toggle" data-toggle="dropdown">
-                    <span>Selected Item</span>
-                    <span class="arrow">&#9660;</span>
-                </div>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">Option 1</a>
-                    <a class="dropdown-item" href="#">Option 2</a>
-                    <a class="dropdown-item" href="#">Option 3</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row justify-content-center mb-3">
-        <div class="col-md-6">
-            <div class="bg-dark text-white p-2 d-flex justify-content-between align-items-center">
-                <span>Ref Value</span>
-                <span class="ref-value">80,000</span>
-            </div>
-        </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="bg-success text-white p-2 d-flex justify-content-between align-items-center">
-                <span>Now Value</span>
-                <span class="now-value">70,000</span>
-            </div>
-        </div>
-    </div>
+<div class="container">
+    <table class="table-custom">
+        <tr>
+            <td class="bg-dark text-white">Item Selected</td>
+            <td class="bg-danger text-white d-flex justify-content-between align-items-center">
+                Timelife Door | <span class="arrow">&#9658;</span>
+                <span class="bg-white text-danger rounded px-2">100,000</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="bg-dark text-white">Ref Value</td>
+<!--            <td class="bg-danger text-white">100,000</td>-->
+            <td class="bg-danger text-white d-flex justify-content-between align-items-center">
+                80,000 <span class="arrow">&#9658;</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="bg-dark text-white">Now Value</td>
+            <td class="bg-success text-white d-flex justify-content-between align-items-center">
+                80,000 <span class="arrow">&#9658;</span>
+            </td>
+        </tr>
+    </table>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
