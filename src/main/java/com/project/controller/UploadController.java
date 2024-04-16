@@ -50,6 +50,46 @@ public class UploadController {
     public void uploadBarChartUserTask4(HttpServletResponse response) throws IOException {
         uploadImage(response, "templates/image/closeold.jpg");
     }
+    @GetMapping("/images/simulation/text")
+    public void uploadSimulationImage1(HttpServletResponse response) throws IOException {
+        uploadImage(response, "templates/images/simulation/black_text.png");
+    }
+    @GetMapping("/images/simulation/blanket")
+    public void uploadSimulationImage2(HttpServletResponse response) throws IOException {
+        uploadImage(response, "templates/images/simulation/blanket2.jpg");
+    }
+    @GetMapping("/images/simulation/ceiling")
+    public void uploadSimulationImage3(HttpServletResponse response) throws IOException {
+        uploadImage(response, "templates/images/simulation/ceiling3.jpg");
+    }
+    @GetMapping("/images/simulation/cord")
+    public void uploadSimulationImage4(HttpServletResponse response) throws IOException {
+        uploadImage(response, "templates/images/simulation/cord.png");
+    }
+    @GetMapping("/images/simulation/door-left")
+    public void uploadSimulationImage5(HttpServletResponse response) throws IOException {
+        uploadImage(response, "templates/images/simulation/door-left.jpg");
+    }
+    @GetMapping("/images/simulation/door-right")
+    public void uploadSimulationImage6(HttpServletResponse response) throws IOException {
+        uploadImage(response, "templates/images/simulation/door-right.jpg");
+    }
+    @GetMapping("/images/simulation/indoor")
+    public void uploadSimulationImage7(HttpServletResponse response) throws IOException {
+        uploadImage(response, "templates/images/simulation/indoor2.png");
+    }
+    @GetMapping("/images/simulation/panel")
+    public void uploadSimulationImage8(HttpServletResponse response) throws IOException {
+        uploadImage(response, "templates/images/simulation/panel-tex5.png");
+    }
+    @GetMapping("/images/simulation/potting")
+    public void uploadSimulationImage9(HttpServletResponse response) throws IOException {
+        uploadImage(response, "templates/images/simulation/potting-2.png");
+    }
+    @GetMapping("/images/simulation/wall")
+    public void uploadSimulationImage10(HttpServletResponse response) throws IOException {
+        uploadImage(response, "templates/images/simulation/wall8.png");
+    }
     private void uploadImage(HttpServletResponse response, String imagePath) throws IOException {
         // Đọc hình ảnh từ resources
         Resource resource = new ClassPathResource(imagePath);
