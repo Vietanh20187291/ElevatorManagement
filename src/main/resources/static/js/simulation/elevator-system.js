@@ -1,5 +1,10 @@
 $(function () {
-    set_building_configs_and_rebuild(floor_nums, elevator_nums)
+    var numFloors = parseInt(document.getElementById("numFloors").innerText);
+    var numElevators = parseInt(document.getElementById("numElevators").innerText);
+    alert("numFloors: " + numFloors + " numElevators: " + numElevators)
+    startConnect()
+    // set_building_configs_and_rebuild(floor_nums, elevator_nums)
+    set_building_configs_and_rebuild(numFloors, numElevators)
 });
 
 function set_building_configs_and_rebuild(floor_nums, elevator_nums) {
@@ -115,7 +120,7 @@ function create_elevators_objects(number_of_elevators) {
                 })
             }
             ,
-            running_AI_mode: function () { //静止待定
+            running_AI_mode: function () { //Still pending
                 if (this.state.auto_mode_running_outer_event !== undefined) {
                     this.stop_AI_mode()
                     return
@@ -328,7 +333,7 @@ function create_elevators_objects(number_of_elevators) {
                     if (level >= print_level) console.log('[level:' + level + '] ' + 'eno: ' + this.elevator_no + " msg: " + msg)
                 }
             }(),
-            check_and_move: function (callBack) {// 已经处理了该楼层该方向上的请求，关门态
+            check_and_move: function (callBack) {// The request for this direction on this floor has been processed and is closed.
                 this.time += 1
                 this.log('check now :fno ' + this.state.now_floor_no + ' dir :' + this.state.now_direction + ' time: ' + this.time)
                 if (this.state.now_direction === DIRECTION_STILL) {//indoor opened

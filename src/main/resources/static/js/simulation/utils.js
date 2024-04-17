@@ -1,18 +1,18 @@
 function Queue() {
 
-    //初始化队列（使用数组实现）
+    //Initialize the queue (implemented using an array)
     let items = [];
 
-    //向队列（尾部）中插入元素
+    //Insert an element into the queue (tail)
     this.push = function (element) {
         items.push(element);
     }
 
-    //从队列（头部）中弹出一个元素，并返回该元素
+    //Pop an element from the queue (head) and return that element
     this.pop = function () {
         return items.shift();
     }
-    //查看队列最前面的元素（数组中索引为0的元素）
+    //View the front element of the queue (the element with index 0 in the array)
     this.front = function () {
         if (items.length === 0) {
             return undefined
@@ -26,7 +26,7 @@ function Queue() {
         return items[items.length - 1]
     }
 
-    //查看队列是否为空，如果为空，返回true；否则返回false
+    //Check whether the queue is empty, if it is empty, return true; otherwise, return false
     this.isEmpty = function () {
         return items.length === 0;
     }

@@ -339,13 +339,13 @@ function controller_open_door(floor_no, elevator_no, callBack) {
 function display_set_floor_nums_dialog() {
     swal(
         {
-            title: '请设置楼层数量',
-            text: '楼层数量为2-50(包含)之间的数字\n\n注意：如果您使用了浏览器缩放功能，请调回100%再设置以正常使用！',
+            title: 'Please set the number of floors',
+            text: 'The number of floors is a number between 2-50 (inclusive)\n\nNote: If you use the browser zoom function, please adjust it back to 100% and set it for normal use!',
             type: 'input',
             showCancelButton: true,
             closeOnConfirm: false,
             animation: 'slide-from-top',
-            inputPlaceholder: '在此输入您期望的楼层数量...'
+            inputPlaceholder: '\n' + 'Enter your desired number of floors here...'
         },
         function (inputValue) {
             if (inputValue === false) {
