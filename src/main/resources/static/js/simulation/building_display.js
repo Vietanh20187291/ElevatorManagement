@@ -158,20 +158,21 @@ function set_panel_body(floor_nums, elevator_nums,list_elevators) {
     //     console.log("\"ujk\":", "ujk");
     //     // res += div_html_of_choose_floor_block(floor_nums, k,"ujk")
     // }
-
-    for (let elevatorId in list_elevators) {
-        if (list_elevators.hasOwnProperty(elevatorId)) {
-
-            let elevator = list_elevators[elevatorId];
+    console.log(list_elevators)
+    for (let Id in list_elevators) {
+        if (list_elevators.hasOwnProperty(Id)) {
+            let elevator = list_elevators[Id];
+            let elevatorId = elevator["elevator-id"];
             let elevatorName = elevator["elevator-name"];
             let elevatorNumFloors = elevator["elevator-num-floors"];
 
-            // console.log("elevatorNumFloors:",elevatorNumFloors);
-            // console.log("elevatorId:",elevatorId);
-            // console.log("elevatorName:",elevatorName);
+            console.log("elevatorNumFloors:",elevatorNumFloors);
+            console.log("elevatorId:",elevatorId);
+            console.log("elevatorId:",typeof elevatorId);
+            console.log("elevatorName:",elevatorName);
 
 
-            res += div_html_of_choose_floor_block(elevatorNumFloors, parseInt(elevatorId), elevatorName);
+            res += div_html_of_choose_floor_block(elevatorNumFloors, elevatorId, elevatorName);
         }
     }
 
@@ -185,6 +186,13 @@ function set_panel_body(floor_nums, elevator_nums,list_elevators) {
     for (let i = 1; i <= elevator_nums; i++) {
         elevators[i].set_now_floor_no(elevators[i].state.now_floor_no)
         elevators[i].set_now_direction(elevators[i].state.now_direction)
+    }
+
+    for (let elevatorId in list_elevators) {
+        if (list_elevators.hasOwnProperty(elevatorId)) {
+            elevators[elevatorId].set_now_floor_no(elevators[elevatorId].state.now_floor_no)
+            elevators[elevatorId].set_now_direction(elevators[elevatorId].state.now_direction)
+        }
     }
     pin_element_to_bottom('g-panel-content')
 }

@@ -16,8 +16,9 @@ $(function () {
 
         if (elevatorId && !isNaN(elevatorFloors)) {
             listElevators[elevatorId] = {
+                "elevator-id": elevatorId,
                 "elevator-name": elevatorName,
-                "elevator-num-floors": elevatorFloors
+                "elevator-num-floors": elevatorFloors,
             };
         }
     }
