@@ -1,19 +1,44 @@
 $(function () {
-    var numFloors = parseInt(document.getElementById("numFloors").innerText);
-    var numElevators = parseInt(document.getElementById("numElevators").innerText);
-    alert("numFloors: " + numFloors + " numElevators: " + numElevators)
+    var numFloors = parseInt(document.getElementById("numFloors").innerText.trim());
+    var numElevators = parseInt(document.getElementById("numElevators").innerText.trim());
+
+
+    var listElevators = {};
+
+    var elevatorNameElements = document.getElementsByClassName("elevator-name");
+    var elevatorIdElements = document.getElementsByClassName("elevator-id");
+    var elevatorFloorsElements = document.getElementsByClassName("elevator-num-floors");
+
+    for (var i = 0; i < elevatorNameElements.length; i++) {
+        var elevatorName = elevatorNameElements[i].innerText.trim();
+        var elevatorId = parseInt(elevatorIdElements[i].innerText.trim());
+        var elevatorFloors = parseInt(elevatorFloorsElements[i].innerText.trim());
+
+        if (elevatorId && !isNaN(elevatorFloors)) {
+            listElevators[elevatorId] = {
+                "elevator-name": elevatorName,
+                "elevator-num-floors": elevatorFloors
+            };
+        }
+    }
+
+    console.log(listElevators);
+
+
+
     startConnect()
     // set_building_configs_and_rebuild(floor_nums, elevator_nums)
-    set_building_configs_and_rebuild(numFloors, numElevators)
+    set_building_configs_and_rebuild(numFloors, numElevators,listElevators)
 });
 
-function set_building_configs_and_rebuild(floor_nums, elevator_nums) {
+function set_building_configs_and_rebuild(floor_nums, elevator_nums, list_elevators) {
+    floor_nums = 10
     $('*').stop()
     create_elevators_objects(elevator_nums)
     set_outdoor_button_states(floor_nums)
 
     set_building_display(floor_nums, elevator_nums)
-    set_panel_body(floor_nums, elevator_nums)
+    set_panel_body(floor_nums, elevator_nums,list_elevators)
 
     set_indoor_switch_bind(floor_nums, elevator_nums)
     set_outdoor_switch_bind(floor_nums, elevator_nums)
@@ -27,7 +52,18 @@ function set_building_configs_and_rebuild(floor_nums, elevator_nums) {
 function create_elevators_objects(number_of_elevators) {
     elevator_nums = number_of_elevators
     let AI_mode_has_gone_to_first_floor = 0
-    for (let i = 1; i <= elevator_nums; i++) {
+
+    var elevatorNames = [];
+
+    var elevatorElements = document.getElementsByClassName("elevator-name");
+
+    for (var i = 0; i < elevatorElements.length; i++) {
+        var elevatorText = elevatorElements[i].innerText.trim();
+        elevatorNames.push(elevatorText);
+    }
+
+
+    for (let i = 0; i <= elevatorNames.length; i++) {
         elevators[i] = {
             elevator_no: i,
             state: {

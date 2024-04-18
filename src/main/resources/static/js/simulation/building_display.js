@@ -124,10 +124,10 @@ function div_html_of_open_close_buttons() {
     return template_of_open_close_buttons
 }
 
-function div_html_of_choose_floor_block(floor_nums, elevator_no) {
+function div_html_of_choose_floor_block(floor_nums, elevator_no, elevator_name){
     let res = ('<div class="g-panel-item-wrapper"><div class="elevator-window choose-floor-block mark-of-eno">\n' +
         '<div class="take-place elevator-info">\n' +
-        '                        <p class="choose-floor-prompt"><span class="a">#mark-of-eno</span></p>\n' +
+        // '                        <p class="choose-floor-prompt"><span class="a">#mark-of-eno</span></p>\n' +
         '\n' +
         '     <div class="now-floor-info">\n' +
         '                        <div class="floor-info-decoration"></div>\n' +
@@ -137,8 +137,8 @@ function div_html_of_choose_floor_block(floor_nums, elevator_no) {
     for (let k = 1; k <= floor_nums; k++) {
         res += tempalte_of_choose_floor_button.replace(/mark-of-fno/g, k)
     }
-
     res += div_html_of_open_close_buttons()
+    res += '<h1>mark-of-eno</h1>'.replace(/mark-of-eno/g, elevator_name)
     res += '</div></div>'
     return res
 }
@@ -150,11 +150,31 @@ function div_html_off_choose_floor_block_side() {
 }
 
 
-function set_panel_body(floor_nums, elevator_nums) {
+function set_panel_body(floor_nums, elevator_nums,list_elevators) {
     let res = div_html_off_choose_floor_block_side()
-    for (let k = 1; k <= elevator_nums; k++) {
-        res += div_html_of_choose_floor_block(floor_nums, k)
+    // for (let k = 1; k <= elevator_nums; k++) {
+    //     console.log("floor_nums:", floor_nums);
+    //     console.log("k:", k);
+    //     console.log("\"ujk\":", "ujk");
+    //     // res += div_html_of_choose_floor_block(floor_nums, k,"ujk")
+    // }
+
+    for (let elevatorId in list_elevators) {
+        if (list_elevators.hasOwnProperty(elevatorId)) {
+
+            let elevator = list_elevators[elevatorId];
+            let elevatorName = elevator["elevator-name"];
+            let elevatorNumFloors = elevator["elevator-num-floors"];
+
+            // console.log("elevatorNumFloors:",elevatorNumFloors);
+            // console.log("elevatorId:",elevatorId);
+            // console.log("elevatorName:",elevatorName);
+
+
+            res += div_html_of_choose_floor_block(elevatorNumFloors, parseInt(elevatorId), elevatorName);
+        }
     }
+
     res += div_html_off_choose_floor_block_side()
     $('#g-panel-body').html(res)
     let grid_template_columns_of_panel_body =

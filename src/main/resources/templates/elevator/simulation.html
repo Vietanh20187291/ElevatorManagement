@@ -19,7 +19,7 @@
     <link href="/static/css/simulation.css" media="all" rel="stylesheet" type="text/css"/>
 <!--    <script src="/static/js/AlertError.js" type="text/javascript"></script>-->
 
-    <script src="/static/js/ElevatorNavigator.js"></script>
+    <script src="/static/js/SimulationNavigator.js"></script>
 
     <script src="/static/js/simulation/utils.js"></script>
 
@@ -39,6 +39,13 @@
 <body>
 <div th:text="${numFloors}" id="numFloors" hidden></div>
 <div th:text="${numElevators}" id="numElevators" hidden></div>
+
+<div th:each="elevator : ${elevators}">
+    <div th:text="${elevator.id}" class="elevator-id" th:id="'elevatorId_' + ${elevator.id}" hidden></div>
+    <div th:text="${elevator.name}" class="elevator-name" th:id="'elevatorName_' + ${elevator.id}" hidden></div>
+    <div th:text="${elevator.numFloors}" class="elevator-num-floors" th:id="'elevatorNumFloors_' + ${elevator.id}" hidden></div>
+</div>
+
 <!--<div th:replace="fragments/header :: header"></div>-->
 <div class="container-a">
 <!--<div class="head-info">-->
