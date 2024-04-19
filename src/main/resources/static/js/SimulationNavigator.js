@@ -6,7 +6,8 @@ var password = "minh";
 cleansession = true;
 var mqtt;
 var reconnectTimeout = 2000;
-var elevator = document.getElementById("elevator").value;
+// var elevator = document.getElementById("elevator").value;
+var elevator = 1;
 var numFloors = parseInt(document.getElementById("numFloors").value);
 console.log(elevator);
 

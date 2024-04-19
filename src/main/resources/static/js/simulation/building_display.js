@@ -166,10 +166,10 @@ function set_panel_body(floor_nums, elevator_nums,list_elevators) {
             let elevatorName = elevator["elevator-name"];
             let elevatorNumFloors = elevator["elevator-num-floors"];
 
-            console.log("elevatorNumFloors:",elevatorNumFloors);
-            console.log("elevatorId:",elevatorId);
-            console.log("elevatorId:",typeof elevatorId);
-            console.log("elevatorName:",elevatorName);
+            // console.log("elevatorNumFloors:",elevatorNumFloors);
+            // console.log("elevatorId:",elevatorId);
+            // console.log("elevatorId:",typeof elevatorId);
+            // console.log("elevatorName:",elevatorName);
 
 
             res += div_html_of_choose_floor_block(elevatorNumFloors, elevatorId, elevatorName);
