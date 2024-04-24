@@ -47,6 +47,8 @@ function set_building_configs_and_rebuild(floor_nums, elevator_nums, list_elevat
     for (let eno = 1; eno <= elevator_nums; eno++) {
         elevators[eno].start()
     }
+
+
 }
 
 
@@ -84,7 +86,20 @@ function create_elevators_objects(number_of_elevators,list_elevators) {
                     indoor_activated_switches_num: 0
                 },
                 start: function () {
-                    this.start_waiting_to_launch_AI_mode()
+                    call_update_floor(1,5)
+
+
+                    // elevators[1].move_up();
+                    // elevators[1].on_reach_floor(6);
+                    //
+                    // elevators[1].move_down();
+                    // elevators[1].on_reach_floor(5);
+
+                    // moveElevatorToFloor(1, 8);
+                    moveElevatorToFloor(1, 3);
+
+
+
                 },
                 set_now_floor_no: function (floor_no) {
                     this.state.now_floor_no = floor_no
@@ -94,38 +109,39 @@ function create_elevators_objects(number_of_elevators,list_elevators) {
                     this.state.now_direction = direct
                     set_indoor_direction_display(this.elevator_no, direct)
                 },
-                check_AI_mode_and_callBack: function (callBack) {
-                    if (this.state.auto_mode_state === AI_MODE_RUNNING) {
-                        let eno = this.elevator_no
-                        this.state.auto_mode_running_outer_event = function () {
-                            elevators[eno].log('running event ' + ' direct:')
-                            callBack()
-                        }
-                        this.log(' check running' + this.state.auto_mode_running_outer_event)
-                        this.set_now_direction(DIRECTION_AI_MODE_WAITING_FOR_CHANGING)
-                    } else if (this.state.auto_mode_state === AI_MODE_STARTING) {
-                        let eno = this.elevator_no
-                        controller_stop_waiting_for_timeout_and_callback(eno, function () {
-
-                            elevators[eno].state.auto_mode_state = AI_MODE_CLOSED
-                            callBack()
-                        })
-                    } else {
-
-                        callBack()
-                    }
-                },
+                // check_AI_mode_and_callBack: function (callBack) {
+                //     if (this.state.auto_mode_state === AI_MODE_RUNNING) {
+                //         let eno = this.elevator_no
+                //         this.state.auto_mode_running_outer_event = function () {
+                //             elevators[eno].log('running event ' + ' direct:')
+                //             callBack()
+                //         }
+                //         this.log(' check running' + this.state.auto_mode_running_outer_event)
+                //         this.set_now_direction(DIRECTION_AI_MODE_WAITING_FOR_CHANGING)
+                //     } else if (this.state.auto_mode_state === AI_MODE_STARTING) {
+                //         let eno = this.elevator_no
+                //         controller_stop_waiting_for_timeout_and_callback(eno, function () {
+                //
+                //             elevators[eno].state.auto_mode_state = AI_MODE_CLOSED
+                //             callBack()
+                //         })
+                //     } else {
+                //
+                //         callBack()
+                //     }
+                // },
                 need_direction: function (direct, inner_request = 0) {
                     if (inner_request === 0 && this.state.now_direction === DIRECTION_STILL) {
                         let eno = this.elevator_no
-                        this.check_AI_mode_and_callBack(function () {
-                            elevators[eno].set_now_direction(direct)
-                            if (DIRECTION_STILL === direct) { // indoor open door request
-                                elevators[eno].on_reach_floor(elevators[eno].state.now_floor_no, 1)
-                            } else {
-                                elevators[eno].on_reach_floor(elevators[eno].state.now_floor_no, 0)
-                            }
-                        })
+                        elevators[1].set_now_direction(1)
+                        // this.check_AI_mode_and_callBack(function () {
+                        //     elevators[eno].set_now_direction(direct)
+                        //     if (DIRECTION_STILL === direct) { // indoor open door request
+                        //         elevators[eno].on_reach_floor(elevators[eno].state.now_floor_no, 1)
+                        //     } else {
+                        //         elevators[eno].on_reach_floor(elevators[eno].state.now_floor_no, 0)
+                        //     }
+                        // })
                         return
                     }
                     if (inner_request === 1) {
@@ -142,162 +158,162 @@ function create_elevators_objects(number_of_elevators,list_elevators) {
                         }
                     }
                 },
-                start_waiting_to_launch_AI_mode: function () {
-                    if (enable_AI_mode === false) {
-                        return
-                    }
-                    if (this.state.auto_mode_state !== AI_MODE_CLOSED) {
-                        return
-                    }
-                    if (this.state.now_direction !== DIRECTION_STILL &&
-                        this.moving !== false && this.state.door_state !== DOOR_CLOSED) {
-                        return
-                    }
-                    this.log('AI mode starting ')
-                    this.state.auto_mode_state = AI_MODE_STARTING
-                    let eno = this.elevator_no
-                    controller_wait_for_timeout_and_callBack(this.elevator_no, AI_mode_start_waiting_time, function () {
-                        elevators[eno].state.auto_mode_state = AI_MODE_RUNNING
-                        set_indoor_direction_display(eno, DIRECTION_STILL)
-                        elevators[eno].running_AI_mode()
-                    })
-                }
-                ,
-                running_AI_mode: function () { //Still pending
-                    if (this.state.auto_mode_running_outer_event !== undefined) {
-                        this.stop_AI_mode()
-                        return
-                    }
-                    let eno = this.elevator_no
-                    let fno = this.state.now_floor_no
-                    let rand = randomNum(1, 300)
-                    this.log('run, rand:' + rand, 2)
-                    controller_wait_for_timeout_and_callBack(eno, rand, function () {
-
-                        elevators[eno].log('AI mode running', 2)
-                        // running and running
-                        let has_elevator_of_floors = new Array(floor_nums + 2).fill(0)
-                        has_elevator_of_floors[floor_nums + 1] = 1
-                        for (let e = 1; e <= elevator_nums; e++) {
-                            if (e !== eno) {
-                                has_elevator_of_floors[elevators[e].state.now_floor_no] += 1
-                            }
-                        }
-                        if (fno !== 1 && (has_elevator_of_floors[1] === 0 && AI_mode_has_gone_to_first_floor === 0)) {
-                            AI_mode_has_gone_to_first_floor += 1
-                            elevators[eno].move_down(
-                                function () {
-                                    elevators[eno].set_now_floor_no(fno - 1)
-                                    controller_directly_go_to_floor(eno, fno - 1)
-                                    AI_mode_has_gone_to_first_floor -= 1
-
-                                    elevators[eno].running_AI_mode()
-                                })
-
-                            return
-                        }
-                        if (has_elevator_of_floors[1] === 0 && fno === 1) {
-                            controller_wait_for_timeout_and_callBack(eno, 2000,
-                                function () {
-                                    elevators[eno].running_AI_mode()
-                                }
-                            )
-                            return
-                        }
-                        let free_intervals = []
-                        let start = 1
-                        let has = 1
-                        elevators[eno].log('has_elevator_of_floors ' + has_elevator_of_floors.toString(), 2)
-
-                        for (let fno = 1; fno <= floor_nums + 1; fno++) {
-                            elevators[eno].log('fno:' + fno + ',' + 'start:' + start + ',has:' + has + 'now:' + has_elevator_of_floors[fno], 2)
-                            if (has_elevator_of_floors[fno] === 0) {
-                                if (has === 1) {
-                                    start = fno
-                                    has = 0
-                                }
-                            } else {
-                                if (has === 0) {
-                                    free_intervals.push(
-                                        {
-                                            st: start,
-                                            ed: fno - 1,
-                                            len: fno - start,
-                                        }
-                                    )
-                                    elevators[eno].log(' catch  st :' + start + ',ed :' + (fno - 1), 2)
-                                    has = 1
-                                }
-                            }
-                        }
-                        if (free_intervals.length === 0) {
-                            controller_wait_for_timeout_and_callBack(eno, 2000,
-                                function () {
-                                    elevators[eno].running_AI_mode()
-                                }
-                            )
-
-                        } else {
-                            let longest_index = -1
-                            let longest_len = 0
-                            let in_interval_index = -1
-                            for (let i = 0; i < free_intervals.length; i++) {
-                                elevators[eno].log('x.st:' + number_of_elevators.st + ',x.ed:' + number_of_elevators.ed, 2)
-                                if (free_intervals[i].len > longest_len) {
-                                    longest_index = i
-                                    longest_len = free_intervals[i].len
-                                }
-                                if (fno >= free_intervals[i].st && fno <= free_intervals[i].ed) {
-                                    in_interval_index = i
-                                }
-                            }
-                            const GO_TO_ERROR = 1
-                            const INTERVAL_LEN_ERROR = 1
-                            elevators[eno].log('lg_idx:' + longest_index + ',lg_len:' + longest_len + ',lg.st:' + free_intervals[longest_index].st, 2)
-                            elevators[eno].log('in_index:' + in_interval_index, 2)
-                            let go_to_interval_index = longest_index
-                            if (in_interval_index !== -1 && longest_index !== in_interval_index && Math.abs(free_intervals[in_interval_index].len - free_intervals[longest_index].len) <= INTERVAL_LEN_ERROR) {
-                                go_to_interval_index = in_interval_index
-                            }
-                            let go_to_mid = Math.floor((free_intervals[go_to_interval_index].st + free_intervals[go_to_interval_index].ed) / 2)
-                            if (in_interval_index === -1 || (in_interval_index !== -1 && Math.abs(fno - go_to_mid) > GO_TO_ERROR)) {
-                                if (go_to_mid > fno) {
-                                    elevators[eno].move_up(function () {
-                                        elevators[eno].set_now_floor_no(fno + 1)
-                                        controller_directly_go_to_floor(eno, fno + 1)
-                                        elevators[eno].running_AI_mode()
-                                    })
-                                } else {
-                                    elevators[eno].move_down(
-                                        function () {
-                                            elevators[eno].set_now_floor_no(fno - 1)
-                                            controller_directly_go_to_floor(eno, fno - 1)
-
-                                            elevators[eno].running_AI_mode()
-                                        })
-                                }
-                            } else {
-                                // setTimeout()
-                                controller_wait_for_timeout_and_callBack(eno, 2000,
-                                    function () {
-                                        elevators[eno].running_AI_mode()
-                                    }
-                                )
-
-                            }
-
-                        }
-
-                    })
-                },
-                stop_AI_mode: function () {
-                    this.log('AI mode stoped')
-                    this.state.auto_mode_state = AI_MODE_CLOSED
-                    let callBack = this.state.auto_mode_running_outer_event
-                    this.state.auto_mode_running_outer_event = undefined
-                    this.set_now_direction(DIRECTION_STILL)
-                    if (callBack) callBack()
-                },
+                // start_waiting_to_launch_AI_mode: function () {
+                //     if (enable_AI_mode === false) {
+                //         return
+                //     }
+                //     if (this.state.auto_mode_state !== AI_MODE_CLOSED) {
+                //         return
+                //     }
+                //     if (this.state.now_direction !== DIRECTION_STILL &&
+                //         this.moving !== false && this.state.door_state !== DOOR_CLOSED) {
+                //         return
+                //     }
+                //     this.log('AI mode starting ')
+                //     this.state.auto_mode_state = AI_MODE_STARTING
+                //     let eno = this.elevator_no
+                //     controller_wait_for_timeout_and_callBack(this.elevator_no, AI_mode_start_waiting_time, function () {
+                //         elevators[eno].state.auto_mode_state = AI_MODE_RUNNING
+                //         set_indoor_direction_display(eno, DIRECTION_STILL)
+                //         elevators[eno].running_AI_mode()
+                //     })
+                // }
+                // ,
+                // running_AI_mode: function () { //Still pending
+                //     if (this.state.auto_mode_running_outer_event !== undefined) {
+                //         this.stop_AI_mode()
+                //         return
+                //     }
+                //     let eno = this.elevator_no
+                //     let fno = this.state.now_floor_no
+                //     let rand = randomNum(1, 300)
+                //     this.log('run, rand:' + rand, 2)
+                //     controller_wait_for_timeout_and_callBack(eno, rand, function () {
+                //
+                //         elevators[eno].log('AI mode running', 2)
+                //         // running and running
+                //         let has_elevator_of_floors = new Array(floor_nums + 2).fill(0)
+                //         has_elevator_of_floors[floor_nums + 1] = 1
+                //         for (let e = 1; e <= elevator_nums; e++) {
+                //             if (e !== eno) {
+                //                 has_elevator_of_floors[elevators[e].state.now_floor_no] += 1
+                //             }
+                //         }
+                //         if (fno !== 1 && (has_elevator_of_floors[1] === 0 && AI_mode_has_gone_to_first_floor === 0)) {
+                //             AI_mode_has_gone_to_first_floor += 1
+                //             elevators[eno].move_down(
+                //                 function () {
+                //                     elevators[eno].set_now_floor_no(fno - 1)
+                //                     controller_directly_go_to_floor(eno, fno - 1)
+                //                     AI_mode_has_gone_to_first_floor -= 1
+                //
+                //                     elevators[eno].running_AI_mode()
+                //                 })
+                //
+                //             return
+                //         }
+                //         if (has_elevator_of_floors[1] === 0 && fno === 1) {
+                //             controller_wait_for_timeout_and_callBack(eno, 2000,
+                //                 function () {
+                //                     elevators[eno].running_AI_mode()
+                //                 }
+                //             )
+                //             return
+                //         }
+                //         let free_intervals = []
+                //         let start = 1
+                //         let has = 1
+                //         elevators[eno].log('has_elevator_of_floors ' + has_elevator_of_floors.toString(), 2)
+                //
+                //         for (let fno = 1; fno <= floor_nums + 1; fno++) {
+                //             elevators[eno].log('fno:' + fno + ',' + 'start:' + start + ',has:' + has + 'now:' + has_elevator_of_floors[fno], 2)
+                //             if (has_elevator_of_floors[fno] === 0) {
+                //                 if (has === 1) {
+                //                     start = fno
+                //                     has = 0
+                //                 }
+                //             } else {
+                //                 if (has === 0) {
+                //                     free_intervals.push(
+                //                         {
+                //                             st: start,
+                //                             ed: fno - 1,
+                //                             len: fno - start,
+                //                         }
+                //                     )
+                //                     elevators[eno].log(' catch  st :' + start + ',ed :' + (fno - 1), 2)
+                //                     has = 1
+                //                 }
+                //             }
+                //         }
+                //         if (free_intervals.length === 0) {
+                //             controller_wait_for_timeout_and_callBack(eno, 2000,
+                //                 function () {
+                //                     elevators[eno].running_AI_mode()
+                //                 }
+                //             )
+                //
+                //         } else {
+                //             let longest_index = -1
+                //             let longest_len = 0
+                //             let in_interval_index = -1
+                //             for (let i = 0; i < free_intervals.length; i++) {
+                //                 elevators[eno].log('x.st:' + number_of_elevators.st + ',x.ed:' + number_of_elevators.ed, 2)
+                //                 if (free_intervals[i].len > longest_len) {
+                //                     longest_index = i
+                //                     longest_len = free_intervals[i].len
+                //                 }
+                //                 if (fno >= free_intervals[i].st && fno <= free_intervals[i].ed) {
+                //                     in_interval_index = i
+                //                 }
+                //             }
+                //             const GO_TO_ERROR = 1
+                //             const INTERVAL_LEN_ERROR = 1
+                //             elevators[eno].log('lg_idx:' + longest_index + ',lg_len:' + longest_len + ',lg.st:' + free_intervals[longest_index].st, 2)
+                //             elevators[eno].log('in_index:' + in_interval_index, 2)
+                //             let go_to_interval_index = longest_index
+                //             if (in_interval_index !== -1 && longest_index !== in_interval_index && Math.abs(free_intervals[in_interval_index].len - free_intervals[longest_index].len) <= INTERVAL_LEN_ERROR) {
+                //                 go_to_interval_index = in_interval_index
+                //             }
+                //             let go_to_mid = Math.floor((free_intervals[go_to_interval_index].st + free_intervals[go_to_interval_index].ed) / 2)
+                //             if (in_interval_index === -1 || (in_interval_index !== -1 && Math.abs(fno - go_to_mid) > GO_TO_ERROR)) {
+                //                 if (go_to_mid > fno) {
+                //                     elevators[eno].move_up(function () {
+                //                         elevators[eno].set_now_floor_no(fno + 1)
+                //                         controller_directly_go_to_floor(eno, fno + 1)
+                //                         elevators[eno].running_AI_mode()
+                //                     })
+                //                 } else {
+                //                     elevators[eno].move_down(
+                //                         function () {
+                //                             elevators[eno].set_now_floor_no(fno - 1)
+                //                             controller_directly_go_to_floor(eno, fno - 1)
+                //
+                //                             elevators[eno].running_AI_mode()
+                //                         })
+                //                 }
+                //             } else {
+                //                 // setTimeout()
+                //                 controller_wait_for_timeout_and_callBack(eno, 2000,
+                //                     function () {
+                //                         elevators[eno].running_AI_mode()
+                //                     }
+                //                 )
+                //
+                //             }
+                //
+                //         }
+                //
+                //     })
+                // },
+                // stop_AI_mode: function () {
+                //     this.log('AI mode stoped')
+                //     this.state.auto_mode_state = AI_MODE_CLOSED
+                //     let callBack = this.state.auto_mode_running_outer_event
+                //     this.state.auto_mode_running_outer_event = undefined
+                //     this.set_now_direction(DIRECTION_STILL)
+                //     if (callBack) callBack()
+                // },
                 choose_floor_switch: function (floor_no) {
                     return ext_choose_indoor_foor_switch(floor_no, this.elevator_no)
                 },
@@ -818,3 +834,191 @@ function dispatch_request(floor_no, direct) {
     console.assert(ok)
 
 }
+function call_move_down(elevator_id, to_floor_no) {
+                        elevators[elevator_id].move_down(
+                            function () {
+                                // elevators[elevator_id].set_now_floor_no(to_floor_no)
+                                // controller_directly_go_to_floor(elevator_id, to_floor_no)
+
+                                // elevators[elevator_id].running_AI_mode()
+                            })
+}
+
+function call_update_floor(elevator_no, floor_no) {
+    $('.elevator-main.' + elevator_no).css({'top': elevator_main_first_top - (floor_no - 1) * floor_height + 'px'})
+    $('.elevator-main.' + elevator_no + ' .elevator-line').css({'height': elevator_line_height - (floor_no - 1) * floor_height + 'px'})
+}
+
+// function call_move_up(elevator_id, to_floor_no) {
+//     console.log("move up")
+//     elevators[elevator_id].state.moving = 1
+//     let eno = elevator_id
+//     // floor_height=(floor_height +elevator_main_first_top)/2
+//     // $('.elevator-main.' + elevator_id + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear")
+//     // $('.elevator-main.' + elevator_id).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callBack)
+//
+//     call_move_up_multiple_times(1, 5, 4);
+// }
+// function call_move_up_multiple_times(elevator_id, to_floor_no, num_times) {
+//     console.log("move up")
+//     let eno = elevator_id;
+//     num_times+=1;
+//
+//     function moveUpRecursive(count) {
+//         if (count === 0) {
+//             return; // Kết thúc đệ quy khi đạt số lần gọi cần thiết
+//         }
+//
+//         controller_move_up(elevator_id, function () {
+//             elevators[eno].state.moving = 0;
+//             // elevators[eno].set_now_floor_no(to_floor_no);
+//             // controller_directly_go_to_floor(elevator_id, to_floor_no - 1);
+//
+//             // Gọi đệ quy với count giảm đi 1
+//             moveUpRecursive(count - 1);
+//         });
+//     }
+//
+//     moveUpRecursive(num_times);
+// }
+
+function move_up(callBack) {
+    this.log("move up")
+    this.state.moving = 1
+    let eno = 1
+    controller_move_up(this.elevator_no, function () {
+        elevators[eno].state.moving = 0
+        callBack()
+    })
+}
+
+    function call_check_and_move(eno, floorno) {
+        // The request for this direction on this floor has been processed and is closed.
+        this.time += 1;
+        this.log('check now :fno ' + this.state.now_floor_no + ' dir :' + this.state.now_direction + ' time: ' + this.time);
+
+        // If elevator is in still mode, start waiting to launch AI mode
+        if (this.state.now_direction === DIRECTION_STILL) {
+            this.start_waiting_to_launch_AI_mode();
+            return;
+        }
+
+        // Determine direction based on floorno
+        let direction = floorno > this.state.now_floor_no ? DIRECTION_UP : DIRECTION_DOWN;
+
+        // Check if there are inner requests or outer requests in current direction
+        let direct_has_inner_requests = 0;
+        let direct_has_outter_requests = 0;
+
+        let request_floors = Array(floor_nums * 2 + 1).fill(0);
+        let going_elevators = Array(floor_nums * 2 + 1).fill(0);
+
+        for (let k = this.state.now_floor_no + this.state.now_direction; k >= 1 && k <= floor_nums; k += this.state.now_direction) {
+            if (this.state.indoor_switches[k] === ON) {
+                direct_has_inner_requests = 1;
+                break;
+            }
+            if (outdoor_buttons_state[k][DIRECTION_UP] === ON || outdoor_buttons_state[k][DIRECTION_DOWN] === ON) {
+                request_floors[k] = 1;
+            }
+        }
+
+        for (let otherEno = 1; otherEno <= elevator_nums; otherEno++) {
+            if (otherEno !== eno && elevators[otherEno].state.now_direction === direction) {
+                going_elevators[elevators[otherEno].state.now_floor_no] += 1;
+            }
+        }
+
+        let now_enum = 0;
+        let now_fnum = 0;
+        let threash = 1.8;
+        for (let k = this.state.now_floor_no; k >= 1 && k <= floor_nums; k += this.state.now_direction) {
+            now_enum += going_elevators[k];
+            now_fnum += request_floors[k];
+            if ((now_enum === 0 && now_fnum !== 0) || (now_enum !== 0 && now_fnum / now_enum >= threash)) {
+                direct_has_outter_requests = 1;
+                break;
+            }
+        }
+
+        this.log('dir has req ' + direct_has_inner_requests + ' outer ' + direct_has_outter_requests);
+
+        if (direct_has_inner_requests || direct_has_outter_requests) {
+            this.log(' now fno: ' + floorno);
+            if (direction === DIRECTION_UP) {
+                this.move_up();
+                elevators[eno].on_reach_floor(floorno + 1);
+            } else {
+                this.move_down();
+                elevators[eno].on_reach_floor(floorno - 1);
+            }
+        } else {
+            // Reverse direction
+            let rev_direction = direction === DIRECTION_UP ? DIRECTION_DOWN : DIRECTION_UP;
+
+            // Check if there are inner requests or outer requests in reversed direction
+            let rev_direct_has_inner_requests = 0;
+            let rev_direct_has_outer_requests = 0;
+
+            request_floors = Array(floor_nums * 2 + 1).fill(0);
+            going_elevators = Array(floor_nums * 2 + 1).fill(0);
+
+            for (let k = this.state.now_floor_no; k >= 1 && k <= floor_nums; k += rev_direction) {
+                if (this.state.indoor_switches[k] === ON) {
+                    rev_direct_has_inner_requests = 1;
+                    break;
+                }
+                if (outdoor_buttons_state[k][DIRECTION_UP] === ON || outdoor_buttons_state[k][DIRECTION_DOWN] === ON) {
+                    request_floors[k] = 1;
+                }
+            }
+
+            for (let otherEno = 1; otherEno <= elevator_nums; otherEno++) {
+                if (otherEno !== eno && elevators[otherEno].state.now_direction === rev_direction) {
+                    going_elevators[elevators[otherEno].state.now_floor_no] += 1;
+                }
+            }
+
+            now_enum = 0;
+            now_fnum = 0;
+            for (let k = this.state.now_floor_no; k >= 1 && k <= floor_nums; k += rev_direction) {
+                now_enum += going_elevators[k];
+                now_fnum += request_floors[k];
+                if ((now_enum === 0 && now_fnum !== 0) || (now_enum !== 0 && now_fnum / now_enum >= threash)) {
+                    rev_direct_has_outer_requests = 1;
+                    break;
+                }
+            }
+
+            if (rev_direct_has_inner_requests || rev_direct_has_outer_requests) {
+                this.need_direction(rev_direction, 1);
+            } else {
+                this.need_direction(DIRECTION_STILL, 1);
+            }
+        }
+
+
+}
+function moveElevatorToFloor(elevator_no, target_floor) {
+    let elevator = elevators[elevator_no];
+    let current_floor = elevator.state.now_floor_no;
+
+    if (target_floor > current_floor) {
+        let floors_to_move = target_floor - current_floor;
+        for (let i = 0; i < floors_to_move; i++) {
+            elevator.move_up();
+        }
+        console.log("Elevator " + elevator_no + " moved up " + floors_to_move + " floors.");
+    } else if (target_floor < current_floor) {
+        let floors_to_move = current_floor - target_floor;
+        for (let i = 0; i < floors_to_move; i++) {
+            elevator.move_down();
+        }
+        console.log("Elevator " + elevator_no + " moved down " + floors_to_move + " floors.");
+    } else {
+        console.log("Elevator " + elevator_no + " is already at floor " + target_floor + ".");
+    }
+}
+
+
+

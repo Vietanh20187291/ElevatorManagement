@@ -17,9 +17,9 @@
     <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link href="/static/css/simulation.css" media="all" rel="stylesheet" type="text/css"/>
-<!--    <script src="/static/js/AlertError.js" type="text/javascript"></script>-->
+    <!--    <script src="/static/js/AlertError.js" type="text/javascript"></script>-->
 
-    <script src="/static/js/SimulationNavigator.js"></script>
+    <script src="/static/js/ElevatorNavigator.js"></script>
 
     <script src="/static/js/demo-simulation/utils.js"></script>
 
@@ -29,65 +29,58 @@
     <script src="/static/js/demo-simulation/binding.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-<!--    <script src="js/utils.js"></script>-->
-<!--    <script src="js/config.js"></script>-->
-<!--    <script src="js/building_display.js"></script>-->
-<!--    <script src="js/elevator-system.js"></script>-->
-<!--    <script src="js/binding.js"></script>-->
+    <!--    <script src="js/utils.js"></script>-->
+    <!--    <script src="js/config.js"></script>-->
+    <!--    <script src="js/building_display.js"></script>-->
+    <!--    <script src="js/elevator-system.js"></script>-->
+    <!--    <script src="js/binding.js"></script>-->
     <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js}" type="text/javascript"></script>
 </head>
 <body>
 <div th:text="${numFloors}" id="numFloors" hidden></div>
 <div th:text="${numElevators}" id="numElevators" hidden></div>
-
-<div th:each="elevator : ${elevators}">
-    <div th:text="${elevator.id}" class="elevator-id" th:id="'elevatorId_' + ${elevator.id}" hidden></div>
-    <div th:text="${elevator.name}" class="elevator-name" th:id="'elevatorName_' + ${elevator.id}" hidden></div>
-    <div th:text="${elevator.numFloors}" class="elevator-num-floors" th:id="'elevatorNumFloors_' + ${elevator.id}" hidden></div>
-</div>
-
 <!--<div th:replace="fragments/header :: header"></div>-->
 <div class="container-a">
-<!--<div class="head-info">-->
-<!--    <div class="building-info">-->
-<!--        <p>Number of floors：<span id="floor_nums_info">10</span>&nbsp;<button class="btn btn-primary .btn-xs change_building-button"-->
-<!--                                                                              id="change-floor-nums"-->
-<!--                                                                              type="button">-->
-<!--            Change-->
-<!--        </button>&nbsp; Number of elevator：<span id="elevator_nums_info">3</span>-->
-<!--            <button class="btn btn-primary .btn-xs change_building-button" id="change-elevator_nums"-->
-<!--                    type="button">Change-->
-<!--            </button>-->
+    <!--<div class="head-info">-->
+    <!--    <div class="building-info">-->
+    <!--        <p>Number of floors：<span id="floor_nums_info">10</span>&nbsp;<button class="btn btn-primary .btn-xs change_building-button"-->
+    <!--                                                                              id="change-floor-nums"-->
+    <!--                                                                              type="button">-->
+    <!--            Change-->
+    <!--        </button>&nbsp; Number of elevator：<span id="elevator_nums_info">3</span>-->
+    <!--            <button class="btn btn-primary .btn-xs change_building-button" id="change-elevator_nums"-->
+    <!--                    type="button">Change-->
+    <!--            </button>-->
 
-<!--        </p>-->
-<!--        <div>-->
-<!--            <div> Change the elevator position (effective when all elevators are stationary)</div>-->
-<!--            <button class="btn btn-info .btn-xs change_building-button half-one-half-distribution"-->
-<!--                    type="button">Half of the elevators are on the first floor and half are scattered around-->
-<!--            </button>-->
-<!--            <button class="btn btn-info .btn-xs change_building-button all-one"-->
-<!--                    type="button">All elevators are on the first floor-->
-<!--            </button>-->
-<!--        </div>-->
-<!--        <div>-->
-<!--            <div>Smart mode: All elevators automatically analyze the system status when idle and move to floors lacking elevators</div>-->
-<!--            <button class="btn btn-info .btn-xs enable-ai-mode-button"-->
-<!--                    type="button">Activate smart mode-->
-<!--            </button>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-<div class="g-content" id="g-building">
-    <div class="g-take-place"></div>
-    <div class="g-container"></div>
-    <div class="g-take-place"></div>
-</div>
-<div class="take-place-panel take-place-hidden"></div>
-<div id="g-panel-content">
-    <div class="g-take-place"></div>
-    <div id="g-panel-body"></div>
-    <div class="g-take-place"></div>
-</div>
+    <!--        </p>-->
+    <!--        <div>-->
+    <!--            <div> Change the elevator position (effective when all elevators are stationary)</div>-->
+    <!--            <button class="btn btn-info .btn-xs change_building-button half-one-half-distribution"-->
+    <!--                    type="button">Half of the elevators are on the first floor and half are scattered around-->
+    <!--            </button>-->
+    <!--            <button class="btn btn-info .btn-xs change_building-button all-one"-->
+    <!--                    type="button">All elevators are on the first floor-->
+    <!--            </button>-->
+    <!--        </div>-->
+    <!--        <div>-->
+    <!--            <div>Smart mode: All elevators automatically analyze the system status when idle and move to floors lacking elevators</div>-->
+    <!--            <button class="btn btn-info .btn-xs enable-ai-mode-button"-->
+    <!--                    type="button">Activate smart mode-->
+    <!--            </button>-->
+    <!--        </div>-->
+    <!--    </div>-->
+    <!--</div>-->
+    <div class="g-content" id="g-building">
+        <div class="g-take-place"></div>
+        <div class="g-container"></div>
+        <div class="g-take-place"></div>
+    </div>
+    <div class="take-place-panel take-place-hidden"></div>
+    <div id="g-panel-content">
+        <div class="g-take-place"></div>
+        <div id="g-panel-body"></div>
+        <div class="g-take-place"></div>
+    </div>
 </div>
 </body>
 </html>
@@ -104,9 +97,9 @@
         /*background-image: url("/images/simulation/wall");*/
         background-color: black;
     }
-/*html{*/
-/*    transform: scale(0.75);*/
-/*}*/
+    /*html{*/
+    /*    transform: scale(0.75);*/
+    /*}*/
     div.grid-container {
         display: grid;
         background-color: #FFAA00;

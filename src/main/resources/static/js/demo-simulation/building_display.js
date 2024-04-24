@@ -124,10 +124,10 @@ function div_html_of_open_close_buttons() {
     return template_of_open_close_buttons
 }
 
-function div_html_of_choose_floor_block(floor_nums, elevator_no, elevator_name){
+function div_html_of_choose_floor_block(floor_nums, elevator_no) {
     let res = ('<div class="g-panel-item-wrapper"><div class="elevator-window choose-floor-block mark-of-eno">\n' +
         '<div class="take-place elevator-info">\n' +
-        // '                        <p class="choose-floor-prompt"><span class="a">#mark-of-eno</span></p>\n' +
+        '                        <p class="choose-floor-prompt"><span class="a">#mark-of-eno</span></p>\n' +
         '\n' +
         '     <div class="now-floor-info">\n' +
         '                        <div class="floor-info-decoration"></div>\n' +
@@ -137,8 +137,8 @@ function div_html_of_choose_floor_block(floor_nums, elevator_no, elevator_name){
     for (let k = 1; k <= floor_nums; k++) {
         res += tempalte_of_choose_floor_button.replace(/mark-of-fno/g, k)
     }
+
     res += div_html_of_open_close_buttons()
-    res += '<h1>mark-of-eno</h1>'.replace(/mark-of-eno/g, elevator_name)
     res += '</div></div>'
     return res
 }
@@ -150,32 +150,11 @@ function div_html_off_choose_floor_block_side() {
 }
 
 
-function set_panel_body(floor_nums, elevator_nums,list_elevators) {
+function set_panel_body(floor_nums, elevator_nums) {
     let res = div_html_off_choose_floor_block_side()
-    // for (let k = 1; k <= elevator_nums; k++) {
-    //     console.log("floor_nums:", floor_nums);
-    //     console.log("k:", k);
-    //     console.log("\"ujk\":", "ujk");
-    //     // res += div_html_of_choose_floor_block(floor_nums, k,"ujk")
-    // }
-    console.log(list_elevators)
-    for (let Id in list_elevators) {
-        if (list_elevators.hasOwnProperty(Id)) {
-            let elevator = list_elevators[Id];
-            let elevatorId = elevator["elevator-id"];
-            let elevatorName = elevator["elevator-name"];
-            let elevatorNumFloors = elevator["elevator-num-floors"];
-
-            // console.log("elevatorNumFloors:",elevatorNumFloors);
-            // console.log("elevatorId:",elevatorId);
-            // console.log("elevatorId:",typeof elevatorId);
-            // console.log("elevatorName:",elevatorName);
-
-
-            res += div_html_of_choose_floor_block(elevatorNumFloors, elevatorId, elevatorName);
-        }
+    for (let k = 1; k <= elevator_nums; k++) {
+        res += div_html_of_choose_floor_block(floor_nums, k)
     }
-
     res += div_html_off_choose_floor_block_side()
     $('#g-panel-body').html(res)
     let grid_template_columns_of_panel_body =
@@ -186,13 +165,6 @@ function set_panel_body(floor_nums, elevator_nums,list_elevators) {
     for (let i = 1; i <= elevator_nums; i++) {
         elevators[i].set_now_floor_no(elevators[i].state.now_floor_no)
         elevators[i].set_now_direction(elevators[i].state.now_direction)
-    }
-
-    for (let elevatorId in list_elevators) {
-        if (list_elevators.hasOwnProperty(elevatorId)) {
-            elevators[elevatorId].set_now_floor_no(elevators[elevatorId].state.now_floor_no)
-            elevators[elevatorId].set_now_direction(elevators[elevatorId].state.now_direction)
-        }
     }
     pin_element_to_bottom('g-panel-content')
 }
@@ -295,7 +267,6 @@ let elevator_line_height = 330
 let elevator_main_first_top = 123
 let floor_height = 320
 
-
 function cal_elevator_main_first_top() {
     elevator_main_first_top = $(".elevator-main.1").position().top
     return elevator_main_first_top
@@ -316,7 +287,7 @@ function cal_floor_height() {
 }
 
 function controller_directly_go_to_floor(elevator_no, floor_no) {
--
+    $('.elevator-main.' + elevator_no).css({'top': elevator_main_first_top - (floor_no - 1) * floor_height + 'px'})
     $('.elevator-main.' + elevator_no + ' .elevator-line').css({'height': elevator_line_height - (floor_no - 1) * floor_height + 'px'})
 
 }
@@ -331,14 +302,13 @@ function controller_stop_waiting_for_timeout_and_callback(elevator_no, callBack)
 }
 
 function controller_move_up(elevator_no, callBack) {
-
     $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear")
+
     $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callBack)
 }
 
-
 function controller_move_down(elevator_no, callBack) {
-    // floor_height=(floor_height +elevator_main_first_top)/2
+
     $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear")
     $('.elevator-main.' + elevator_no).animate({top: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callBack)
 
