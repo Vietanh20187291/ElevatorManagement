@@ -58,7 +58,7 @@ public class AreaController {
         System.out.println("numFloors: "+elevators.get(0).getNumFloors());
         model.addAttribute("numElevators",elevators.size());
         System.out.println("numElevators: "+elevators.size());
-        return "elevator/demo-simulation";
+        return "elevator/simulation";
     }
 
     @GetMapping("/{areaId}/add-elevator")

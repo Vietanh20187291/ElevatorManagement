@@ -330,25 +330,25 @@ function controller_stop_waiting_for_timeout_and_callback(elevator_no, callBack)
     callBack()
 }
 
-function controller_move_up(elevator_no, callBack) {
+function controller_move_up_old(elevator_no, callBack) {
 
     $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear")
     $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callBack)
 }
+function controller_move_up(elevator_no) {
+    $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear")
+    $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear")
+}
 
-
-function controller_move_down(elevator_no, callBack) {
-    // floor_height=(floor_height +elevator_main_first_top)/2
+function controller_move_down(elevator_no) {
     $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear")
-    $('.elevator-main.' + elevator_no).animate({top: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callBack)
-
-
+    $('.elevator-main.' + elevator_no).animate({top: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear")
 }
 
 
-function controller_close_door(floor_no, elevator_no, callBack) {
+function controller_close_door(elevator_no,floor_no) {
     let elevator_window_mark = floor_no + '-' + elevator_no
-    $('.elevator-main.' + elevator_no).animate({opacity: '75%'}, toggle_door_secs, "linear", callBack)
+    $('.elevator-main.' + elevator_no).animate({opacity: '75%'}, toggle_door_secs, "linear")
     $('.elevator-window.' + elevator_window_mark + ' .elevator-door').animate({width: '50%'}, toggle_door_secs, "linear")
 }
 
@@ -359,91 +359,14 @@ function controller_stop_closing_door(floor_no, elevator_no, callBack) {
     callBack()
 }
 
-function controller_open_door(floor_no, elevator_no, callBack) {
+function controller_open_door(elevator_no,floor_no) {
     let elevator_window_mark = floor_no + '-' + elevator_no
-    $('.elevator-main.' + elevator_no).animate({opacity: '100%'}, toggle_door_secs, "linear", callBack)
+    $('.elevator-main.' + elevator_no).animate({opacity: '100%'}, toggle_door_secs, "linear")
     $('.elevator-window.' + elevator_window_mark + ' .elevator-door').animate({width: '0%'}, toggle_door_secs, "linear")
+
 }
 
 
-function display_set_floor_nums_dialog() {
-    swal(
-        {
-            title: 'Please set the number of floors',
-            text: 'The number of floors is a number between 2-50 (inclusive)\n\nNote: If you use the browser zoom function, please adjust it back to 100% and set it for normal use!',
-            type: 'input',
-            showCancelButton: true,
-            closeOnConfirm: false,
-            animation: 'slide-from-top',
-            inputPlaceholder: '\n' + 'Enter your desired number of floors here...'
-        },
-        function (inputValue) {
-            if (inputValue === false) {
-                return false;
-            }
-            if (inputValue === '') {
-                swal.showInputError('内容不能为空！');
-                return false;
-            }
-            var re = /^\+?[1-9][0-9]*$/s;
-            if (!re.test(inputValue)) {
-                swal.showInputError('请输入合法的正整数！');
-                return false;
-            }
-            let value = parseInt(inputValue)
-            console.log(value)
-            if (value < 2 || value > 50) {
-                swal.showInputError(
-                    '楼层数目必须在2-50区间，您输入的值为' + value +
-                    '!')
-                return false;
-            }
-            set_building_configs_and_rebuild(value, elevator_nums)
-            swal(
-                'Nice!',
-                '您的楼层数目已更改为：' + value + '，新的电梯系统已生成！',
-                'success',
-            )
-        });
-}
 
-function display_set_elevator_nums_dialog() {
-    swal(
-        {
-            title: '请设置电梯数量',
-            text: '电梯数量为1-30(包含)之间的数字\n\n注意：如果您使用了浏览器缩放功能，请调回100%再设置以正常使用！',
-            type: 'input',
-            showCancelButton: true,
-            closeOnConfirm: false,
-            animation: 'slide-from-top',
-            inputPlaceholder: '在此输入您期望的电梯数量...'
-        },
-        function (inputValue) {
-            if (inputValue === false) {
-                return false;
-            }
-            if (inputValue === '') {
-                swal.showInputError('内容不能为空！');
-                return false;
-            }
-            var re = /^\+?[1-9][0-9]*$/;
-            if (!re.test(inputValue)) {
-                swal.showInputError('请输入合法的正整数！');
-                return false;
-            }
-            let value = parseInt(inputValue)
-            console.log(value)
-            if (value < 1 || value > 30) {
-                swal.showInputError(
-                    '电梯数目必须在1-30区间，您输入的值为' + value +
-                    '!')
-                return false;
-            }
-            set_building_configs_and_rebuild(floor_nums, value)
-            swal(
-                'Nice!',
-                '您的楼电梯数量已更改为：' + value + '，新的电梯系统已生成！',
-                'success',
-            )
-        });
-}
+
+

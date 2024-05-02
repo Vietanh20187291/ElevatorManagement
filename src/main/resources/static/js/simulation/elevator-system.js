@@ -30,8 +30,30 @@ $(function () {
     startConnect()
     // set_building_configs_and_rebuild(floor_nums, elevator_nums)
     set_building_configs_and_rebuild(numFloors, numElevators,listElevators)
-});
+    call_move_up(1)
+    call_move_down(1)
+    call_open_door(2,elevators[2].state.now_floor_no, 2)
+    call_close_door(2,elevators[2].state.now_floor_no, 2)
+    call_move_up(2)
 
+
+});
+function call_move_up(elevator_no){
+    elevators[elevator_no].now_floor_no += 1
+    controller_move_up(elevator_no)
+}
+function call_move_down(elevator_no){
+    elevators[elevator_no].now_floor_no -= 1
+    controller_move_down(elevator_no)
+}
+function call_open_door(elevator_no,floor_no){
+    elevators[elevator_no].state.door_state = DOOR_OPENED
+    controller_open_door(elevator_no,floor_no)
+}
+function call_close_door(elevator_no,floor_no){
+    elevators[elevator_no].state.door_state = DOOR_CLOSED
+    controller_close_door(elevator_no,floor_no)
+}
 function set_building_configs_and_rebuild(floor_nums, elevator_nums, list_elevators) {
     floor_nums = 10
     $('*').stop()
@@ -69,6 +91,7 @@ function create_elevators_objects(number_of_elevators,list_elevators) {
     console.log("ck");
     console.log(elevatorNames);
     console.log(list_elevators);
+
     for (let Id in list_elevators) {
         if (list_elevators.hasOwnProperty(Id)) {
             let elevator = list_elevators[Id];
@@ -86,9 +109,9 @@ function create_elevators_objects(number_of_elevators,list_elevators) {
                     indoor_activated_switches_num: 0
                 },
                 start: function () {
-                    call_update_floor(1,5)
+                    // call_update_floor(1,5)
 
-
+                    // controller_test_move_up(1)
                     // elevators[1].move_up();
                     // elevators[1].on_reach_floor(6);
                     //
@@ -96,7 +119,7 @@ function create_elevators_objects(number_of_elevators,list_elevators) {
                     // elevators[1].on_reach_floor(5);
 
                     // moveElevatorToFloor(1, 8);
-                    moveElevatorToFloor(1, 3);
+                    // moveElevatorToFloor(1, 3);
 
 
 
@@ -1005,14 +1028,16 @@ function moveElevatorToFloor(elevator_no, target_floor) {
 
     if (target_floor > current_floor) {
         let floors_to_move = target_floor - current_floor;
+        alert(floors_to_move)
         for (let i = 0; i < floors_to_move; i++) {
-            elevator.move_up();
+            controller_move_up(elevator_no);
+            // console.log("Elevator " + elevator_no + " moved up " + floors_to_move + " floors.");
         }
-        console.log("Elevator " + elevator_no + " moved up " + floors_to_move + " floors.");
+
     } else if (target_floor < current_floor) {
         let floors_to_move = current_floor - target_floor;
         for (let i = 0; i < floors_to_move; i++) {
-            elevator.move_down();
+           controller_move_down()
         }
         console.log("Elevator " + elevator_no + " moved down " + floors_to_move + " floors.");
     } else {
