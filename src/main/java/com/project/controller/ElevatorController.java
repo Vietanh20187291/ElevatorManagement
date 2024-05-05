@@ -1,8 +1,10 @@
 package com.project.controller;
 
 import com.project.entity.Elevator;
+import com.project.entity.MqttConnection;
 import com.project.helper.CookieHelper;
 import com.project.service.ElevatorService;
+import com.project.service.MqttConnectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,13 +22,17 @@ public class ElevatorController {
     private ElevatorService elevatorService;
     @Autowired
     private CookieHelper cookieHelper;
+    @Autowired
+    private MqttConnectionService mqttConnectionService;
 
     @GetMapping("/{elevatorId}")
     public String getElevatorById(@PathVariable int elevatorId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
         Elevator elevator = elevatorService.getElevatorById(elevatorId);
         model.addAttribute("elevator", elevator);
-        return "elevator/elevator";
+        MqttConnection mqttConnection = mqttConnectionService.getMqttConnection();
+        model.addAttribute("mqttConnection", mqttConnection);
+        return "elevator/ele1";
     }
 
 

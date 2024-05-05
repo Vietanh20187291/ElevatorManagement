@@ -46,6 +46,7 @@
           <li class="nav-item ml-auto">
             <a th:if="${role == 'ADMIN' || role == 'MANAGER'}" class="nav-link navbar-text" href="/user">Users</a>
           </li>
+
           <li class="nav-item ml-auto">
             <a class="nav-link navbar-text" href="/building/1">Building</a>
           </li>
@@ -64,6 +65,9 @@
 <!--          <li class="nav-item ml-auto">-->
 <!--            <a th:if="${role == 'USER'}" class="nav-link navbar-text" th:href="@{/task/user/{userId}(userId=${userId})}">My Tasks</a>-->
 <!--          </li>-->
+            <li class="nav-item ml-auto">
+                <a th:if="${role == 'ADMIN' || role == 'MANAGER'}" class="nav-link navbar-text" href="/mqtt-connection">MQTT Config</a>
+            </li>
           <li class="nav-item">
             <a class="nav-link" href="/user/password">Password</a>
           </li>

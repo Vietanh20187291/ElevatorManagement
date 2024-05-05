@@ -118,7 +118,11 @@
 <!--        </div>-->
 <!--    </div>-->
 
-
+    <div th:text="${mqttConnection.host}" id="host"></div>
+    <div th:text="${mqttConnection.port}" id="port"></div>
+    <div th:text="${mqttConnection.username}" id="username"></div>
+    <div th:text="${mqttConnection.password}" id="password"></div>
+    <div th:text="${mqttConnection.path}" id="path"></div>
     <div class="row">
         <div class="col text-center">
             <h1>Elevator Controlling</h1>

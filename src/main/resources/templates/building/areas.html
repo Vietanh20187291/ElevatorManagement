@@ -33,6 +33,7 @@
                         <div class="card-body">
                             <p th:text="${area.description}"></p>
                             <a class="btn btn-primary" th:href="@{/area/{areaId}(areaId=${area.id})}">View Details</a>
+                            <a class="btn btn-secondary mr-2" th:href="@{/area/{areaId}/elevator-simulation(areaId=${area.id})}">Simulation</a>
                         </div>
                     </div>
                 </div>

@@ -1,3 +1,11 @@
+// var host = document.getElementById("host").value;
+// var port = parseInt(document.getElementById("port").value);
+// var useTLS = false;
+// var username = document.getElementById("username").value;
+// var password = document.getElementById("password").value;
+// cleansession = true;
+// alert("ji")
+// alert(host+port+username+password);
 var host = 'tkevn.ddns.net';
 var port = 8001;
 var useTLS = false;
@@ -6,7 +14,7 @@ var password = "minh";
 cleansession = true;
 var mqtt;
 var reconnectTimeout = 2000;
-var elevator = document.getElementById("elevator").value;
+var elevator = document.getElementById("elevator").innerHTML;
 var numFloors = parseInt(document.getElementById("numFloors").value);
 console.log(elevator);
 
