@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thang máy</title>
+    <style>
+        /* Định nghĩa kiểu cho div bao quanh */
+        .elevator-control {
+            display: inline-block; /* Hiển thị như một khối trên cùng một dòng */
+            background-color: black; /* Nền đen */
+            color: red; /* Chữ màu đỏ */
+            padding: 5px; /* Khoảng cách giữa nội dung và viền */
+            width: auto; /* Độ rộng tự động dựa trên nội dung */
+        }
+
+        /* Định nghĩa kiểu cho h1 */
+        .elevator-control h1 {
+            display: inline; /* Hiển thị như một phần tử inline */
+            margin: 0; /* Xóa margin */
+            padding: 0; /* Xóa padding */
+        }
+
+        /* Định nghĩa kiểu cho biểu tượng UP và DOWN */
+        .up-arrow::before,
+        .down-arrow::before {
+            font-family: Arial, sans-serif; /* Chọn font chữ */
+            font-size: 1.5em; /* Kích thước */
+            margin-right: 5px; /* Khoảng cách với chữ số */
+        }
+        .up-arrow::before {
+            content: "\2191"; /* Biểu tượng mũi tên lên */
+        }
+        .down-arrow::before {
+            content: "\2193"; /* Biểu tượng mũi tên xuống */
+        }
+    </style>
+</head>
+<body>
+<div class="elevator-control">
+    <h1>1</h1>
+    <span class="up-arrow">&#9650;</span> <!-- Biểu tượng mũi tên lên -->
+    <!-- Thêm biểu tượng mở cửa/đóng cửa -->
+    <span class="open-door"></span>
+</div>
+</body>
+</html>

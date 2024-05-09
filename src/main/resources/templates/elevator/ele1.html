@@ -285,10 +285,10 @@
             Back
         </a>
     </div>
-    <input class="input-info" id="host" name="mqttConnectionHost" readonly th:value="${mqttConnection.host}">
-    <input class="input-info" id="port" name="mqttConnectionPort" readonly th:value="${mqttConnection.port}">
-    <input class="input-info" id="username" name="mqttConnectionUsername" readonly th:value="${mqttConnection.username}">
-    <input class="input-info" id="password" name="mqttConnectionPassword" readonly th:value="${mqttConnection.password}">
+    <input class="input-info" id="host" name="mqttConnectionHost" readonly th:value="${mqttConnection.host}" hidden>
+    <input class="input-info" id="port" name="mqttConnectionPort" readonly th:value="${mqttConnection.port}" hidden>
+    <input class="input-info" id="username" name="mqttConnectionUsername" readonly th:value="${mqttConnection.username}" hidden>
+    <input class="input-info" id="password" name="mqttConnectionPassword" readonly th:value="${mqttConnection.password}" hidden>
 
 </div>
 <script type="text/javascript">
