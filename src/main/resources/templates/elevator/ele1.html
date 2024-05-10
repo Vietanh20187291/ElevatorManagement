@@ -360,6 +360,8 @@
 
         var subscribetopicdisplay = "/Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator";
         mqtt.subscribe(subscribetopicdisplay, {qos: 0});
+        var subscribetopiccarcall = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/carcall";
+        mqtt.subscribe(subscribetopiccarcall, {qos: 0});
         // console.log(subscribetopicdisplay)
         // alert(subscribetopicdisplay)
 
@@ -415,13 +417,11 @@
     }
 
     function onMessageArrived(message) {
-        alert("onMessageArrived")
         var topic = message.destinationName;
         var payload = message.payloadString;
-
+        alert(topic + " : " + payload);
 
         // Alert the formatted hexadecimal payload
-        alert("Hexadecimal Payload: " + payloadHex);
         if (topic ==  "Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator"){
             var payloadBytes = message.payloadBytes;
 
@@ -430,8 +430,22 @@
 
             // Insert space after every two characters
             payloadHex = insertSpaceEveryNChars(payloadHex, 4);
-            handleInput(payloadHex.replace(/\s/g, ''));
+            handleInputTopicDisplay(payloadHex.replace(/\s/g, ''));
         }
+        if (topic ==  "Vietnam/Hanoi/Showzoom/PL1/elvtopc/carcall") {
+
+            var payloadBytes = message.payloadBytes;
+
+            // Convert payload bytes to hexadecimal string
+            var payloadHex = bytesToHex(payloadBytes);
+
+            // Insert space after every two characters
+            payloadHex = insertSpaceEveryNChars(payloadHex, 2);
+            // handleInput(payloadHex.replace(/\s/g, ''));
+            var result = findCalledFloors(payloadHex);
+            alert(result);
+        }
+
         if (topic ==  "/display"){
             alert(payload.toUpperCase())
         }
@@ -651,7 +665,7 @@
         }
         return result.trim(); // Remove trailing space
     }
-    function handleInput(input) {
+    function handleInputTopicDisplay(input) {
         // var input = document.getElementById("input").value;
 
         // Check if input is valid
@@ -698,7 +712,7 @@
         } else if (d4.charAt(3) === "1") {
             status = "Full";
         } else {
-            status = "Unknown";
+            status = "Active";
         }
 
         alert("d0: " + d0 + "\n" +
@@ -727,6 +741,23 @@
             var asciiCharacter = String.fromCharCode(decimalValue);
             return asciiCharacter;
         }
+    }
+
+    function findCalledFloors(signalInput) {
+        var signalArray = signalInput.split(" ");
+        var result = [];
+
+        for (var i = 0; i < signalArray.length; i++) {
+            var binaryString = parseInt(signalArray[i], 16).toString(2).padStart(8, '0');
+            for (var j = 0; j < binaryString.length; j++) {
+                if (binaryString[j] === '1') {
+                    var floorNumber = (i * 8) + (8 - j);
+                    result.push(floorNumber);
+                }
+            }
+        }
+
+        return result;
     }
 </script>
 <script crossorigin="anonymous"

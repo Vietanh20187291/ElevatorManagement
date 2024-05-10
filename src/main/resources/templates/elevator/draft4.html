@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #input {
+            margin-bottom: 10px;
+        }
+        #result {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div id="input">
+    <label for="signal">Nhập tín hiệu:</label>
+    <input type="text" id="signal">
+    <button onclick="dost()">Tìm</button>
+</div>
+<div id="result"></div>
+
+<script>
+    function findCalledFloors(signalInput) {
+        var signalArray = signalInput.split(" ");
+        var result = [];
+
+        for (var i = 0; i < signalArray.length; i++) {
+            var binaryString = parseInt(signalArray[i], 16).toString(2).padStart(8, '0');
+            for (var j = 0; j < binaryString.length; j++) {
+                if (binaryString[j] === '1') {
+                    var floorNumber = (i * 8) + (8 - j);
+                    result.push(floorNumber);
+                }
+            }
+        }
+
+        return result;
+    }
+    function dost(){
+        var signalInput = document.getElementById("signal").value.trim();
+        var rs = findCalledFloors(signalInput);
+        alert(rs);
+    }
+
+</script>
+</body>
+</html>
