@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hex to Decimal Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .converter {
+            text-align: center;
+        }
+
+        input {
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 200px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<div class="converter">
+    <h2>Hex to Decimal Converter</h2>
+    <input type="text" id="hexInput" placeholder="Enter hex value">
+    <button onclick="convertHexToDecimal()">Convert</button>
+    <p id="result"></p>
+</div>
+
+<script>
+    function convertHexToDecimal() {
+        var hexValue = document.getElementById("hexInput").value;
+        var decimalValue = parseInt(hexValue, 16) - 4 + 10;
+        document.getElementById("result").innerHTML = "Decimal value: " + decimalValue;
+    }
+</script>
+
+</body>
+</html>

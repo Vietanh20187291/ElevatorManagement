@@ -285,10 +285,10 @@
             Back
         </a>
     </div>
-    <input class="input-info" id="host" name="mqttConnectionHost" readonly th:value="${mqttConnection.host}" hidden>
-    <input class="input-info" id="port" name="mqttConnectionPort" readonly th:value="${mqttConnection.port}" hidden>
-    <input class="input-info" id="username" name="mqttConnectionUsername" readonly th:value="${mqttConnection.username}" hidden>
-    <input class="input-info" id="password" name="mqttConnectionPassword" readonly th:value="${mqttConnection.password}" hidden>
+    <input class="input-info" id="host" name="mqttConnectionHost" readonly th:value="${mqttConnection.host}">
+    <input class="input-info" id="port" name="mqttConnectionPort" readonly th:value="${mqttConnection.port}">
+    <input class="input-info" id="username" name="mqttConnectionUsername" readonly th:value="${mqttConnection.username}">
+    <input class="input-info" id="password" name="mqttConnectionPassword" readonly th:value="${mqttConnection.password}">
 
 </div>
 <script type="text/javascript">
@@ -316,6 +316,7 @@
             "web_1",
             // "" + parseInt(Math.random() * 100, 10),
         );
+
         var options = {
             timeout: 3,
             keepAliveInterval: 60,
@@ -330,7 +331,7 @@
             cleanSession: cleansession,
             onSuccess: onConnect,
             onFailure: function (message) {
-                alertError("Connection failed ... Retrying");
+                alertError("Connection failed: "+message.errorMessage);
                 setTimeout(MQTTconnect, reconnectTimeout);
             }
         };
@@ -357,6 +358,16 @@
         // Connection succeeded; subscribe to lift of topic:display
         // for (var i = 0; i < 8; i++) {
 
+        var subscribetopicdisplay = "/Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator";
+        mqtt.subscribe(subscribetopicdisplay, {qos: 0});
+        // console.log(subscribetopicdisplay)
+        // alert(subscribetopicdisplay)
+
+        // var topic ="Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator";
+        // mqtt.subscribe(topic, {qos: 0});
+        // alert("Subscribed to topic: " + topic);
+
+
         var subscribetopicdisplay = elevator + "/display";
         mqtt.subscribe(subscribetopicdisplay, {qos: 0});
         console.log(subscribetopicdisplay)
@@ -374,6 +385,12 @@
         var subscribetopicliftstatus = elevator + "/liftstatus";
         mqtt.subscribe(subscribetopicliftstatus, {qos: 0});
         $('#subscribetopic').val(subscribetopicliftstatus);
+
+
+        var subscribetopicdisplay = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator";
+        mqtt.subscribe(subscribetopicdisplay, {qos: 0});
+
+
         // }
         /*
          // Connection succeeded; subscribe to lift of topic:doorstatus
@@ -398,10 +415,27 @@
     }
 
     function onMessageArrived(message) {
-
+        alert("onMessageArrived")
         var topic = message.destinationName;
         var payload = message.payloadString;
-        if (topic == elevator + "/doorstatus") //
+
+
+        // Alert the formatted hexadecimal payload
+        alert("Hexadecimal Payload: " + payloadHex);
+        if (topic ==  "Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator"){
+            var payloadBytes = message.payloadBytes;
+
+            // Convert payload bytes to hexadecimal string
+            var payloadHex = bytesToHex(payloadBytes);
+
+            // Insert space after every two characters
+            payloadHex = insertSpaceEveryNChars(payloadHex, 4);
+            handleInput(payloadHex.replace(/\s/g, ''));
+        }
+        if (topic ==  "/display"){
+            alert(payload.toUpperCase())
+        }
+        if (topic == elevator + "/doorstatus")
         {
             if (payload.toUpperCase() == "CLOSED") {
                 document.getElementById("doorImage").src = "/images/doorclose";
@@ -479,36 +513,36 @@
     var msg2 = "up";
 
     //function in clycle
-    function myTimer() {
-        var msg1 = i.toString();
-        var topic1 = elevator+ "/display";
-        var msg2 = "up";
-        var topic2 = elevator+ "/direction";
-        var msg3 = "on";
-        var topic3 = elevator+ "/onoff";
-        var msg4 = "closed";
-        var topic4 = elevator+ "/doorstatus";
-        var msg5 = "auto";
-        var topic5 = elevator+ "/liftstatus";
-        if (i % 3 == 0) msg4 = "opened";
-        Message1 = new Paho.MQTT.Message(msg1);
-        Message1.destinationName = topic1;
-        Message2 = new Paho.MQTT.Message(msg2);
-        Message2.destinationName = topic2;
-        Message3 = new Paho.MQTT.Message(msg3);
-        Message3.destinationName = topic3;
-        Message4 = new Paho.MQTT.Message(msg4);
-        Message4.destinationName = topic4;
-        Message5 = new Paho.MQTT.Message(msg5);
-        Message5.destinationName = topic5;
-        mqtt.send(Message1);
-        mqtt.send(Message2);
-        mqtt.send(Message3);
-        mqtt.send(Message4);
-        mqtt.send(Message5);
-        i++;
-        if (i > 40) i = 1;
-    }
+    // function myTimer() {
+    //     var msg1 = i.toString();
+    //     var topic1 = elevator+ "/display";
+    //     var msg2 = "up";
+    //     var topic2 = elevator+ "/direction";
+    //     var msg3 = "on";
+    //     var topic3 = elevator+ "/onoff";
+    //     var msg4 = "closed";
+    //     var topic4 = elevator+ "/doorstatus";
+    //     var msg5 = "auto";
+    //     var topic5 = elevator+ "/liftstatus";
+    //     if (i % 3 == 0) msg4 = "opened";
+    //     Message1 = new Paho.MQTT.Message(msg1);
+    //     Message1.destinationName = topic1;
+    //     Message2 = new Paho.MQTT.Message(msg2);
+    //     Message2.destinationName = topic2;
+    //     Message3 = new Paho.MQTT.Message(msg3);
+    //     Message3.destinationName = topic3;
+    //     Message4 = new Paho.MQTT.Message(msg4);
+    //     Message4.destinationName = topic4;
+    //     Message5 = new Paho.MQTT.Message(msg5);
+    //     Message5.destinationName = topic5;
+    //     mqtt.send(Message1);
+    //     mqtt.send(Message2);
+    //     mqtt.send(Message3);
+    //     mqtt.send(Message4);
+    //     mqtt.send(Message5);
+    //     i++;
+    //     if (i > 40) i = 1;
+    // }
 
     function attClick() {
         var msg = "att activation";
@@ -597,7 +631,103 @@
     //         }
     //     });
     // });
+    function bytesToHex(bytes) {
+        var hexString = "";
+        for (var i = 0; i < bytes.length; i++) {
+            var byteHex = bytes[i].toString(16);
+            if (byteHex.length === 1) {
+                byteHex = '0' + byteHex; // Ensure two digits
+            }
+            hexString += byteHex;
+        }
+        return hexString;
+    }
 
+    // Function to insert space after every n characters
+    function insertSpaceEveryNChars(str, n) {
+        var result = '';
+        for (var i = 0; i < str.length; i += n) {
+            result += str.substr(i, n) + ' ';
+        }
+        return result.trim(); // Remove trailing space
+    }
+    function handleInput(input) {
+        // var input = document.getElementById("input").value;
+
+        // Check if input is valid
+        if (input.length !== 10) {
+            alert("Invalid input length. Please enter a 12-character input.");
+            return;
+        }
+        alert("Input: " + input);
+        // Extracting d0, d1, d2, d3, d4 from input
+        var d0 = input.substring(0, 2);
+        var d1 = input.substring(2, 4);
+        var d2 = input.substring(4, 6);
+        var d3 = input.substring(6, 8);
+        var d4 = input.substring(8, 10);
+
+        // Convert d1, d2, d3 from hex to decimal
+        var floor = convertHex(d0) +convertHex(d1)+convertHex(d2);
+
+
+        // Direction based on d3
+        var direction = "";
+        if (d3 === "10") {
+            direction = "Up";
+        } else if (d3 === "11") {
+            direction = "Run Up";
+        } else if (d3 === "20") {
+            direction = "Down";
+        } else if (d3 === "21") {
+            direction = "Run Down";
+        } else {
+            direction = "Unknown";
+        }
+
+        //Status based on d4
+        var status = "";
+        if (d4.charAt(7) === "1") {
+            status = "Parking";
+        } else if (d4.charAt(6) === "1") {
+            status = "Overload";
+        } else if (d4.charAt(5) === "1") {
+            status = "Priority";
+        } else if (d4.charAt(4) === "1") {
+            status = "Fire";
+        } else if (d4.charAt(3) === "1") {
+            status = "Full";
+        } else {
+            status = "Unknown";
+        }
+
+        alert("d0: " + d0 + "\n" +
+            "d1: " + d1 + "\n" +
+            "d2: " + d2 + "\n" +
+            "d3: " + d3 + " (" + direction + ")\n" +
+            "d4: " + d4 + "\n\n" +
+            "Floor: " + floor + "\n" +
+            "Direction: " + direction + "\n" +
+            "Status: " + status);
+
+
+    }
+    function convertHex(hexInput) {
+        var decimalValue = parseInt(hexInput, 16);
+        if (decimalValue == 0) {
+            // Convert using first method
+            var result = 0;
+            return result;
+        }else if (decimalValue >= 4 && decimalValue <= 44) {
+            // Convert using first method
+            var result = decimalValue - 4 + 10;
+            return result;
+        } else {
+            // Convert using second method
+            var asciiCharacter = String.fromCharCode(decimalValue);
+            return asciiCharacter;
+        }
+    }
 </script>
 <script crossorigin="anonymous"
         integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5/9gG0G5HQpO/pL3E9wKmODFFPng5G0yJGoi6S9D"

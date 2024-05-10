@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hex Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        input {
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 200px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<h2>Hex Converter</h2>
+<div id="converter">
+    <label for="hexInput">Enter Hex Value:</label>
+    <input type="text" id="hexInput" maxlength="2">
+    <button onclick="a()">Convert</button>
+    <p>Result: <span id="output"></span></p>
+</div>
+
+<script>
+    function convertHex(hexInput) {
+        var decimalValue = parseInt(hexInput, 16);
+        if (decimalValue == 0) {
+            // Convert using first method
+            var result = 0;
+            return result;
+        }else if (decimalValue >= 4 && decimalValue <= 44) {
+            // Convert using first method
+            var result = decimalValue - 4 + 10;
+            return result;
+        } else {
+            // Convert using second method
+            var asciiCharacter = String.fromCharCode(decimalValue);
+            return asciiCharacter;
+        }
+    }
+    function a() {
+        var hexInput = document.getElementById("hexInput").value;
+        var result = convertHex(hexInput);
+        document.getElementById("output").innerText = "Decimal value: " + result;
+    }
+</script>
+</body>
+</html>

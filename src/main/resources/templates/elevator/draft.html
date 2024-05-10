@@ -3,45 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thang máy</title>
+    <title>Hex to ASCII Converter</title>
     <style>
-        /* Định nghĩa kiểu cho div bao quanh */
-        .elevator-control {
-            display: inline-block; /* Hiển thị như một khối trên cùng một dòng */
-            background-color: black; /* Nền đen */
-            color: red; /* Chữ màu đỏ */
-            padding: 5px; /* Khoảng cách giữa nội dung và viền */
-            width: auto; /* Độ rộng tự động dựa trên nội dung */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
         }
-
-        /* Định nghĩa kiểu cho h1 */
-        .elevator-control h1 {
-            display: inline; /* Hiển thị như một phần tử inline */
-            margin: 0; /* Xóa margin */
-            padding: 0; /* Xóa padding */
-        }
-
-        /* Định nghĩa kiểu cho biểu tượng UP và DOWN */
-        .up-arrow::before,
-        .down-arrow::before {
-            font-family: Arial, sans-serif; /* Chọn font chữ */
-            font-size: 1.5em; /* Kích thước */
-            margin-right: 5px; /* Khoảng cách với chữ số */
-        }
-        .up-arrow::before {
-            content: "\2191"; /* Biểu tượng mũi tên lên */
-        }
-        .down-arrow::before {
-            content: "\2193"; /* Biểu tượng mũi tên xuống */
+        #converter {
+            margin-top: 50px;
         }
     </style>
 </head>
 <body>
-<div class="elevator-control">
-    <h1>1</h1>
-    <span class="up-arrow">&#9650;</span> <!-- Biểu tượng mũi tên lên -->
-    <!-- Thêm biểu tượng mở cửa/đóng cửa -->
-    <span class="open-door"></span>
+<h2>Hex to ASCII Converter</h2>
+<div id="converter">
+    <label for="hexInput">Enter Hex Character:</label>
+    <input type="text" id="hexInput" maxlength="2">
+    <button onclick="convertHexToAscii()">Convert</button>
+    <p>ASCII Character: <span id="asciiOutput"></span></p>
 </div>
+
+<script>
+    function convertHexToAscii() {
+        var hexInput = document.getElementById("hexInput").value;
+        if (hexInput.length !== 2) {
+            alert("Please enter a valid two-digit hexadecimal character.");
+            return;
+        }
+
+        var decimalValue = parseInt(hexInput, 16);
+        var asciiCharacter = String.fromCharCode(decimalValue);
+
+        document.getElementById("asciiOutput").innerText = asciiCharacter;
+    }
+</script>
 </body>
 </html>
