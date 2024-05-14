@@ -30,13 +30,35 @@ $(function () {
     startConnect()
     // set_building_configs_and_rebuild(floor_nums, elevator_nums)
     set_building_configs_and_rebuild(numFloors, numElevators,listElevators)
+    getFloor(1)
     call_move_up(1)
+    getFloor(1)
     call_move_down(1)
+    getFloor(1)
     call_open_door(2,elevators[2].state.now_floor_no, 2)
     call_close_door(2,elevators[2].state.now_floor_no, 2)
-    call_move_up(2)
+    controller_move(1,4)
+    // call_move_up(2)
+    // call_move_up(1)
+    // call_move_up(1)
+    // call_move_up(1)
+    // call_move_up(1)
+    // call_move_up(1)
+    // controller_move(1,5)
+    // controller_move(1,1)
+    // controller_move(1,6)
+    // controller_move(1,3)
+    // controller_move(1,5)
+    // controller_move(1,4)
+    // controller_move(1,5)
 
 
+    // elevators[1].change_floor(6)
+    // Example usage
+    initializeElevatorQueues(3); // Assume there are 3 elevators
+    addFloorRequest(1, 5); // Request to move elevator 1 to floor 5
+    addFloorRequest(1, 3); // Request to move elevator 1 to floor 3
+    addFloorRequest(2, 4); // Request to move elevator 2 to floor 4
 });
 function call_move_up(elevator_no){
     elevators[elevator_no].now_floor_no += 1
@@ -1022,28 +1044,25 @@ function move_up(callBack) {
 
 
 }
-function moveElevatorToFloor(elevator_no, target_floor) {
-    let elevator = elevators[elevator_no];
-    let current_floor = elevator.state.now_floor_no;
-
-    if (target_floor > current_floor) {
-        let floors_to_move = target_floor - current_floor;
-        alert(floors_to_move)
-        for (let i = 0; i < floors_to_move; i++) {
-            controller_move_up(elevator_no);
-            // console.log("Elevator " + elevator_no + " moved up " + floors_to_move + " floors.");
-        }
-
-    } else if (target_floor < current_floor) {
-        let floors_to_move = current_floor - target_floor;
-        for (let i = 0; i < floors_to_move; i++) {
-           controller_move_down()
-        }
-        console.log("Elevator " + elevator_no + " moved down " + floors_to_move + " floors.");
-    } else {
-        console.log("Elevator " + elevator_no + " is already at floor " + target_floor + ".");
-    }
-}
-
-
-
+// function controller_move(elevator_no, floor_no) {
+//     let elevatorMainTop = $('.elevator-main.' + elevator_no).position().top;
+//     let targetFloorTop = floor_height * (floor_no - 1); // Tính toán độ cao của tầng cần di chuyển tới
+//     console.log("controller_move")
+//     console.log("elevatorMainTop: " + elevatorMainTop/floor_height)
+//     console.log("targetFloorTop: " + targetFloorTop)
+//     if (elevatorMainTop > targetFloorTop) {
+//         // Nếu độ cao hiện tại lớn hơn độ cao của tầng đích, thì di chuyển xuống
+//         let floorsToMove = Math.ceil((elevatorMainTop - targetFloorTop) / floor_height);
+//         for (let i = 0; i < floorsToMove; i++) {
+//             controller_move_down(elevator_no);
+//         }
+//     } else if (elevatorMainTop < targetFloorTop) {
+//         // Nếu độ cao hiện tại nhỏ hơn độ cao của tầng đích, thì di chuyển lên
+//         let floorsToMove = Math.ceil((targetFloorTop - elevatorMainTop) / floor_height);
+//         for (let i = 0; i < floorsToMove; i++) {
+//             alert(hi)
+//             controller_move_up(elevator_no);
+//         }
+//     }
+//     // Nếu độ cao hiện tại bằng với độ cao của tầng đích, không cần phải di chuyển
+// }

@@ -301,18 +301,22 @@ function controller_stop_waiting_for_timeout_and_callback(elevator_no, callBack)
     callBack()
 }
 
-function controller_move_up(elevator_no, callBack) {
-    $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear")
-
-    $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callBack)
+function controller_move_up(elevator_no, callback) {
+    $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear");
+    $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
+        if (callback) {
+            callback();
+        }
+    });
 }
 
-function controller_move_down(elevator_no, callBack) {
-
-    $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear")
-    $('.elevator-main.' + elevator_no).animate({top: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callBack)
-
-
+function controller_move_down(elevator_no, callback) {
+    $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear");
+    $('.elevator-main.' + elevator_no).animate({top: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
+        if (callback) {
+            callback();
+        }
+    });
 }
 
 

@@ -335,14 +335,49 @@ function controller_move_up_old(elevator_no, callBack) {
     $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear")
     $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callBack)
 }
-function controller_move_up(elevator_no) {
-    $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear")
-    $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear")
+function controller_move_up(elevator_no, callback) {
+    $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
+        $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
+    });
 }
 
-function controller_move_down(elevator_no) {
-    $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear")
-    $('.elevator-main.' + elevator_no).animate({top: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear")
+function controller_move_down(elevator_no, callback) {
+    $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
+        $('.elevator-main.' + elevator_no).animate({top: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
+    });
+}
+function controller_move_up_N_floors(elevator_no, floors, callback) {
+    var total_height = floors * floor_height;
+    $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
+        { height: '-=' + total_height + 'px' },
+        total_height * moving_speed_millisecond_per_pixel,
+        "linear",
+        function() {
+            $('.elevator-main.' + elevator_no).animate(
+                { top: '-=' + total_height + 'px' },
+                total_height * moving_speed_millisecond_per_pixel,
+                "linear",
+                callback
+            );
+        }
+    );
+}
+
+function controller_move_down_N_floors(elevator_no, floors, callback) {
+    var total_height = floors * floor_height;
+    $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
+        { height: '+=' + total_height + 'px' },
+        total_height * moving_speed_millisecond_per_pixel,
+        "linear",
+        function() {
+            $('.elevator-main.' + elevator_no).animate(
+                { top: '+=' + total_height + 'px' },
+                total_height * moving_speed_millisecond_per_pixel,
+                "linear",
+                callback
+            );
+        }
+    );
 }
 
 
@@ -365,8 +400,175 @@ function controller_open_door(elevator_no,floor_no) {
     $('.elevator-window.' + elevator_window_mark + ' .elevator-door').animate({width: '0%'}, toggle_door_secs, "linear")
 
 }
+//
+// function move(elevator_no, callback) {
+//     var ran = Math.floor(Math.random() * (7 - 3 + 1)) + 7;
+//     console.log(ran);
+//     let elevatorMainTop = $('.elevator-main.' + elevator_no).position().top;
+//     let targetFloorTop = floor_height * (ran - 1); // Tính toán độ cao của tầng cần di chuyển tới
+//     if (elevatorMainTop > targetFloorTop) {
+//         // Nếu độ cao hiện tại lớn hơn độ cao của tầng đích, thì di chuyển xuống
+//         let floorsToMove = Math.ceil((elevatorMainTop - targetFloorTop) / floor_height);
+//         for (let i = 0; i < floorsToMove; i++) {
+//             controller_move_down(elevator_no);
+//         }
+//     } else if (elevatorMainTop < targetFloorTop) {
+//         // Nếu độ cao hiện tại nhỏ hơn độ cao của tầng đích, thì di chuyển lên
+//         let floorsToMove = Math.ceil((targetFloorTop - elevatorMainTop) / floor_height);
+//         for (let i = 0; i < floorsToMove; i++) {
+//             controller_move_up(elevator_no);
+//         }
+//     }
+//     // Nếu độ cao hiện tại bằng với độ cao của tầng đích, không cần phải di chuyển
+//     if (typeof callback === 'function') {
+//         callback(); // Gọi callback sau khi di chuyển hoàn tất
+//     }
+// }
+// function controller_move(elevator_no, target_floor_no, callback) {
+//     // Calculate the floor height
+//     let floor_height = cal_floor_height();
+//
+//     // Function to get the current floor based on the elevator's position
+//     function getCurrentFloor() {
+//         let current_top_position = $('.elevator-main.' + elevator_no).position().top;
+//         let ground_floor_top_position = elevator_main_first_top;
+//         return Math.round((ground_floor_top_position - current_top_position) / floor_height) + 1;
+//     }
+//
+//     // Initial calculation of the current floor
+//     let current_floor_no = getCurrentFloor();
+//
+//     // The move function
+//     function move() {
+//         current_floor_no = getCurrentFloor();
+//
+//         if (current_floor_no < target_floor_no) {
+//             controller_move_up(elevator_no, function() {
+//                 move(); // Recursively call move until the target floor is reached
+//             });
+//         } else if (current_floor_no > target_floor_no) {
+//             controller_move_down(elevator_no, function() {
+//                 move(); // Recursively call move until the target floor is reached
+//             });
+//         } else {
+//             callback(); // Call the callback function when the elevator reaches the target floor
+//         }
+//     }
+//
+//     // Start the move process
+//     move();
+// }
+// let elevatorQueues = {}; // Store queues for each elevator
+//
+// // Initialize the queue for each elevator
+// function initializeElevatorQueues(elevator_nums) {
+//     for (let i = 1; i <= elevator_nums; i++) {
+//         elevatorQueues[i] = [];
+//     }
+// }
+//
+// // Function to add a floor request to the queue
+// function addFloorRequest(elevator_no, floor_no) {
+//     elevatorQueues[elevator_no].push(floor_no);
+//     if (elevatorQueues[elevator_no].length === 1) {
+//         // If the queue was empty before adding this request, start processing
+//         processQueue(elevator_no);
+//     }
+// }
+//
+// // Function to process the queue for a specific elevator
+// function processQueue(elevator_no) {
+//     if (elevatorQueues[elevator_no].length === 0) {
+//         return;
+//     }
+//
+//     let target_floor_no = elevatorQueues[elevator_no][0];
+//     controller_move(elevator_no, target_floor_no).then(() => {
+//         // Remove the processed request from the queue
+//         elevatorQueues[elevator_no].shift();
+//         // Process the next request
+//         processQueue(elevator_no);
+//     });
+// }
+//
+// // Updated controller_move function with Promise support
+// function controller_move(elevator_no, target_floor_no) {
+//     return new Promise((resolve) => {
+//         let current_floor_no = elevators[elevator_no].state.now_floor_no;
+//
+//         function moveElevator() {
+//             if (current_floor_no < target_floor_no) {
+//                 controller_move_up(elevator_no, () => {
+//                     current_floor_no++;
+//                     if (current_floor_no < target_floor_no) {
+//                         moveElevator();
+//                     } else {
+//                         // Open the door when the target floor is reached
+//                         controller_open_door(elevator_no, target_floor_no);
+//                         resolve(); // Resolve the promise
+//                     }
+//                 });
+//             } else if (current_floor_no > target_floor_no) {
+//                 controller_move_down(elevator_no, () => {
+//                     current_floor_no--;
+//                     if (current_floor_no > target_floor_no) {
+//                         moveElevator();
+//                     } else {
+//                         // Open the door when the target floor is reached
+//                         controller_open_door(elevator_no, target_floor_no);
+//                         resolve(); // Resolve the promise
+//                     }
+//                 });
+//             } else {
+//                 // If already on the target floor, resolve immediately
+//                 resolve();
+//             }
+//         }
+//
+//         moveElevator();
+//     });
+// }
+//
+//
+//     // Function to get the current floor based on the elevator's position
+//     function getCurrentFloor() {
+//         let floor_height = cal_floor_height();
+//         let current_top_position = $('.elevator-main.' + elevator_no).position().top;
+//         let ground_floor_top_position = elevator_main_first_top;
+//         return Math.round((ground_floor_top_position - current_top_position) / floor_height) + 1;
+//     }
 
+function controller_move1(elevator_no) {
+    var targetFloor = Math.floor(Math.random() * (7 - 3 + 1)) + 3;
+    console.log('targetFloor'+targetFloor);
+    let current_floor = get_current_floor(elevator_no);
 
+    if (current_floor > targetFloor) {
+        let floorsToMove = current_floor - targetFloor;
+        // for (let i = 0; i < floorsToMove; i++) {
+        //     controller_move_down(elevator_no);
+        // }
+        controller_move_down_N_floors(elevator_no, floorsToMove);
+    }  else if (current_floor < targetFloor) {
+        // Move up
+        let floorsToMove = targetFloor - current_floor;
+        // for (let i = 0; i < floorsToMove; i++) {
+        //     controller_move_up(elevator_no);
+        // }
+        controller_move_up_N_floors(elevator_no, floorsToMove);
+    }
 
+    // Nếu độ cao hiện tại bằng với độ cao của tầng đích, không cần phải di chuyển
+}
+function get_current_floor(elevator_no) {
+    // Get the current top position of the elevator main container
+    let current_top = parseFloat($('.elevator-main.' + elevator_no).css('top'));
 
+    // Calculate the distance the elevator has moved from the starting position
+    let distance_moved = elevator_main_first_top - current_top;
 
+    // Calculate the current floor number based on the distance moved and floor height
+    let current_floor = Math.round(distance_moved / floor_height) + 1;
+
+    return current_floor;
+}
