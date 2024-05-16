@@ -9,7 +9,145 @@ function set_building_display(floor_nums, elevator_nums) {
     cal_elevator_main_first_top()
     $('.elevator-line').height(cal_elevator_line_height(floor_nums) + 'px')
 }
+function controller_move(elevator_no,targetFloor) {
+    // var targetFloor = Math.floor(Math.random() * (7 - 3 + 1)) + 3;
+    console.log('controller_move')
+    console.log('targetFloor'+targetFloor);
+    let current_floor = get_current_floor(elevator_no);
 
+    if (current_floor > targetFloor) {
+        let floorsToMove = current_floor - targetFloor;
+        // for (let i = 0; i < floorsToMove; i++) {
+        //     controller_move_down(elevator_no);
+        // }
+        if(floorsToMove==1){
+            console.log('controller_move_down');
+            controller_move_down(elevator_no);
+        }else {
+            console.log('controller_move_down');
+            function controller_move_up(elevator_no, callback) {
+                $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
+                    $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
+                });
+            }
+
+            function controller_move_down(elevator_no, callback) {
+                $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
+                    $('.elevator-main.' + elevator_no).animate({top: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
+                });
+            }
+            function controller_move_up_N_floors(elevator_no, floors, callback) {
+                var total_height = floors * floor_height;
+                $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
+                    { height: '-=' + total_height + 'px' },
+                    total_height * moving_speed_millisecond_per_pixel,
+                    "linear",
+                    function() {
+                        $('.elevator-main.' + elevator_no).animate(
+                            { top: '-=' + total_height + 'px' },
+                            total_height * moving_speed_millisecond_per_pixel,
+                            "linear",
+                            callback
+                        );
+                    }
+                );
+            }
+
+            function controller_move_down_N_floors(elevator_no, floors, callback) {
+                var total_height = floors * floor_height;
+                $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
+                    { height: '+=' + total_height + 'px' },
+                    total_height * moving_speed_millisecond_per_pixel,
+                    "linear",
+                    function() {
+                        $('.elevator-main.' + elevator_no).animate(
+                            { top: '+=' + total_height + 'px' },
+                            total_height * moving_speed_millisecond_per_pixel,
+                            "linear",
+                            callback
+                        );
+                    }
+                );
+            }
+        }
+    }  else if (current_floor < targetFloor) {
+        // Move up
+        let floorsToMove = targetFloor - current_floor;
+        // for (let i = 0; i < floorsToMove; i++) {
+        //     controller_move_up(elevator_no);
+        // }
+        console.log('floorsToMove'+floorsToMove);
+        if(floorsToMove==1){
+            console.log('controller_move_up');
+            controller_move_up(elevator_no);
+        }else {
+            console.log('controller_move_up');
+            controller_move_up_N_floors(elevator_no, floorsToMove);
+        }
+    }
+// Update floor number display for elevator 1 to floor 5
+    set_indoor_floor_number_display(targetFloor, 1);
+
+// Update direction display for elevator 1 to 'up'
+    set_indoor_direction_display(1, DIRECTION_STILL);
+    // Nếu độ cao hiện tại bằng với độ cao của tầng đích, không cần phải di chuyển
+}
+function get_current_floor(elevator_no) {
+    // Get the current top position of the elevator main container
+    let current_top = parseFloat($('.elevator-main.' + elevator_no).css('top'));
+
+    // Calculate the distance the elevator has moved from the starting position
+    let distance_moved = elevator_main_first_top - current_top;
+
+    // Calculate the current floor number based on the distance moved and floor height
+    let current_floor = Math.round(distance_moved / floor_height) + 1;
+
+    return current_floor;
+}
+function controller_move_up(elevator_no, callback) {
+    $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
+        $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
+    });
+}
+
+function controller_move_down(elevator_no, callback) {
+    $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
+        $('.elevator-main.' + elevator_no).animate({top: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
+    });
+}
+function controller_move_up_N_floors(elevator_no, floors, callback) {
+    var total_height = floors * floor_height;
+    $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
+        { height: '-=' + total_height + 'px' },
+        total_height * moving_speed_millisecond_per_pixel,
+        "linear",
+        function() {
+            $('.elevator-main.' + elevator_no).animate(
+                { top: '-=' + total_height + 'px' },
+                total_height * moving_speed_millisecond_per_pixel,
+                "linear",
+                callback
+            );
+        }
+    );
+}
+
+function controller_move_down_N_floors(elevator_no, floors, callback) {
+    var total_height = floors * floor_height;
+    $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
+        { height: '+=' + total_height + 'px' },
+        total_height * moving_speed_millisecond_per_pixel,
+        "linear",
+        function() {
+            $('.elevator-main.' + elevator_no).animate(
+                { top: '+=' + total_height + 'px' },
+                total_height * moving_speed_millisecond_per_pixel,
+                "linear",
+                callback
+            );
+        }
+    );
+}
 
 function set_g_container_grid_template(floor_nums, elevator_nums) {
     let column_res = wall_side_with + string_repeat(' ' + wall_main_with, elevator_nums) + ' ' + wall_side_with
@@ -335,50 +473,50 @@ function controller_move_up_old(elevator_no, callBack) {
     $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear")
     $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callBack)
 }
-function controller_move_up(elevator_no, callback) {
-    $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
-        $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
-    });
-}
-
-function controller_move_down(elevator_no, callback) {
-    $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
-        $('.elevator-main.' + elevator_no).animate({top: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
-    });
-}
-function controller_move_up_N_floors(elevator_no, floors, callback) {
-    var total_height = floors * floor_height;
-    $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
-        { height: '-=' + total_height + 'px' },
-        total_height * moving_speed_millisecond_per_pixel,
-        "linear",
-        function() {
-            $('.elevator-main.' + elevator_no).animate(
-                { top: '-=' + total_height + 'px' },
-                total_height * moving_speed_millisecond_per_pixel,
-                "linear",
-                callback
-            );
-        }
-    );
-}
-
-function controller_move_down_N_floors(elevator_no, floors, callback) {
-    var total_height = floors * floor_height;
-    $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
-        { height: '+=' + total_height + 'px' },
-        total_height * moving_speed_millisecond_per_pixel,
-        "linear",
-        function() {
-            $('.elevator-main.' + elevator_no).animate(
-                { top: '+=' + total_height + 'px' },
-                total_height * moving_speed_millisecond_per_pixel,
-                "linear",
-                callback
-            );
-        }
-    );
-}
+// function controller_move_up(elevator_no, callback) {
+//     $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
+//         $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
+//     });
+// }
+//
+// function controller_move_down(elevator_no, callback) {
+//     $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
+//         $('.elevator-main.' + elevator_no).animate({top: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
+//     });
+// }
+// function controller_move_up_N_floors(elevator_no, floors, callback) {
+//     var total_height = floors * floor_height;
+//     $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
+//         { height: '-=' + total_height + 'px' },
+//         total_height * moving_speed_millisecond_per_pixel,
+//         "linear",
+//         function() {
+//             $('.elevator-main.' + elevator_no).animate(
+//                 { top: '-=' + total_height + 'px' },
+//                 total_height * moving_speed_millisecond_per_pixel,
+//                 "linear",
+//                 callback
+//             );
+//         }
+//     );
+// }
+//
+// function controller_move_down_N_floors(elevator_no, floors, callback) {
+//     var total_height = floors * floor_height;
+//     $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
+//         { height: '+=' + total_height + 'px' },
+//         total_height * moving_speed_millisecond_per_pixel,
+//         "linear",
+//         function() {
+//             $('.elevator-main.' + elevator_no).animate(
+//                 { top: '+=' + total_height + 'px' },
+//                 total_height * moving_speed_millisecond_per_pixel,
+//                 "linear",
+//                 callback
+//             );
+//         }
+//     );
+// }
 
 
 function controller_close_door(elevator_no,floor_no) {
@@ -538,37 +676,3 @@ function controller_open_door(elevator_no,floor_no) {
 //         return Math.round((ground_floor_top_position - current_top_position) / floor_height) + 1;
 //     }
 
-function controller_move1(elevator_no) {
-    var targetFloor = Math.floor(Math.random() * (7 - 3 + 1)) + 3;
-    console.log('targetFloor'+targetFloor);
-    let current_floor = get_current_floor(elevator_no);
-
-    if (current_floor > targetFloor) {
-        let floorsToMove = current_floor - targetFloor;
-        // for (let i = 0; i < floorsToMove; i++) {
-        //     controller_move_down(elevator_no);
-        // }
-        controller_move_down_N_floors(elevator_no, floorsToMove);
-    }  else if (current_floor < targetFloor) {
-        // Move up
-        let floorsToMove = targetFloor - current_floor;
-        // for (let i = 0; i < floorsToMove; i++) {
-        //     controller_move_up(elevator_no);
-        // }
-        controller_move_up_N_floors(elevator_no, floorsToMove);
-    }
-
-    // Nếu độ cao hiện tại bằng với độ cao của tầng đích, không cần phải di chuyển
-}
-function get_current_floor(elevator_no) {
-    // Get the current top position of the elevator main container
-    let current_top = parseFloat($('.elevator-main.' + elevator_no).css('top'));
-
-    // Calculate the distance the elevator has moved from the starting position
-    let distance_moved = elevator_main_first_top - current_top;
-
-    // Calculate the current floor number based on the distance moved and floor height
-    let current_floor = Math.round(distance_moved / floor_height) + 1;
-
-    return current_floor;
-}

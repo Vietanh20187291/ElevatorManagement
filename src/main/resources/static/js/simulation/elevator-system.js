@@ -37,20 +37,13 @@ $(function () {
     getFloor(1)
     call_open_door(2,elevators[2].state.now_floor_no, 2)
     call_close_door(2,elevators[2].state.now_floor_no, 2)
-    controller_move(1,4)
     // call_move_up(2)
     // call_move_up(1)
     // call_move_up(1)
     // call_move_up(1)
     // call_move_up(1)
     // call_move_up(1)
-    // controller_move(1,5)
-    // controller_move(1,1)
-    // controller_move(1,6)
-    // controller_move(1,3)
-    // controller_move(1,5)
-    // controller_move(1,4)
-    // controller_move(1,5)
+
 
 
     // elevators[1].change_floor(6)
@@ -1065,4 +1058,48 @@ function move_up(callBack) {
 //         }
 //     }
 //     // Nếu độ cao hiện tại bằng với độ cao của tầng đích, không cần phải di chuyển
+// }
+// function controller_move_up(elevator_no, callback) {
+//     $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
+//         $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
+//     });
+// }
+//
+// function controller_move_down(elevator_no, callback) {
+//     $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
+//         $('.elevator-main.' + elevator_no).animate({top: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
+//     });
+// }
+// function controller_move_up_N_floors(elevator_no, floors, callback) {
+//     var total_height = floors * floor_height;
+//     $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
+//         { height: '-=' + total_height + 'px' },
+//         total_height * moving_speed_millisecond_per_pixel,
+//         "linear",
+//         function() {
+//             $('.elevator-main.' + elevator_no).animate(
+//                 { top: '-=' + total_height + 'px' },
+//                 total_height * moving_speed_millisecond_per_pixel,
+//                 "linear",
+//                 callback
+//             );
+//         }
+//     );
+// }
+//
+// function controller_move_down_N_floors(elevator_no, floors, callback) {
+//     var total_height = floors * floor_height;
+//     $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
+//         { height: '+=' + total_height + 'px' },
+//         total_height * moving_speed_millisecond_per_pixel,
+//         "linear",
+//         function() {
+//             $('.elevator-main.' + elevator_no).animate(
+//                 { top: '+=' + total_height + 'px' },
+//                 total_height * moving_speed_millisecond_per_pixel,
+//                 "linear",
+//                 callback
+//             );
+//         }
+//     );
 // }
