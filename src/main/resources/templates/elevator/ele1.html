@@ -604,22 +604,22 @@
 
 
     function carcallClick() {
-        alert("carcall")
         var input = document.getElementById("carcall").value;
 
         // var topic = elevator + "/" + "carcall";
         var topic = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/carcall";
 
         var value = parseInt(input);
+        if (isNaN(value) || value < 0 || value > numFloors) {
+            alertError("Invalid Floor Number")
+            return;
+        }
         var floors = [];
         floors.push(value)
 
         var signal = generateElevatorCallSignal(floors);
         mqtt.publish(topic, signal, {qos: 0});
-        // if (isNaN(value) || value < 0 || value > numFloors) {
-        //     alertError("Invalid Floor Number")
-        //     return;
-        // }
+
 
         Message = new Paho.MQTT.Message(signal);
         Message.destinationName = topic;
@@ -628,35 +628,41 @@
     }
 
     function callupClick() {
-        var msg = document.getElementById("callup").value;
-        var topic = elevator + "/" + "callup";
+        var input = document.getElementById("callup").value;
 
-        var value = parseInt(msg);
+        // var topic = elevator + "/" + "carcall";
+        var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/callhallup";
+
+        var value = parseInt(input);
         if (isNaN(value) || value < 0 || value > numFloors) {
             alertError("Invalid Floor Number")
             return;
         }
+        var floors = [];
+        floors.push(value)
 
-        Message = new Paho.MQTT.Message(msg);
-        Message.destinationName = topic;
-        mqtt.send(Message);
-        document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
+        var signal = generateElevatorCallSignal(floors);
+        mqtt.publish(topic, signal, {qos: 0});
+
+
     }
 
     function calldnClick() {
-        var msg = document.getElementById("calldn").value;
-        var topic = elevator + "/" + "calldn";
+        var input = document.getElementById("calldn").value;
 
-        var value = parseInt(msg);
+        // var topic = elevator + "/" + "carcall";
+        var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/callhalldown";
+
+        var value = parseInt(input);
         if (isNaN(value) || value < 0 || value > numFloors) {
             alertError("Invalid Floor Number")
             return;
         }
+        var floors = [];
+        floors.push(value)
 
-        Message = new Paho.MQTT.Message(msg);
-        Message.destinationName = topic;
-        mqtt.send(Message);
-        document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
+        var signal = generateElevatorCallSignal(floors);
+        mqtt.publish(topic, signal, {qos: 0});
     }
 
     // document.addEventListener('DOMContentLoaded', function() {
@@ -714,15 +720,20 @@
         // Direction based on d3
         var direction = "";
         if (d3 === "10") {
-            direction = "Up";
+            // direction = "Up";
+            direction = "▲";
         } else if (d3 === "11") {
-            direction = "Run Up";
+            // direction = "Run Up";
+            direction = "▲";
         } else if (d3 === "20") {
-            direction = "Down";
+            // direction = "Down";
+            direction = "▼";
         } else if (d3 === "21") {
-            direction = "Run Down";
+            // direction = "Run Down";
+            direction = "▼";
         } else {
-            direction = "Unknown";
+            // direction = "Unknown";
+            direction = "_";
         }
 
         //Status based on d4
