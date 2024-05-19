@@ -17,80 +17,19 @@ function controller_move(elevator_no,targetFloor) {
 
     if (current_floor > targetFloor) {
         let floorsToMove = current_floor - targetFloor;
-        // for (let i = 0; i < floorsToMove; i++) {
-        //     controller_move_down(elevator_no);
-        // }
-        if(floorsToMove==1){
-            console.log('controller_move_down');
-            controller_move_down(elevator_no);
-        }else {
-            console.log('controller_move_down');
-            function controller_move_up(elevator_no, callback) {
-                $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
-                    $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
-                });
-            }
-
-            function controller_move_down(elevator_no, callback) {
-                $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
-                    $('.elevator-main.' + elevator_no).animate({top: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
-                });
-            }
-            function controller_move_up_N_floors(elevator_no, floors, callback) {
-                var total_height = floors * floor_height;
-                $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
-                    { height: '-=' + total_height + 'px' },
-                    total_height * moving_speed_millisecond_per_pixel,
-                    "linear",
-                    function() {
-                        $('.elevator-main.' + elevator_no).animate(
-                            { top: '-=' + total_height + 'px' },
-                            total_height * moving_speed_millisecond_per_pixel,
-                            "linear",
-                            callback
-                        );
-                    }
-                );
-            }
-
-            function controller_move_down_N_floors(elevator_no, floors, callback) {
-                var total_height = floors * floor_height;
-                $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
-                    { height: '+=' + total_height + 'px' },
-                    total_height * moving_speed_millisecond_per_pixel,
-                    "linear",
-                    function() {
-                        $('.elevator-main.' + elevator_no).animate(
-                            { top: '+=' + total_height + 'px' },
-                            total_height * moving_speed_millisecond_per_pixel,
-                            "linear",
-                            callback
-                        );
-                    }
-                );
-            }
-        }
-    }  else if (current_floor < targetFloor) {
-        // Move up
+        controller_move_down_N_floors(elevator_no, floorsToMove);
+    } else if (current_floor < targetFloor) {
         let floorsToMove = targetFloor - current_floor;
-        // for (let i = 0; i < floorsToMove; i++) {
-        //     controller_move_up(elevator_no);
-        // }
-        console.log('floorsToMove'+floorsToMove);
-        if(floorsToMove==1){
-            console.log('controller_move_up');
-            controller_move_up(elevator_no);
-        }else {
-            console.log('controller_move_up');
-            controller_move_up_N_floors(elevator_no, floorsToMove);
-        }
+        controller_move_up_N_floors(elevator_no, floorsToMove);
     }
-// Update floor number display for elevator 1 to floor 5
-    set_indoor_floor_number_display(targetFloor, 1);
+    setTimeout(function() {
+        set_indoor_floor_number_display(targetFloor, 1);
+    }, 2000);
 
-// Update direction display for elevator 1 to 'up'
-    set_indoor_direction_display(1, DIRECTION_STILL);
-    // Nếu độ cao hiện tại bằng với độ cao của tầng đích, không cần phải di chuyển
+// Gọi hàm set_indoor_direction_display với độ trễ 2 giây (2000 milliseconds)
+    setTimeout(function() {
+        set_indoor_direction_display(1, DIRECTION_STILL);
+    }, 2000);
 }
 function get_current_floor(elevator_no) {
     // Get the current top position of the elevator main container
@@ -115,8 +54,10 @@ function controller_move_down(elevator_no, callback) {
         $('.elevator-main.' + elevator_no).animate({top: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
     });
 }
-function controller_move_up_N_floors(elevator_no, floors, callback) {
+function controller_move_up_N_floors(elevator_no, floors) {
+    console.log('controller_move_up_N_floors');
     var total_height = floors * floor_height;
+    console.log('total_height'+total_height);
     $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
         { height: '-=' + total_height + 'px' },
         total_height * moving_speed_millisecond_per_pixel,
@@ -126,14 +67,16 @@ function controller_move_up_N_floors(elevator_no, floors, callback) {
                 { top: '-=' + total_height + 'px' },
                 total_height * moving_speed_millisecond_per_pixel,
                 "linear",
-                callback
+                // callback
             );
         }
     );
 }
 
-function controller_move_down_N_floors(elevator_no, floors, callback) {
+function controller_move_down_N_floors(elevator_no, floors) {
+    console.log('controller_move_down_N_floors');
     var total_height = floors * floor_height;
+    console.log('total_height'+total_height);
     $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
         { height: '+=' + total_height + 'px' },
         total_height * moving_speed_millisecond_per_pixel,
@@ -143,7 +86,7 @@ function controller_move_down_N_floors(elevator_no, floors, callback) {
                 { top: '+=' + total_height + 'px' },
                 total_height * moving_speed_millisecond_per_pixel,
                 "linear",
-                callback
+                // callback
             );
         }
     );

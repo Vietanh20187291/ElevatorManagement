@@ -87,6 +87,7 @@ public class LoginController {
                 response.addCookie(tokenCookie);
                 response.addCookie(userCookie);
                 response.addCookie(roleCookie);
+                System.out.println("tokenCookie: " + tokenCookie.getValue());
                 if (userDetail.getRole().equals(UserRole.ADMIN)) {
                     return "redirect:/admin/user";
                 } else if (userDetail.getRole().equals(UserRole.MANAGER)) {

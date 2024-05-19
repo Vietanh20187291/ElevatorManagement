@@ -1,7 +1,3 @@
-// var host = document.getElementById("host").value;
-// var port = parseInt(document.getElementById("port").value);
-// var username = document.getElementById("username").value;
-// var password = document.getElementById("password").value;
 var host = 'tkevn.ddns.net';
 var port = 8001;
 var username = 'user1';
@@ -102,22 +98,6 @@ function onConnect() {
     var subscribetopicdisplay = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator";
     mqtt.subscribe(subscribetopicdisplay, {qos: 0});
 
-
-    // }
-    /*
-     // Connection succeeded; subscribe to lift of topic:doorstatus
-    mqtt.subscribe(doorstatusp, {qos: 0});
-    $('#doorstatusp').val(doorstatusp);
-     // Connection succeeded; subscribe to lift of topic:direction
-    mqtt.subscribe(directionp, {qos: 0});
-    $('#directionp').val(directionp);
-     // Connection succeeded; subscribe to lift of topic:onoff
-    mqtt.subscribe(onoffp, {qos: 0});
-    $('#onoffp').val(onoffp);
-    // Connection succeeded; subscribe to lift of topic:liftstatus
-    mqtt.subscribe(liftstatusp, {qos: 0});
-    $('#liftstatusp').val(liftstatusp);
-   */
 }
 
 function onConnectionLost(response) {
@@ -133,15 +113,17 @@ function onMessageArrived(message) {
 
     // Alert the formatted hexadecimal payload
     if (topic ==  "Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator"){
+        alert('Received message: ' + payload);
 
         var payloadBytes = message.payloadBytes;
+        alert(payloadBytes);
 
         // Convert payload bytes to hexadecimal string
         var payloadHex = bytesToHex(payloadBytes);
         // Insert space after every two characters
         payloadHex = insertSpaceEveryNChars(payloadHex, 4);
         var result =handleInputTopicDisplay(payloadHex.replace(/\s/g, ''));
-
+        alert('rs'+result)
         if (result === null) {
             console.log("Invalid input length. Please enter a 12-character input.");
         } else {
@@ -174,60 +156,6 @@ function onMessageArrived(message) {
         var result = findCalledFloors(payloadHex);
     }
 
-    if (topic ==  "/display"){
-        alert(payload.toUpperCase())
-    }
-    if (topic == elevator + "/doorstatus")
-    {
-        if (payload.toUpperCase() == "CLOSED") {
-            document.getElementById("doorImage").src = "/images/doorclose";
-            // $('#doorstatus').val(payload.toUpperCase());
-        } else if (payload.toUpperCase() == "OPENED") {
-            document.getElementById("doorImage").src = "/images/dooropen";
-            // $('#doorstatus').val(payload.toUpperCase());
-        }
-    } else if (topic == elevator + "/display") {
-        if (payload.toUpperCase() == "1" || payload.toUpperCase() == "2" || payload.toUpperCase() == "3" || payload.toUpperCase() == "4" || payload.toUpperCase() == "5" ||
-            payload.toUpperCase() == "6" || payload.toUpperCase() == "7" || payload.toUpperCase() == "8" || payload.toUpperCase() == "9" || payload.toUpperCase() == "10" ||
-            payload.toUpperCase() == "11" || payload.toUpperCase() == "12" || payload.toUpperCase() == "13" || payload.toUpperCase() == "14" || payload.toUpperCase() == "15" ||
-            payload.toUpperCase() == "16" || payload.toUpperCase() == "17" || payload.toUpperCase() == "18" || payload.toUpperCase() == "19" || payload.toUpperCase() == "20" ||
-            payload.toUpperCase() == "21" || payload.toUpperCase() == "22" || payload.toUpperCase() == "23" || payload.toUpperCase() == "24" || payload.toUpperCase() == "25" ||
-            payload.toUpperCase() == "26" || payload.toUpperCase() == "27" || payload.toUpperCase() == "28" || payload.toUpperCase() == "29" || payload.toUpperCase() == "30" ||
-            payload.toUpperCase() == "31" || payload.toUpperCase() == "32" || payload.toUpperCase() == "33" || payload.toUpperCase() == "34" || payload.toUpperCase() == "35" ||
-            payload.toUpperCase() == "36" || payload.toUpperCase() == "37" || payload.toUpperCase() == "38" || payload.toUpperCase() == "39" || payload.toUpperCase() == "40" ||
-            payload.toUpperCase() == "B1" || payload.toUpperCase() == "B2" || payload.toUpperCase() == "B3" || payload.toUpperCase() == "G" || payload.toUpperCase() == "M" ||
-            payload.toUpperCase() == "B" || payload.toUpperCase() == "12A" || payload.toUpperCase() == "12B" || payload.toUpperCase() == "A" || payload.toUpperCase() == "3A") {
-            $('#display').val(payload.toUpperCase());
-        }
-
-    } else if (topic == elevator + "/direction") {
-        if (payload.toUpperCase() == "UP") {
-            // $('#direction').val('\u2191')
-            $('#direction').val('▲')
-        } else if (payload.toUpperCase() == "DN") {
-            // $('#direction').val('\u2193')
-            $('#direction').val('▼')
-        } else if (payload.toUpperCase() == "STP") {
-            $('#direction').val('_')
-        }
-    } else if (topic == elevator + "/onoff") {
-        if (payload.toUpperCase() == "STP") {
-            $('#direction').val('LIFT-OFF')
-        } else if (payload.toUpperCase() == "ON") {
-            $('#onoff').val('ON');
-            $('#onoff').blur();
-        } else if (payload.toUpperCase() == "OFF") {
-            $('#onoff').val('OFF')
-
-        }
-    } else if (topic == elevator + "/liftstatus") {
-        if (payload.toUpperCase() == "JU" || payload.toUpperCase() == "IF" || payload.toUpperCase() == "AUTO" || payload.toUpperCase() == "FULL" ||
-            payload.toUpperCase() == "FIRE" || payload.toUpperCase() == "OVERLOAD" || payload.toUpperCase() == "--" || payload.toUpperCase() == "ATT"
-            || payload.toUpperCase() == "PAK")
-            $('#liftstatus').val(payload.toUpperCase())
-    }
-
-    //$('#ws').prepend(' ' + payload);
 
 }
 
@@ -253,38 +181,6 @@ function publishMessage() {
 setInterval(myTimer, 3000);
 var i = 1;
 var msg2 = "up";
-
-//function in clycle
-// function myTimer() {
-//     var msg1 = i.toString();
-//     var topic1 = elevator+ "/display";
-//     var msg2 = "up";
-//     var topic2 = elevator+ "/direction";
-//     var msg3 = "on";
-//     var topic3 = elevator+ "/onoff";
-//     var msg4 = "closed";
-//     var topic4 = elevator+ "/doorstatus";
-//     var msg5 = "auto";
-//     var topic5 = elevator+ "/liftstatus";
-//     if (i % 3 == 0) msg4 = "opened";
-//     Message1 = new Paho.MQTT.Message(msg1);
-//     Message1.destinationName = topic1;
-//     Message2 = new Paho.MQTT.Message(msg2);
-//     Message2.destinationName = topic2;
-//     Message3 = new Paho.MQTT.Message(msg3);
-//     Message3.destinationName = topic3;
-//     Message4 = new Paho.MQTT.Message(msg4);
-//     Message4.destinationName = topic4;
-//     Message5 = new Paho.MQTT.Message(msg5);
-//     Message5.destinationName = topic5;
-//     mqtt.send(Message1);
-//     mqtt.send(Message2);
-//     mqtt.send(Message3);
-//     mqtt.send(Message4);
-//     mqtt.send(Message5);
-//     i++;
-//     if (i > 40) i = 1;
-// }
 
 function attClick() {
     var msg = "att activation";
@@ -361,18 +257,6 @@ function calldnClick() {
     document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
 }
 
-// document.addEventListener('DOMContentLoaded', function() {
-//     var inputFloorNums = document.getElementById('input-floor-nums');
-//
-//     inputFloorNums.addEventListener('input', function() {
-//         var value = parseInt(inputFloorNums.value);
-//
-//         if (isNaN(value) || value > 50) {
-//             inputFloorNums.value = '';
-//             alertError("Invalid Floor Number")
-//         }
-//     });
-// });
 function bytesToHex(bytes) {
     var hexString = "";
     for (var i = 0; i < bytes.length; i++) {
@@ -394,9 +278,11 @@ function insertSpaceEveryNChars(str, n) {
     return result.trim(); // Remove trailing space
 }
 function handleInputTopicDisplay(input) {
+    alert('jo')
     // var input = document.getElementById("input").value;
     // alert("1")
     // Check if input is valid
+    alert("Input: " + input)
     if (input.length !== 10) {
         // alert("Invalid input length. Please enter a 12-character input.");
         return;
@@ -443,14 +329,14 @@ function handleInputTopicDisplay(input) {
         status = "Active";
     }
 
-    // alert("d0: " + d0 + "\n" +
-    //     "d1: " + d1 + "\n" +
-    //     "d2: " + d2 + "\n" +
-    //     "d3: " + d3 + " (" + direction + ")\n" +
-    //     "d4: " + d4 + "\n\n" +
-    //     "Floor: " + floor + "\n" +
-    //     "Direction: " + direction + "\n" +
-    //     "Status: " + status);
+    alert("d0: " + d0 + "\n" +
+        "d1: " + d1 + "\n" +
+        "d2: " + d2 + "\n" +
+        "d3: " + d3 + " (" + direction + ")\n" +
+        "d4: " + d4 + "\n\n" +
+        "Floor: " + floor + "\n" +
+        "Direction: " + direction + "\n" +
+        "Status: " + status);
     return {
         floor: floor,
         direction: direction,

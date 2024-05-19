@@ -46,9 +46,9 @@
     <div th:text="${elevator.name}" class="elevator-name" th:id="'elevatorName_' + ${elevator.id}" hidden></div>
     <div th:text="${elevator.numFloors}" class="elevator-num-floors" th:id="'elevatorNumFloors_' + ${elevator.id}" hidden></div>
 </div>
-<!--<button onclick="controller_move(1)" style="position: fixed; top: 10px; right: 10px;">Move</button>-->
-<!--<button onclick="controller_move_up_N_floors(1, 3)" style="position: fixed; top: 50px; right: 10px;">Move</button>-->
-<!--<button onclick="controller_move_up(1)" style="position: fixed; top: 100px; right: 10px;">Move</button>-->
+<button onclick="controller_move(1,4)" style="position: fixed; top: 10px; right: 10px;">Move</button>
+<button onclick="controller_move(1,2)" style="position: fixed; top: 50px; right: 10px;">Move</button>
+<button onclick="controller_move(1,6)" style="position: fixed; top: 100px; right: 10px;">Move</button>
 
 
 <!--<div th:replace="fragments/header :: header"></div>-->

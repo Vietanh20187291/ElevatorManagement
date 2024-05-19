@@ -6,15 +6,10 @@
 // cleansession = true;
 // alert("ji")
 // alert(host+port+username+password);
-var host = 'tkevn.ddns.net';
-var port = 8001;
 var useTLS = false;
-var username = "user1";
-var password = "minh";
 cleansession = true;
 var mqtt;
 var reconnectTimeout = 2000;
-// var elevator = document.getElementById("elevator").innerHTML;
 var elevator = document.getElementById("elevator").value;
 var numFloors = parseInt(document.getElementById("numFloors").value);
 console.log(elevator);
@@ -30,27 +25,21 @@ function startConnect() {
         "web_1",
         // "" + parseInt(Math.random() * 100, 10),
     );
+
     var options = {
         timeout: 3,
         keepAliveInterval: 60,
         useSSL: useTLS,
-
-        //keyPath: 'client.key',
-        //certPath: 'client.crt',
-        //rejectUnauthorized : false,
-        //The CA list will be used to determine if server is authorized
-        //protocol: 'wss',
-        // protocolId: 'MQTT',
         cleanSession: cleansession,
         onSuccess: onConnect,
         onFailure: function (message) {
-            alertError("Connection failed: " + message.errorMessage);
+            alertError("Connection failed: "+message.errorMessage);
             setTimeout(MQTTconnect, reconnectTimeout);
         }
     };
 
 
-            // alertError("Connected failed: " + message.errorMessage + "Retrying")
+    // alertError("Connected failed: " + message.errorMessage + "Retrying")
 
     mqtt.onConnectionLost = onConnectionLost;
     mqtt.onMessageArrived = onMessageArrived;
@@ -67,105 +56,33 @@ function startConnect() {
 
 function onConnect() {
     $('#connectStatus').val('Connected');//status "+ host + ':' + port + path"
-
-    // Connection succeeded; subscribe to lift of topic:display
-    // for (var i = 0; i < 8; i++) {
-
-        var subscribetopicdisplay = elevator + "/display";
-        mqtt.subscribe(subscribetopicdisplay, {qos: 0});
-        console.log(subscribetopicdisplay)
-        $('#subscribetopic').val(subscribetopicdisplay);
-        var subscribetopicdoorstatus = elevator + "/doorstatus";
-        mqtt.subscribe(subscribetopicdoorstatus, {qos: 0});
-        console.log(subscribetopicdisplay)
-        $('#subscribetopicdisplay').val(subscribetopicdoorstatus);
-        var subscribetopicdirection = elevator + "/direction";
-        mqtt.subscribe(subscribetopicdirection, {qos: 0});
-        $('#subscribetopic').val(subscribetopicdirection);
-        var subscribetopiconoff = elevator + "/onoff";
-        mqtt.subscribe(subscribetopiconoff, {qos: 0});
-        $('#subscribetopic').val(subscribetopiconoff);
-        var subscribetopicliftstatus = elevator + "/liftstatus";
-        mqtt.subscribe(subscribetopicliftstatus, {qos: 0});
-        $('#subscribetopic').val(subscribetopicliftstatus);
-    // }
-    /*
-     // Connection succeeded; subscribe to lift of topic:doorstatus
-    mqtt.subscribe(doorstatusp, {qos: 0});
-    $('#doorstatusp').val(doorstatusp);
-     // Connection succeeded; subscribe to lift of topic:direction
-    mqtt.subscribe(directionp, {qos: 0});
-    $('#directionp').val(directionp);
-     // Connection succeeded; subscribe to lift of topic:onoff
-    mqtt.subscribe(onoffp, {qos: 0});
-    $('#onoffp').val(onoffp);
-    // Connection succeeded; subscribe to lift of topic:liftstatus
-    mqtt.subscribe(liftstatusp, {qos: 0});
-    $('#liftstatusp').val(liftstatusp);
-   */
+    var subscribetopicindicator = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator";
+    mqtt.subscribe(subscribetopicindicator, {qos: 0});
 }
 
 function onConnectionLost(response) {
     setTimeout(MQTTconnect, reconnectTimeout);
-    $('#connectStatus').val("connection lost: " + responseObject.errorMessage + ". Reconnecting");
+    $('#connectStatus').val("connection lost");
 
 }
 
 function onMessageArrived(message) {
-
+    alert("onMessageArrived")
     var topic = message.destinationName;
     var payload = message.payloadString;
-    if (topic == elevator + "/doorstatus") //
-    {
-        if (payload.toUpperCase() == "CLOSED") {
-            document.getElementById("doorImage").src = "/images/doorclose";
-            // $('#doorstatus').val(payload.toUpperCase());
-        } else if (payload.toUpperCase() == "OPENED") {
-            document.getElementById("doorImage").src = "/images/dooropen";
-            // $('#doorstatus').val(payload.toUpperCase());
-        }
-    } else if (topic == elevator + "/display") {
-        if (payload.toUpperCase() == "1" || payload.toUpperCase() == "2" || payload.toUpperCase() == "3" || payload.toUpperCase() == "4" || payload.toUpperCase() == "5" ||
-            payload.toUpperCase() == "6" || payload.toUpperCase() == "7" || payload.toUpperCase() == "8" || payload.toUpperCase() == "9" || payload.toUpperCase() == "10" ||
-            payload.toUpperCase() == "11" || payload.toUpperCase() == "12" || payload.toUpperCase() == "13" || payload.toUpperCase() == "14" || payload.toUpperCase() == "15" ||
-            payload.toUpperCase() == "16" || payload.toUpperCase() == "17" || payload.toUpperCase() == "18" || payload.toUpperCase() == "19" || payload.toUpperCase() == "20" ||
-            payload.toUpperCase() == "21" || payload.toUpperCase() == "22" || payload.toUpperCase() == "23" || payload.toUpperCase() == "24" || payload.toUpperCase() == "25" ||
-            payload.toUpperCase() == "26" || payload.toUpperCase() == "27" || payload.toUpperCase() == "28" || payload.toUpperCase() == "29" || payload.toUpperCase() == "30" ||
-            payload.toUpperCase() == "31" || payload.toUpperCase() == "32" || payload.toUpperCase() == "33" || payload.toUpperCase() == "34" || payload.toUpperCase() == "35" ||
-            payload.toUpperCase() == "36" || payload.toUpperCase() == "37" || payload.toUpperCase() == "38" || payload.toUpperCase() == "39" || payload.toUpperCase() == "40" ||
-            payload.toUpperCase() == "B1" || payload.toUpperCase() == "B2" || payload.toUpperCase() == "B3" || payload.toUpperCase() == "G" || payload.toUpperCase() == "M" ||
-            payload.toUpperCase() == "B" || payload.toUpperCase() == "12A" || payload.toUpperCase() == "12B" || payload.toUpperCase() == "A" || payload.toUpperCase() == "3A") {
-            $('#display').val(payload.toUpperCase());
-        }
 
-    } else if (topic == elevator + "/direction") {
-        if (payload.toUpperCase() == "UP") {
-            // $('#direction').val('\u2191')
-             $('#direction').val('▲')
-        } else if (payload.toUpperCase() == "DN") {
-            // $('#direction').val('\u2193')
-            $('#direction').val('▼')
-        } else if (payload.toUpperCase() == "STP") {
-            $('#direction').val('_')
-        }
-    } else if (topic == elevator + "/onoff") {
-        if (payload.toUpperCase() == "STP") {
-            $('#direction').val('LIFT-OFF')
-        } else if (payload.toUpperCase() == "ON") {
-            $('#onoff').val('ON');
-            $('#onoff').blur();
-        } else if (payload.toUpperCase() == "OFF") {
-            $('#onoff').val('OFF')
 
-        }
-    } else if (topic == elevator + "/liftstatus") {
-        if (payload.toUpperCase() == "JU" || payload.toUpperCase() == "IF" || payload.toUpperCase() == "AUTO" || payload.toUpperCase() == "FULL" ||
-            payload.toUpperCase() == "FIRE" || payload.toUpperCase() == "OVERLOAD" || payload.toUpperCase() == "--" || payload.toUpperCase() == "ATT"
-            || payload.toUpperCase() == "PAK")
-            $('#liftstatus').val(payload.toUpperCase())
+    // Alert the formatted hexadecimal payload
+    alert("Hexadecimal Payload: " + payloadHex);
+    if (topic ==  "Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator"){
+        var payloadBytes = message.payloadBytes;
+
+        // Convert payload bytes to hexadecimal string
+        var payloadHex = bytesToHex(payloadBytes);
+        // Insert space after every two characters
+        payloadHex = insertSpaceEveryNChars(payloadHex, 4);
+        handleInput(payloadHex.replace(/\s/g, ''));
     }
-
-    //$('#ws').prepend(' ' + payload);
 
 }
 
@@ -173,56 +90,13 @@ function startDisconnect() {
     $('#connectStatus').val('Disconnected');
     mqtt.disconnect();
 
+
 }
 
 //Luu y cho nay vì da thay NQTTconect bang startConnect, this line will make a auto connect when lunch app and keep alive to broker
 $(document).ready(function () {
     startConnect();
 });
-
-function publishMessage() {
-    var msg = document.getElementById("messagep").value;
-    var topic = document.getElementById("topic_p").value;
-    Message = new Paho.MQTT.Message(msg);
-    Message.destinationName = topic;
-    mqtt.send(Message);
-    document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
-}//set timer interval event
-setInterval(myTimer, 3000);
-var i = 1;
-var msg2 = "up";
-
-//function in clycle
-function myTimer() {
-    var msg1 = i.toString();
-    var topic1 = elevator+ "/display";
-    var msg2 = "up";
-    var topic2 = elevator+ "/direction";
-    var msg3 = "on";
-    var topic3 = elevator+ "/onoff";
-    var msg4 = "closed";
-    var topic4 = elevator+ "/doorstatus";
-    var msg5 = "auto";
-    var topic5 = elevator+ "/liftstatus";
-    if (i % 3 == 0) msg4 = "opened";
-    Message1 = new Paho.MQTT.Message(msg1);
-    Message1.destinationName = topic1;
-    Message2 = new Paho.MQTT.Message(msg2);
-    Message2.destinationName = topic2;
-    Message3 = new Paho.MQTT.Message(msg3);
-    Message3.destinationName = topic3;
-    Message4 = new Paho.MQTT.Message(msg4);
-    Message4.destinationName = topic4;
-    Message5 = new Paho.MQTT.Message(msg5);
-    Message5.destinationName = topic5;
-    mqtt.send(Message1);
-    mqtt.send(Message2);
-    mqtt.send(Message3);
-    mqtt.send(Message4);
-    mqtt.send(Message5);
-    i++;
-    if (i > 40) i = 1;
-}
 
 function attClick() {
     var msg = "att activation";
@@ -233,13 +107,14 @@ function attClick() {
     document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
 }
 
-function opendoor() {
+function opendoor(){
     var msg = "door is opened";
-    var topic = elevator + "/" + "dooropened";
+    // var topic = document.getElementById("elevator").value +"/"+ "dooropened";
+    var topic = "/abc";
     Message = new Paho.MQTT.Message(msg);
     Message.destinationName = topic;
     mqtt.send(Message);
-    document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
+    document.getElementById("messages").innerHTML += "<span> Message to topic "+topic+ " with value = " +msg + " is sent </span><br>";
 }
 
 function closedoor() {
@@ -252,62 +127,198 @@ function closedoor() {
 }
 
 function carcallClick() {
-    var msg = document.getElementById("carcall").value;
-    var topic = elevator + "/" + "carcall";
 
-    var value = parseInt(msg);
+    var input = document.getElementById("carcall").value;
+
+    var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/callcar";
+    handleCallClick(input,topic);
+
+    }
+
+function handleCallClick(input,topic) {
+    try {
+        var value = parseInt(input);
+    }catch (e) {
+        alertError("Invalid type of input")
+        return;
+    }
     if (isNaN(value) || value < 0 || value > numFloors) {
         alertError("Invalid Floor Number")
         return;
     }
 
-    Message = new Paho.MQTT.Message(msg);
-    Message.destinationName = topic;
-    mqtt.send(Message);
-    document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
+    var floors = [];
+    floors.push(value)
+
+    var signal = generateElevatorCallSignal(floors);
+    // mqtt.publish(topic, signal, {qos: 0});
+
+    let message = new Paho.MQTT.Message(signal);
+    message.destinationName = topic;
+    mqtt.send(message);
 }
 
 function callupClick() {
     var msg = document.getElementById("callup").value;
-    var topic = elevator + "/" + "callup";
+    var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/callhallup";
 
-    var value = parseInt(msg);
-    if (isNaN(value) || value < 0 || value > numFloors) {
-        alertError("Invalid Floor Number")
-        return;
-    }
-
-    Message = new Paho.MQTT.Message(msg);
-    Message.destinationName = topic;
-    mqtt.send(Message);
-    document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
+   handleCallClick(msg,topic);
 }
+
 
 function calldnClick() {
     var msg = document.getElementById("calldn").value;
-    var topic = elevator + "/" + "calldn";
+    var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/callhalldown";
 
-    var value = parseInt(msg);
-    if (isNaN(value) || value < 0 || value > numFloors) {
-        alertError("Invalid Floor Number")
-        return;
-    }
-
-    Message = new Paho.MQTT.Message(msg);
-    Message.destinationName = topic;
-    mqtt.send(Message);
-    document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
+   handleCallClick(msg,topic);
 }
 
-// document.addEventListener('DOMContentLoaded', function() {
-//     var inputFloorNums = document.getElementById('input-floor-nums');
-//
-//     inputFloorNums.addEventListener('input', function() {
-//         var value = parseInt(inputFloorNums.value);
-//
-//         if (isNaN(value) || value > 50) {
-//             inputFloorNums.value = '';
-//             alertError("Invalid Floor Number")
-//         }
-//     });
-// });
+function bytesToHex(bytes) {
+    var hexString = "";
+    for (var i = 0; i < bytes.length; i++) {
+        var byteHex = bytes[i].toString(16);
+        if (byteHex.length === 1) {
+            byteHex = '0' + byteHex; // Ensure two digits
+        }
+        hexString += byteHex;
+    }
+    return hexString;
+}
+
+// Function to insert space after every n characters
+function insertSpaceEveryNChars(str, n) {
+    var result = '';
+    for (var i = 0; i < str.length; i += n) {
+        result += str.substr(i, n) + ' ';
+    }
+    return result.trim(); // Remove trailing space
+}
+function handleInput(input) {
+    // var input = document.getElementById("input").value;
+
+    // // Check if input is valid
+    // if (input.length !== 10) {
+    //     alert("Invalid input length. Please enter a 12-character input.");
+    //     return;
+    // }
+    alert("Input: " + input);
+    // Extracting d0, d1, d2, d3, d4 from input
+    var d0 = input.substring(0, 2);
+    var d1 = input.substring(2, 4);
+    var d2 = input.substring(4, 6);
+    var d3 = input.substring(6, 8);
+    var d4 = input.substring(8, 10);
+    var d5 = input.substring(10, 12);
+    var d6 = input.substring(12, 14);
+    var d7 = input.substring(14, 16);
+
+    // Convert d1, d2, d3 from hex to decimal
+    var floor = convertHex(d0) +convertHex(d1)+convertHex(d2);
+
+
+    // Direction based on d3
+    var direction = "";
+    if (d3 === "10") {
+        direction = "Up";
+    } else if (d3 === "11") {
+        direction = "Run Up";
+    } else if (d3 === "20") {
+        direction = "Down";
+    } else if (d3 === "21") {
+        direction = "Run Down";
+    } else {
+        direction = "Unknown";
+    }
+
+    //Status based on d4
+    var status = "";
+    if (d4.charAt(7) === "1") {
+        status = "Parking";
+    } else if (d4.charAt(6) === "1") {
+        status = "Overload";
+    } else if (d4.charAt(5) === "1") {
+        status = "Priority";
+    } else if (d4.charAt(4) === "1") {
+        status = "Fire";
+    } else if (d4.charAt(3) === "1") {
+        status = "Full";
+    } else {
+        status = "Unknown";
+    }
+
+    var door = "";
+    if (d5 === "04") {
+        door = "Open";
+    } else if (d5 === "08") {
+        door = "Close";
+    }
+
+    console.log("Floor: " + floor);
+    console.log("Direction: " + direction);
+    console.log("Status: " + status);
+    console.log("Door: " + door);
+    $('#display').val(floor);
+
+    if(direction != "Unknown") {
+        $('#direction').val(direction);
+    }
+    $('#onoff').val(status);
+    // alert("d0: " + d0 + "\n" +
+    //     "d1: " + d1 + "\n" +
+    //     "d2: " + d2 + "\n" +
+    //     "d3: " + d3 + " (" + direction + ")\n" +
+    //     "d4: " + d4 + "\n\n" +
+    //     "Floor: " + floor + "\n" +
+    //     "Direction: " + direction + "\n" +
+    //     "Status: " + status);
+
+}
+function convertHex(hexInput) {
+    var decimalValue = parseInt(hexInput, 16);
+    if (decimalValue == 0) {
+        // Convert using first method
+        var result = 0;
+        return result;
+    }else if (decimalValue >= 4 && decimalValue <= 44) {
+        // Convert using first method
+        var result = decimalValue - 4 + 10;
+        return result;
+    } else {
+        // Convert using second method
+        var asciiCharacter = String.fromCharCode(decimalValue);
+        return asciiCharacter;
+    }
+}
+
+function generateElevatorCallSignal(floors) {
+    // Tìm số phần tử cần thiết cho signalArray
+    var maxFloor = Math.max(...floors);
+    var signalArraySize = Math.ceil(maxFloor / 8);
+    var signalArray = Array(signalArraySize).fill('00000000');
+
+    // Lặp qua các tầng đã gọi và thiết lập bit tương ứng trong signalArray
+    floors.forEach(function(floor) {
+        var index = Math.floor((floor - 1) / 8);
+        var bitPosition = 7 - ((floor - 1) % 8);
+        var binaryString = signalArray[index];
+        var updatedBinaryString = binaryString.substring(0, bitPosition) + '1' + binaryString.substring(bitPosition + 1);
+        signalArray[index] = updatedBinaryString;
+    });
+
+    // Chuyển đổi từng chuỗi nhị phân thành giá trị thập lục phân
+    var result = signalArray.map(function(binaryString) {
+        return parseInt(binaryString, 2).toString(16).toUpperCase().padStart(2, '0');
+    });
+
+    // Điền thêm các phần tử '00' để đảm bảo mảng có độ dài là bội số của 8
+    while (result.length < 8) {
+        result.push('00');
+    }
+// Chuyển đổi chuỗi hex thành mảng các byte
+    let byteArray = signal.split(' ').map(byte => parseInt(byte, 16));
+
+// Tạo một Uint8Array từ mảng các byte
+    let uint8Array = new Uint8Array(byteArray);
+
+    return uint8Array.buffer;
+}

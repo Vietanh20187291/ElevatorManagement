@@ -38,6 +38,10 @@ public class AreaController {
     @Autowired
     private ProjectVersionService projectVersionService;
 
+    @GetMapping("/a")
+        public String getAreaById1() {
+        return "elevator/draft4";
+    }
     @GetMapping("/{areaId}")
     public String getAreaById(@PathVariable Integer areaId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
@@ -68,6 +72,7 @@ public class AreaController {
         Area area = areaService.getAreaById(areaId);
         model.addAttribute("elevator", elevator);
         model.addAttribute("area", area);
+        model.addAttribute("floor-list", "");
         return "elevator/add";
     }
 
@@ -75,7 +80,9 @@ public class AreaController {
     public String addElevatorToArea(@PathVariable Integer areaId,
                                     @ModelAttribute("elevator") Elevator elevator,
                                     RedirectAttributes redirectAttributes) {
-        elevatorService.addElevator(elevator);
+        elevator.setTopic("Elevator");
+        int elevator_id = elevatorService.addElevator(elevator);
+        System.out.println("elevator_id: "+elevator_id);
         return "redirect:/area/" + areaId;
     }
 

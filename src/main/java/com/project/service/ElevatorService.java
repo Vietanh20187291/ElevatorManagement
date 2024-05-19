@@ -26,8 +26,10 @@ public class ElevatorService {
         elevatorRepository.save(elevator);
     }
 
-    public void addElevator(Elevator elevator) {
+    public int addElevator(Elevator elevator) {
         elevatorRepository.save(elevator);
+        int elevatorId = elevator.getId();
+        return elevatorId;
     }
 
     public List<Elevator> getElevatorsByAreaId(int areaId) {
