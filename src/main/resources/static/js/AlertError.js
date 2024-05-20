@@ -5,3 +5,10 @@ function alertError(errorMessage) {
         icon: 'error'
     });
 }
+function alertSuccess(successMessage) {
+    Swal.fire({
+        title: 'Success',
+        text: successMessage,
+        icon: 'success'
+    });
+}

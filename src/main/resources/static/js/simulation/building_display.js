@@ -190,7 +190,7 @@ function set_indoor_direction_display(elevator_no, direct) {
 }
 
 
-let tempalte_of_choose_floor_button = '<button class="btn btn-default btn-circle  choose-floor-button mark-of-fno" type="button">mark-of-fno</button>\n' +
+let tempalte_of_choose_floor_button = '<button onclick="carcallClick(mark-of-fno)" class="btn btn-default btn-circle  choose-floor-button mark-of-fno" type="button">mark-of-fno</button>\n' +
     '                    '
 let template_of_open_close_buttons = '' +
     '            <div class="open-close-buttons">\n' +
@@ -289,9 +289,9 @@ function divs_html_of_a_ceiling(floor_no, elevator_nums) {
 
 
 let template_of_div_elevator_window = '<div class="elevator-window mark-of-fno mark-of-fno-mark-of-eno">\n' +
-    '                        <button class="btn btn-default btn-circle  elevator-choose-take choose-up" type="button">▲\n' +
+    '                        <button onclick="callupClick(mark-of-fno)" class="btn btn-default btn-circle  elevator-choose-take choose-up" type="button">▲\n' +
     '                        </button>\n' +
-    '                        <button class="btn btn-default btn-circle  elevator-choose-take choose-down" type="button">▼\n' +
+    '                        <button onclick="calldnClick(mark-of-fno)" class="btn btn-default btn-circle  elevator-choose-take choose-down" type="button">▼\n' +
     '                        </button>\n' +
     '\n' +
     '                        mark-of-elevator-main\n' +
@@ -411,11 +411,6 @@ function controller_stop_waiting_for_timeout_and_callback(elevator_no, callBack)
     callBack()
 }
 
-function controller_move_up_old(elevator_no, callBack) {
-
-    $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear")
-    $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callBack)
-}
 // function controller_move_up(elevator_no, callback) {
 //     $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
 //         $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
