@@ -16,24 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `area`
---
-
-DROP TABLE IF EXISTS `area`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `area` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `description` varchar(1024) DEFAULT NULL,
-  `building_id` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `building_id` (`building_id`),
-  CONSTRAINT `area_ibfk_1` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `area`
 --
 
@@ -42,24 +24,6 @@ LOCK TABLES `area` WRITE;
 INSERT INTO `area` VALUES (1,'A','',1),(2,'B','',1),(3,'C','',1),(4,'D','',1),(5,'E','',1),(6,'Anh','f',NULL);
 /*!40000 ALTER TABLE `area` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `building`
---
-
-DROP TABLE IF EXISTS `building`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `building` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `country` varchar(255) DEFAULT NULL,
-  `city` varchar(255) DEFAULT NULL,
-  `note` varchar(255) DEFAULT NULL,
-  `description` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `building`
@@ -72,24 +36,6 @@ INSERT INTO `building` VALUES (1,'Keungnam','VN','Hanoi','','');
 UNLOCK TABLES;
 
 --
--- Table structure for table `check_in`
---
-
-DROP TABLE IF EXISTS `check_in`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `check_in` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `day` datetime DEFAULT NULL,
-  `duration` int DEFAULT NULL,
-  `summary` varchar(255) DEFAULT NULL,
-  `task_id` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKn99m12o3e7ly0xqvtu8p3c3wk` (`task_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `check_in`
 --
 
@@ -97,25 +43,6 @@ LOCK TABLES `check_in` WRITE;
 /*!40000 ALTER TABLE `check_in` DISABLE KEYS */;
 /*!40000 ALTER TABLE `check_in` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `elevator`
---
-
-DROP TABLE IF EXISTS `elevator`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `elevator` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `topic` varchar(255) NOT NULL,
-  `num_floors` int NOT NULL,
-  `area_id` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `area_id` (`area_id`),
-  CONSTRAINT `elevator_ibfk_1` FOREIGN KEY (`area_id`) REFERENCES `area` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `elevator`
@@ -128,30 +55,6 @@ INSERT INTO `elevator` VALUES (1,'E0001','/1/E0001',10,1),(6,'E0006','/1/E0006',
 UNLOCK TABLES;
 
 --
--- Table structure for table `feature`
---
-
-DROP TABLE IF EXISTS `feature`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `feature` (
-  `feature_id` int NOT NULL AUTO_INCREMENT,
-  `feature_name` varchar(255) NOT NULL,
-  `feature_description` varchar(255) DEFAULT NULL,
-  `project_version_id` int NOT NULL,
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
-  `progress` int DEFAULT NULL,
-  `estimated_end_date` date DEFAULT NULL,
-  `enable` tinyint(1) DEFAULT '1',
-  `status` enum('PROCESSING','COMPLETED','PENDING','POSTPONED') NOT NULL,
-  PRIMARY KEY (`feature_id`),
-  KEY `project_version_id` (`project_version_id`),
-  CONSTRAINT `feature_ibfk_1` FOREIGN KEY (`project_version_id`) REFERENCES `project_version` (`project_version_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `feature`
 --
 
@@ -162,24 +65,6 @@ INSERT INTO `feature` VALUES (1,'Card Management','Description for Card Manageme
 UNLOCK TABLES;
 
 --
--- Table structure for table `floor`
---
-
-DROP TABLE IF EXISTS `floor`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `floor` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `elevator_id` int DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `floor_level` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `elevator_id` (`elevator_id`),
-  CONSTRAINT `floor_ibfk_1` FOREIGN KEY (`elevator_id`) REFERENCES `elevator` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `floor`
 --
 
@@ -187,18 +72,6 @@ LOCK TABLES `floor` WRITE;
 /*!40000 ALTER TABLE `floor` DISABLE KEYS */;
 /*!40000 ALTER TABLE `floor` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `hibernate_sequence`
---
-
-DROP TABLE IF EXISTS `hibernate_sequence`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `hibernate_sequence` (
-  `next_val` bigint DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `hibernate_sequence`
@@ -211,30 +84,6 @@ INSERT INTO `hibernate_sequence` VALUES (1);
 UNLOCK TABLES;
 
 --
--- Table structure for table `issue`
---
-
-DROP TABLE IF EXISTS `issue`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `issue` (
-  `issue_id` int NOT NULL AUTO_INCREMENT,
-  `task_id` int DEFAULT NULL,
-  `issue_type` enum('REQUEST','COMMENT','NOTE','BUG') NOT NULL,
-  `priority` enum('CRITICAL','HIGH','MEDIUM','LOW') DEFAULT NULL,
-  `summary` varchar(255) NOT NULL,
-  `reporter` int NOT NULL,
-  `created_at` date DEFAULT NULL,
-  PRIMARY KEY (`issue_id`),
-  KEY `task_id` (`task_id`),
-  KEY `FK5bxmtkww0pdssd9aw5dislu4a` (`reporter`),
-  CONSTRAINT `FK5bxmtkww0pdssd9aw5dislu4a` FOREIGN KEY (`reporter`) REFERENCES `user` (`user_id`),
-  CONSTRAINT `issue_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `task` (`task_id`),
-  CONSTRAINT `issue_ibfk_2` FOREIGN KEY (`reporter`) REFERENCES `user_old` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `issue`
 --
 
@@ -245,20 +94,6 @@ INSERT INTO `issue` VALUES (1,1,'REQUEST','HIGH','Issue 1 for Task 1',2,'2023-01
 UNLOCK TABLES;
 
 --
--- Table structure for table `jwt_response`
---
-
-DROP TABLE IF EXISTS `jwt_response`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `jwt_response` (
-  `id` int NOT NULL,
-  `token` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `jwt_response`
 --
 
@@ -266,24 +101,6 @@ LOCK TABLES `jwt_response` WRITE;
 /*!40000 ALTER TABLE `jwt_response` DISABLE KEYS */;
 /*!40000 ALTER TABLE `jwt_response` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `mqttconnection`
---
-
-DROP TABLE IF EXISTS `mqttconnection`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `mqttconnection` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `host` varchar(255) NOT NULL,
-  `port` int NOT NULL,
-  `username` varchar(255) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  `path` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `mqttconnection`
@@ -296,24 +113,6 @@ INSERT INTO `mqttconnection` VALUES (1,'tkevn.ddns.net',8001,'user1','minh',NULL
 UNLOCK TABLES;
 
 --
--- Table structure for table `noti`
---
-
-DROP TABLE IF EXISTS `noti`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `noti` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `content` text,
-  `timestamp` datetime DEFAULT NULL,
-  `unread` bit(1) DEFAULT NULL,
-  `recipient` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FKlyr1iusr4egk3h3w1iiw3qxsa` (`recipient`)
-) ENGINE=MyISAM AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `noti`
 --
 
@@ -324,23 +123,6 @@ INSERT INTO `noti` VALUES (1,'manager updated area with id: 1','2024-03-30 15:25
 UNLOCK TABLES;
 
 --
--- Table structure for table `product`
---
-
-DROP TABLE IF EXISTS `product`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `product` (
-  `product_id` int NOT NULL AUTO_INCREMENT,
-  `description` varchar(255) DEFAULT NULL,
-  `name` varchar(255) NOT NULL,
-  `price` double NOT NULL,
-  `quantity` int NOT NULL,
-  PRIMARY KEY (`product_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `product`
 --
 
@@ -348,22 +130,6 @@ LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `project`
---
-
-DROP TABLE IF EXISTS `project`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `project` (
-  `project_id` int NOT NULL AUTO_INCREMENT,
-  `project_name` varchar(255) NOT NULL,
-  `project_description` varchar(255) DEFAULT NULL,
-  `enable` tinyint(1) DEFAULT '1',
-  PRIMARY KEY (`project_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project`
@@ -376,30 +142,6 @@ INSERT INTO `project` VALUES (1,'Transaction Management','This is Transaction Ma
 UNLOCK TABLES;
 
 --
--- Table structure for table `project_version`
---
-
-DROP TABLE IF EXISTS `project_version`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `project_version` (
-  `project_version_id` int NOT NULL AUTO_INCREMENT,
-  `project_id` int NOT NULL,
-  `version` varchar(50) NOT NULL,
-  `version_description` varchar(255) DEFAULT NULL,
-  `start_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
-  `estimated_end_date` date DEFAULT NULL,
-  `status` enum('PROCESSING','COMPLETED','PENDING','POSTPONED') NOT NULL,
-  `progress` int DEFAULT NULL,
-  `enable` tinyint(1) DEFAULT '1',
-  PRIMARY KEY (`project_version_id`),
-  KEY `project_id` (`project_id`),
-  CONSTRAINT `project_version_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `project` (`project_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `project_version`
 --
 
@@ -408,35 +150,6 @@ LOCK TABLES `project_version` WRITE;
 INSERT INTO `project_version` VALUES (1,1,'1.0','Basic Function for Transaction Management','2023-01-01','2023-01-10','2023-01-15','PROCESSING',77,1),(2,1,'2.0','Pageable and advance Function for Transaction Management','2023-02-01',NULL,'2024-05-22','PROCESSING',78,1),(3,2,'1.0','Version 1.0 for Student Management','2023-03-01','2023-03-15','2023-03-20','PENDING',67,1);
 /*!40000 ALTER TABLE `project_version` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `task`
---
-
-DROP TABLE IF EXISTS `task`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `task` (
-  `task_id` int NOT NULL AUTO_INCREMENT,
-  `task_name` varchar(255) NOT NULL,
-  `task_description` varchar(255) DEFAULT NULL,
-  `feature_id` int NOT NULL,
-  `assigned_to` int DEFAULT NULL,
-  `start_date` date DEFAULT NULL,
-  `estimated_end_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL,
-  `progress` int DEFAULT NULL,
-  `status` enum('PROCESSING','COMPLETED','PENDING','POSTPONED') NOT NULL,
-  `priority` enum('CRITICAL','HIGH','MEDIUM','LOW') DEFAULT NULL,
-  `enable` tinyint(1) DEFAULT '1',
-  PRIMARY KEY (`task_id`),
-  KEY `feature_id` (`feature_id`),
-  KEY `FKqe4qg10osjw9r6rnusrtvou25` (`assigned_to`),
-  CONSTRAINT `FKqe4qg10osjw9r6rnusrtvou25` FOREIGN KEY (`assigned_to`) REFERENCES `user` (`user_id`),
-  CONSTRAINT `task_ibfk_1` FOREIGN KEY (`feature_id`) REFERENCES `feature` (`feature_id`),
-  CONSTRAINT `task_ibfk_2` FOREIGN KEY (`assigned_to`) REFERENCES `user_old` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `task`
@@ -449,25 +162,6 @@ INSERT INTO `task` VALUES (1,'Add Card','Description for Task 1',1,4,'2023-01-01
 UNLOCK TABLES;
 
 --
--- Table structure for table `tokens`
---
-
-DROP TABLE IF EXISTS `tokens`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `tokens` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `token` varchar(255) NOT NULL,
-  `user_id` int NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `expires_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `tokens_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `tokens`
 --
 
@@ -475,26 +169,6 @@ LOCK TABLES `tokens` WRITE;
 /*!40000 ALTER TABLE `tokens` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tokens` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user` (
-  `user_id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `role` enum('USER','ADMIN','MANAGER') NOT NULL,
-  `active` tinyint(1) DEFAULT '1',
-  `building_id` int DEFAULT NULL,
-  PRIMARY KEY (`user_id`),
-  KEY `building_id` (`building_id`),
-  CONSTRAINT `user_ibfk_1` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `user`
@@ -507,25 +181,6 @@ INSERT INTO `user` VALUES (1,'admin','Binhta123','ADMIN',1,NULL),(2,'manager','m
 UNLOCK TABLES;
 
 --
--- Table structure for table `user_area`
---
-
-DROP TABLE IF EXISTS `user_area`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user_area` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int DEFAULT NULL,
-  `area_id` int DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  KEY `area_id` (`area_id`),
-  CONSTRAINT `user_area_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-  CONSTRAINT `user_area_ibfk_2` FOREIGN KEY (`area_id`) REFERENCES `area` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `user_area`
 --
 
@@ -536,26 +191,6 @@ INSERT INTO `user_area` VALUES (1,3,1),(2,4,2),(3,5,3),(6,NULL,NULL),(7,NULL,NUL
 UNLOCK TABLES;
 
 --
--- Table structure for table `user_old`
---
-
-DROP TABLE IF EXISTS `user_old`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user_old` (
-  `user_id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `role` enum('USER','ADMIN','MANAGER') NOT NULL,
-  `active` tinyint(1) DEFAULT '1',
-  `building_id` int DEFAULT NULL,
-  PRIMARY KEY (`user_id`),
-  KEY `fk_building_id` (`building_id`),
-  CONSTRAINT `fk_building_id` FOREIGN KEY (`building_id`) REFERENCES `building` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Dumping data for table `user_old`
 --
 
@@ -564,29 +199,6 @@ LOCK TABLES `user_old` WRITE;
 INSERT INTO `user_old` VALUES (1,'admin','admin','ADMIN',1,NULL),(2,'manager','manager','MANAGER',1,NULL),(3,'user1','user1','USER',1,NULL),(4,'user2','user2','USER',1,NULL),(5,'user3','user3','USER',1,NULL),(6,'user4','user4','USER',1,NULL);
 /*!40000 ALTER TABLE `user_old` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `user_project_version`
---
-
-DROP TABLE IF EXISTS `user_project_version`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user_project_version` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `project_version_id` int NOT NULL,
-  `version_modification` tinyint(1) DEFAULT '0',
-  `feature_modification` tinyint(1) DEFAULT '0',
-  `task_modification` tinyint(1) DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `project_version_id` (`project_version_id`),
-  KEY `FK2mq15b06p80qafdslxc5h98ot` (`user_id`),
-  CONSTRAINT `FK2mq15b06p80qafdslxc5h98ot` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
-  CONSTRAINT `user_project_version_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_old` (`user_id`),
-  CONSTRAINT `user_project_version_ibfk_2` FOREIGN KEY (`project_version_id`) REFERENCES `project_version` (`project_version_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `user_project_version`
@@ -607,4 +219,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-20 22:11:41
+-- Dump completed on 2024-05-21  0:01:55
