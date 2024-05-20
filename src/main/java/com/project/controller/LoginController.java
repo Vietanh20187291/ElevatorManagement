@@ -48,12 +48,6 @@ public class LoginController {
         return "login";
 //        return "mqtt/main";
     }
-    @GetMapping("/1")
-    public String getLoginPage1() {
-//        return "login";
-//        return "mqtt/main";
-        return "elevator/simulation";
-    }
 
     @PostMapping
     public String login(@ModelAttribute User user, Model model, HttpServletResponse response, RedirectAttributes redirectAttributes) {

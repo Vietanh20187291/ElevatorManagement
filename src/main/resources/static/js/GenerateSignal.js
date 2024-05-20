@@ -128,30 +128,3 @@ function findCalledFloors(signalInput) {
 
     return result;
 }
-function generateElevatorCallSignal(floors) {
-    // Tìm số phần tử cần thiết cho signalArray
-    var maxFloor = Math.max(...floors);
-    var signalArraySize = Math.ceil(maxFloor / 8);
-    var signalArray = Array(signalArraySize).fill('00000000');
-
-    // Lặp qua các tầng đã gọi và thiết lập bit tương ứng trong signalArray
-    floors.forEach(function(floor) {
-        var index = Math.floor((floor - 1) / 8);
-        var bitPosition = 7 - ((floor - 1) % 8);
-        var binaryString = signalArray[index];
-        var updatedBinaryString = binaryString.substring(0, bitPosition) + '1' + binaryString.substring(bitPosition + 1);
-        signalArray[index] = updatedBinaryString;
-    });
-
-    // Chuyển đổi từng chuỗi nhị phân thành giá trị thập lục phân
-    var result = signalArray.map(function(binaryString) {
-        return parseInt(binaryString, 2).toString(16).toUpperCase().padStart(2, '0');
-    });
-
-    // Điền thêm các phần tử '00' để đảm bảo mảng có độ dài là bội số của 8
-    while (result.length < 8) {
-        result.push('00');
-    }
-
-    return result.join(' ');
-}

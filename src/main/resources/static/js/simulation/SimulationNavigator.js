@@ -155,7 +155,7 @@ function handleCallClick(input,topic) {
 
 function callupClick(input) {
     // alert(input)
-    // var msg = document.getElementById("callup").value;
+    var msg = document.getElementById("callup").value;
     var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/callhallup";
 
     handleCallClick(msg,topic);
@@ -289,13 +289,25 @@ function convertHex(hexInput) {
 }
 
 function generateElevatorCallSignal(floors) {
+    let result = generateSignal(floors);
+
+    // alert(result);
+// Chuyển đổi chuỗi hex thành mảng các byte
+    let byteArray = result.split(' ').map(byte => parseInt(byte, 16));
+
+// Tạo một Uint8Array từ mảng các byte
+    let uint8Array = new Uint8Array(byteArray);
+    return uint8Array.buffer;
+}
+function generateSignal(floors) {
+
     // Tìm số phần tử cần thiết cho signalArray
     var maxFloor = Math.max(...floors);
     var signalArraySize = Math.ceil(maxFloor / 8);
     var signalArray = Array(signalArraySize).fill('00000000');
 
     // Lặp qua các tầng đã gọi và thiết lập bit tương ứng trong signalArray
-    floors.forEach(function(floor) {
+    floors.forEach(function (floor) {
         var index = Math.floor((floor - 1) / 8);
         var bitPosition = 7 - ((floor - 1) % 8);
         var binaryString = signalArray[index];
@@ -304,7 +316,7 @@ function generateElevatorCallSignal(floors) {
     });
 
     // Chuyển đổi từng chuỗi nhị phân thành giá trị thập lục phân
-    var result = signalArray.map(function(binaryString) {
+    var result = signalArray.map(function (binaryString) {
         return parseInt(binaryString, 2).toString(16).toUpperCase().padStart(2, '0');
     });
 
@@ -312,11 +324,6 @@ function generateElevatorCallSignal(floors) {
     while (result.length < 8) {
         result.push('00');
     }
-// Chuyển đổi chuỗi hex thành mảng các byte
-    let byteArray = signal.split(' ').map(byte => parseInt(byte, 16));
 
-// Tạo một Uint8Array từ mảng các byte
-    let uint8Array = new Uint8Array(byteArray);
-
-    return uint8Array.buffer;
+    return result.join(' ');
 }
