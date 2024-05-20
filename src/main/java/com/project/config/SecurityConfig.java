@@ -32,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/user/**/update-role").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .antMatchers("/user").permitAll()
-//                .anyRequest().permitAll()
+                .anyRequest().permitAll()
 
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
