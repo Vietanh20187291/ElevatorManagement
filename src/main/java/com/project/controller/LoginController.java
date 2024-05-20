@@ -62,25 +62,26 @@ public class LoginController {
                 // Tạo cookie chứa token
                 Cookie tokenCookie = new Cookie("jwtToken", jwtToken);
                 tokenCookie.setPath("/");
-                tokenCookie.setMaxAge(7 * 24 * 60 * 60); // Thời gian sống của cookie (7 ngày)
+                tokenCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
                 tokenCookie.setHttpOnly(true);
-                tokenCookie.setSecure(true); // Nếu trang web chạy trên HTTPS, hãy đặt giá trị true
+                tokenCookie.setSecure(false); // Nếu không sử dụng HTTPS, đặt giá trị này thành false
 
                 Cookie userCookie = new Cookie("userId", String.valueOf(userDetail.getUserId()));
                 userCookie.setPath("/");
-                userCookie.setMaxAge(7 * 24 * 60 * 60); // Thời gian sống của cookie (7 ngày)
+                userCookie.setMaxAge(7 * 24 * 60 * 60);
                 userCookie.setHttpOnly(true);
-                userCookie.setSecure(true);
+                userCookie.setSecure(false); // Đặt giá trị này thành false nếu không sử dụng HTTPS
 
                 Cookie roleCookie = new Cookie("role", String.valueOf(userDetail.getRole()));
                 roleCookie.setPath("/");
-                roleCookie.setMaxAge(7 * 24 * 60 * 60); // Thời gian sống của cookie (7 ngày)
+                roleCookie.setMaxAge(7 * 24 * 60 * 60);
                 roleCookie.setHttpOnly(true);
-                roleCookie.setSecure(true);
+                roleCookie.setSecure(false); // Đặt giá trị này thành false nếu không sử dụng HTTPS
 
                 response.addCookie(tokenCookie);
                 response.addCookie(userCookie);
                 response.addCookie(roleCookie);
+
                 System.out.println("tokenCookie: " + tokenCookie.getValue());
                 if (userDetail.getRole().equals(UserRole.ADMIN)) {
                     return "redirect:/admin/user";
