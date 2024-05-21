@@ -1,7 +1,11 @@
-var host = 'tkevn.id.vn';
-var port = 8001;
-var username = 'user1';
-var password = 'minh';
+// var host = 'tkevn.id.vn';
+// var port = 8001;
+// var username = 'user1';
+// var password = 'minh';
+alert(host)
+alert(port)
+alert(username)
+alert(password)
 var useTLS = false;
 cleansession = true;
 var mqtt;

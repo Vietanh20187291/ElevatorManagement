@@ -37,6 +37,8 @@ public class AreaController {
     private NotiHelper notiHelper;
     @Autowired
     private ProjectVersionService projectVersionService;
+    @Autowired
+    private MqttConnectionService mqttConnectionService;
 
     @GetMapping("/a")
         public String getAreaById1() {
@@ -62,6 +64,8 @@ public class AreaController {
         System.out.println("numFloors: "+elevators.get(0).getNumFloors());
         model.addAttribute("numElevators",elevators.size());
         System.out.println("numElevators: "+elevators.size());
+        MqttConnection mqttConnection = mqttConnectionService.getMqttConnection();
+        model.addAttribute("mqttConnection", mqttConnection);
         return "elevator/simulation";
     }
 

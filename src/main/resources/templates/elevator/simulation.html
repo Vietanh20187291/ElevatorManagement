@@ -43,6 +43,11 @@
 <body>
 <div th:text="${numFloors}" id="numFloors" hidden></div>
 <div th:text="${numElevators}" id="numElevators" hidden></div>
+<input class="input-info" id="host" name="mqttConnectionHost" readonly th:value="${mqttConnection.host}" hidden>
+<input class="input-info" id="port" name="mqttConnectionPort" readonly th:value="${mqttConnection.port}" hidden>
+<input class="input-info" id="username" name="mqttConnectionUsername" readonly th:value="${mqttConnection.username}" hidden>
+<input class="input-info" id="password" name="mqttConnectionPassword" readonly th:value="${mqttConnection.password}" hidden>
+
 
 <div th:each="elevator : ${elevators}">
     <div th:text="${elevator.id}" class="elevator-id" th:id="'elevatorId_' + ${elevator.id}" hidden></div>
@@ -650,4 +655,10 @@
     }
 
 </style>
+<script>
+    var host = document.getElementById("host").value;
+    var port = parseInt(document.getElementById("port").value);
+    var username = document.getElementById("username").value;
+    var password = document.getElementById("password").value;
+</script>
 </html>
