@@ -1,4 +1,4 @@
-var host = 'tkevn.ddns.net';
+var host = 'tkevn.id.vn';
 var port = 8001;
 var username = 'user1';
 var password = 'minh';
@@ -155,18 +155,18 @@ function handleCallClick(input,topic) {
 
 function callupClick(input) {
     // alert(input)
-    var msg = document.getElementById("callup").value;
+    // var msg = document.getElementById("callup").value;
     var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/callhallup";
 
-    handleCallClick(msg,topic);
+    handleCallClick(input,topic);
 }
 
 
-function calldnClick() {
-    var msg = document.getElementById("calldn").value;
+function calldnClick(input) {
+    // var msg = document.getElementById("calldn").value;
     var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/callhalldown";
 
-    handleCallClick(msg,topic);
+    handleCallClick(input,topic);
 }
 
 function bytesToHex(bytes) {

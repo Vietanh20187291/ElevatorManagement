@@ -78,6 +78,7 @@ public class LoginController {
                 roleCookie.setHttpOnly(true);
                 roleCookie.setSecure(false); // Đặt giá trị này thành false nếu không sử dụng HTTPS
 
+
                 response.addCookie(tokenCookie);
                 response.addCookie(userCookie);
                 response.addCookie(roleCookie);
