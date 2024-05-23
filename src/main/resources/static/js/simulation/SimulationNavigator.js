@@ -1,11 +1,11 @@
-// var host = 'tkevn.id.vn';
-// var port = 8001;
-// var username = 'user1';
-// var password = 'minh';
-alert(host)
-alert(port)
-alert(username)
-alert(password)
+var host = 'tkevn.id.vn';
+var port = 8001;
+var username = 'user1';
+var password = 'minh';
+// alert(host)
+// alert(port)
+// alert(username)
+// alert(password)
 var useTLS = false;
 cleansession = true;
 var mqtt;
@@ -58,6 +58,12 @@ function onConnect() {
     $('#connectStatus').val('Connected');//status "+ host + ':' + port + path"
     var subscribetopicindicator = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator";
     mqtt.subscribe(subscribetopicindicator, {qos: 0});
+    var subscribetopiccallcar = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callcar";
+    mqtt.subscribe(subscribetopiccallcar, {qos: 0});
+    var subscribetopiccallup = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callhallup";
+    mqtt.subscribe(subscribetopiccallup, {qos: 0});
+    var subscribetopiccalldown = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callhalldown";
+    mqtt.subscribe(subscribetopiccalldown, {qos: 0});
     alertSuccess("Connected successfully");
 }
 
@@ -72,7 +78,7 @@ function onMessageArrived(message) {
     // alert("onMessageArrived")
     var topic = message.destinationName;
     var payload = message.payloadString;
-
+    alert('hi'+topic+'payload'+payload)
 
     // Alert the formatted hexadecimal payload
     // alert("Hexadecimal Payload: " + payloadHex);
@@ -84,6 +90,34 @@ function onMessageArrived(message) {
         // Insert space after every two characters
         payloadHex = insertSpaceEveryNChars(payloadHex, 4);
         handleInput(payloadHex.replace(/\s/g, ''));
+    }
+    if (topic ==  "Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator"){
+        var payloadBytes = message.payloadBytes;
+
+        // Convert payload bytes to hexadecimal string
+        var payloadHex = bytesToHex(payloadBytes);
+        // Insert space after every two characters
+        payloadHex = insertSpaceEveryNChars(payloadHex, 4);
+        handleInput(payloadHex.replace(/\s/g, ''));
+    }
+    if(topic == "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callcar"){
+        alert('ho')
+        var payloadBytes = message.payloadBytes;
+        var payloadHex = bytesToHex(payloadBytes);
+
+        var floors = signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2))
+        alert(floors)
+        highlightFloors(floors)
+    }
+    if(topic == "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callhallup"){
+        var payloadBytes = message.payloadBytes;
+        var payloadHex = bytesToHex(payloadBytes);
+        highlightButtonUpFloors(signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2)))
+    }
+    if(topic == "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callhalldown"){
+        var payloadBytes = message.payloadBytes;
+        var payloadHex = bytesToHex(payloadBytes);
+        highlightButtonDownFloors(signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2)))
     }
 
 }
@@ -330,4 +364,54 @@ function generateSignal(floors) {
     }
 
     return result.join(' ');
+}
+function signalCalledFloorsToOutput(signalInput) {
+    var signalArray = signalInput.split(" ");
+    var result = [];
+
+    for (var i = 0; i < signalArray.length; i++) {
+        var binaryString = parseInt(signalArray[i], 16).toString(2).padStart(8, '0');
+        for (var j = 0; j < binaryString.length; j++) {
+            if (binaryString[j] === '1') {
+                var floorNumber = (i * 8) + (8 - j);
+                alert(floorNumber)
+                result.push(floorNumber);
+            }
+        }
+    }
+    return result;
+}
+// Hàm để bật sáng các nút theo danh sách các tầng
+function highlightFloors(floorList) {
+    let elevator_no = 1; // Giả sử là thang máy số 1, bạn có thể điều chỉnh nếu cần
+
+    // Tắt tất cả các nút trước
+    $('.choose-floor-button').css({'background': 'white'});
+
+    // Bật sáng các nút trong danh sách floorList
+    floorList.forEach(floor_no => {
+        set_indoor_floor_switch_state(floor_no, elevator_no, ON);
+    });
+}
+function highlightButtonUpFloors(floorList) {
+    let elevator_no = 1; // Giả sử là thang máy số 1, bạn có thể điều chỉnh nếu cần
+
+    // Tắt tất cả các nút trước
+    $('.choose-up').css({'background': 'white'});
+
+    // Bật sáng các nút trong danh sách floorList
+    floorList.forEach(floor_no => {
+        pressButtonUp(floor_no)
+    });
+}
+function highlightButtonDownFloors(floorList) {
+    let elevator_no = 1; // Giả sử là thang máy số 1, bạn có thể điều chỉnh nếu cần
+
+    // Tắt tất cả các nút trước
+    $('.choose-up').css({'background': 'white'});
+
+    // Bật sáng các nút trong danh sách floorList
+    floorList.forEach(floor_no => {
+        pressButtonDown(floor_no)
+    });
 }

@@ -103,10 +103,10 @@ function set_g_container_grid_template(floor_nums, elevator_nums) {
 
 function ext_set_is_AI_mode_enabled(enable_AI_mode) {
     if (enable_AI_mode) {
-        $('.enable-AI-mode-button').html('关闭智能模式')
+        $('.enable-AI-mode-button').html('')
     } else {
 
-        $('.enable-AI-mode-button').html('启动智能模式')
+        $('.enable-AI-mode-button').html('')
     }
 }
 
@@ -613,4 +613,12 @@ function controller_open_door(elevator_no,floor_no) {
 //         let ground_floor_top_position = elevator_main_first_top;
 //         return Math.round((ground_floor_top_position - current_top_position) / floor_height) + 1;
 //     }
+// Hàm ấn nút xuống
+function pressButtonDown(floor_no) {
+    set_outdoor_switch(floor_no, DIRECTION_DOWN, ON);
+}
 
+// Hàm ấn nút lên
+function pressButtonUp(floor_no) {
+    set_outdoor_switch(floor_no, DIRECTION_UP, ON);
+}

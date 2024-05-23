@@ -9,7 +9,7 @@ function Queue() {
     }
 
     //Pop an element from the queue (head) and return that element
-    this.pop = function () {
+    this.povp = function () {
         return items.shift();
     }
     //View the front element of the queue (the element with index 0 in the array)

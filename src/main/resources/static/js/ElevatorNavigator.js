@@ -178,15 +178,6 @@ function insertSpaceEveryNChars(str, n) {
     return result.trim(); // Remove trailing space
 }
 function handleInput(input) {
-    // var input = document.getElementById("input").value;
-
-    // // Check if input is valid
-    // if (input.length !== 10) {
-    //     alert("Invalid input length. Please enter a 12-character input.");
-    //     return;
-    // }
-    // alert("Input: " + input);
-    // Extracting d0, d1, d2, d3, d4 from input
     var d0 = input.substring(0, 2);
     var d1 = input.substring(2, 4);
     var d2 = input.substring(4, 6);
