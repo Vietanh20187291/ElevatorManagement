@@ -67,7 +67,8 @@ function call_close_door(elevator_no,floor_no){
     controller_close_door(elevator_no,floor_no)
 }
 function set_building_configs_and_rebuild(floor_nums, elevator_nums, list_elevators) {
-    floor_nums = 10
+    //Đoạn này set vẽ số tầng thang máy
+    floor_nums = floors.length;
     $('*').stop()
     create_elevators_objects(elevator_nums,list_elevators)
     set_outdoor_button_states(floor_nums)

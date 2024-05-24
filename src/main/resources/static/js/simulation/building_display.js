@@ -10,7 +10,7 @@ function set_building_display(floor_nums, elevator_nums) {
     $('.elevator-line').height(cal_elevator_line_height(floor_nums) + 'px')
 }
 
-function controller_move(elevator_no, targetFloor) {
+function controller_move(elevator_no, targetFloor, door) {
     console.log('controller_move');
     console.log('targetFloor' + targetFloor);
 
@@ -19,7 +19,15 @@ function controller_move(elevator_no, targetFloor) {
 
     // Tính toán tọa độ của tầng muốn đến dựa trên chiều cao của tầng và số tầng cần di chuyển
     let targetTop = elevator_main_first_top - (targetFloor - 1) * floor_height;
-
+    // if(current_top == targetTop) {
+    //     if(door == 'Open') {
+    //         let current_floor = Math.round((elevator_main_first_top - parseFloat($(this).css('top'))) / floor_height) + 1;
+    //         controller_open_door(elevator_no, current_floor);
+    //     } else if(door == 'Close'){
+    //         let current_floor = Math.round((elevator_main_first_top - parseFloat($(this).css('top'))) / floor_height) + 1;
+    //         controller_close_door(elevator_no,current_floor);
+    //     }
+    // }
     // Di chuyển thang máy đến tọa độ của tầng muốn đến
     $('.elevator-main.' + elevator_no).animate({ top: targetTop + 'px' }, {
         duration: Math.abs(targetTop - current_top) * moving_speed_millisecond_per_pixel,
@@ -470,8 +478,9 @@ function controller_stop_waiting_for_timeout_and_callback(elevator_no, callBack)
 // }
 
 
-function controller_close_door(elevator_no,floor_no) {
-    let elevator_window_mark = floor_no + '-' + elevator_no
+function controller_close_door(elevator_no) {
+    let current_floor = Math.round((elevator_main_first_top - parseFloat($(this).css('top'))) / floor_height) + 1;
+    let elevator_window_mark = current_floor + '-' + elevator_no
     $('.elevator-main.' + elevator_no).animate({opacity: '75%'}, toggle_door_secs, "linear")
     $('.elevator-window.' + elevator_window_mark + ' .elevator-door').animate({width: '50%'}, toggle_door_secs, "linear")
 }
@@ -483,8 +492,9 @@ function controller_stop_closing_door(floor_no, elevator_no, callBack) {
     callBack()
 }
 
-function controller_open_door(elevator_no,floor_no) {
-    let elevator_window_mark = floor_no + '-' + elevator_no
+function controller_open_door(elevator_no,ele_no) {
+    // let current_floor = Math.round((elevator_main_first_top - parseFloat($(this).css('top'))) / floor_height) + 1;
+    let elevator_window_mark = ele_no + '-' + elevator_no
     $('.elevator-main.' + elevator_no).animate({opacity: '100%'}, toggle_door_secs, "linear")
     $('.elevator-window.' + elevator_window_mark + ' .elevator-door').animate({width: '0%'}, toggle_door_secs, "linear")
 

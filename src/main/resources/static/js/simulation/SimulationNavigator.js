@@ -253,7 +253,10 @@ function handleInput(input) {
 
     // Convert d1, d2, d3 from hex to decimal
     var floor = convertHex(d0) +convertHex(d1)+convertHex(d2);
-
+    // Bỏ ký tự 0 ở đâu nếu ký tự thứ 2 là chữ
+    if (floor.length > 1 && floor[0] === '0' && isNaN(floor[1])) {
+        floor = floor.substring(1);
+    }
 
     // Direction based on d3
     var direction = "";
@@ -339,7 +342,7 @@ function handleInput(input) {
     //     set_indoor_direction_display(1, DIRECTION_STILL);
     // }
 
-    controller_move(1,floor)
+    controller_move(1,floor,door)
 
 
 }
@@ -452,3 +455,22 @@ function highlightButtonDownFloors(floorList) {
         pressButtonDown(floor_no)
     });
 }
+
+function getNameByFloorLevel(floorLevel) {
+    for (var i = 0; i < floors.length; i++) {
+        if (floors[i].floorLevel === floorLevel) {
+            return floors[i].name;
+        }
+    }
+    return null;
+}
+
+function getFloorLevelByName(name) {
+    for (var i = 0; i < floors.length; i++) {
+        if (floors[i].name === name) {
+            return floors[i].floorLevel;
+        }
+    }
+    return null;
+}
+

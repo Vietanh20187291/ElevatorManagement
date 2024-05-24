@@ -657,11 +657,16 @@
     }
 
 </style>
-<script>
-    var host = document.getElementById("host").value;
-    var port = parseInt(document.getElementById("port").value);
-    var username = document.getElementById("username").value;
-    var password = document.getElementById("password").value;
+<!--<script>-->
+<!--    var host = document.getElementById("host").value;-->
+<!--    var port = parseInt(document.getElementById("port").value);-->
+<!--    var username = document.getElementById("username").value;-->
+<!--    var password = document.getElementById("password").value;-->
+<!--</script>-->
+<script th:inline="javascript">
+    var floors = /*[[${floors}]]*/ [];
+
+    // alert(floors.get(0).name)
 </script>
 <script src="/static/js/simulation/SimulationNavigator.js"></script>
 </html>
