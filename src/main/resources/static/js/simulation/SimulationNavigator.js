@@ -1,11 +1,16 @@
-var host = 'tkevn.id.vn';
-var port = 8001;
-var username = 'user1';
-var password = 'minh';
+// var host = 'tkevn.id.vn';
+// var port = 8001;
+// var username = 'user1';
+// var password = 'minh';
 // alert(host)
 // alert(port)
 // alert(username)
 // alert(password)
+
+var host = document.getElementById("host").value;
+var port = parseInt(document.getElementById("port").value);
+var username = document.getElementById("username").value;
+var password = document.getElementById("password").value;
 var useTLS = false;
 cleansession = true;
 var mqtt;
@@ -40,7 +45,8 @@ function startConnect() {
         onSuccess: onConnect,
         onFailure: function (message) {
             alertError("Connection failed: "+message.errorMessage);
-            setTimeout(MQTTconnect, reconnectTimeout);
+            // setTimeout(MQTTconnect, reconnectTimeout);
+
         }
     };
 
@@ -111,7 +117,7 @@ function onMessageArrived(message) {
         var payloadHex = bytesToHex(payloadBytes);
 
         var floors = signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2))
-        alert(floors)
+
         highlightFloors(1,floors)
     }
     if(topic == "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callhallup"){
@@ -149,22 +155,24 @@ function attClick() {
 }
 
 function opendoor(){
-    var msg = "door is opened";
-    // var topic = document.getElementById("elevator").value +"/"+ "dooropened";
-    var topic = "/abc";
-    Message = new Paho.MQTT.Message(msg);
-    Message.destinationName = topic;
-    mqtt.send(Message);
-    document.getElementById("messages").innerHTML += "<span> Message to topic "+topic+ " with value = " +msg + " is sent </span><br>";
+    // var msg = "door is opened";
+    // // var topic = document.getElementById("elevator").value +"/"+ "dooropened";
+    // var topic = "/abc";
+    // Message = new Paho.MQTT.Message(msg);
+    // Message.destinationName = topic;
+    // mqtt.send(Message);
+    // document.getElementById("messages").innerHTML += "<span> Message to topic "+topic+ " with value = " +msg + " is sent </span><br>";
+    alertSuccess("Sent request successfully")
 }
 
 function closedoor() {
-    var msg = "door is closed";
-    var topic = elevator + "/" + "doorclosed";
-    Message = new Paho.MQTT.Message(msg);
-    Message.destinationName = topic;
-    mqtt.send(Message);
-    document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
+    // var msg = "door is closed";
+    // var topic = elevator + "/" + "doorclosed";
+    // Message = new Paho.MQTT.Message(msg);
+    // Message.destinationName = topic;
+    // mqtt.send(Message);
+    // document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
+    alertSuccess("Sent request successfully")
 }
 
 function carcallClick(input) {
@@ -274,7 +282,7 @@ function handleInput(input) {
     } else if (d4.charAt(3) === "1") {
         status = "Full";
     } else {
-        status = "Unknown";
+        status = "Available";
     }
 
     var door = "";
@@ -400,6 +408,7 @@ function signalCalledFloorsToOutput(signalInput) {
         for (var j = 0; j < binaryString.length; j++) {
             if (binaryString[j] === '1') {
                 var floorNumber = (i * 8) + (8 - j);
+
                 // alert(floorNumber)
                 result.push(floorNumber);
             }

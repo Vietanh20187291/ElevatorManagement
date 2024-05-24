@@ -14,6 +14,7 @@ var elevator = document.getElementById("elevator").value;
 var numFloors = parseInt(document.getElementById("numFloors").value);
 console.log(elevator);
 
+
 function startConnect() {
     if (typeof path == "undefined") {
         path = '/mqtt';
@@ -50,7 +51,7 @@ function startConnect() {
     }
     console.log("Host=");
 
-    alert("Host=" + host + ", port=" + port + ", path=" + path + " TLS = " + useTLS + " username=" + username + " password=" + password);
+    console.log("Host=" + host + ", port=" + port + ", path=" + path + " TLS = " + useTLS + " username=" + username + " password=" + password);
     mqtt.connect(options);
 }
 
@@ -171,6 +172,39 @@ function calldnClick() {
 
    handleCallClick(msg,topic);
 }
+function opendoor(){
+    // var msg = "door is opened";
+    // // var topic = document.getElementById("elevator").value +"/"+ "dooropened";
+    // var topic = "/abc";
+    // Message = new Paho.MQTT.Message(msg);
+    // Message.destinationName = topic;
+    // mqtt.send(Message);
+    // document.getElementById("messages").innerHTML += "<span> Message to topic "+topic+ " with value = " +msg + " is sent </span><br>";
+    let connectStatus = document.getElementById('connectStatus');
+    if (connectStatus.value !== 'Connected') {
+        alertError("Please connect to the server first")
+        return;
+    }
+
+    alertSuccess("Sent request successfully")
+}
+
+function closedoor() {
+    // var msg = "door is closed";
+    // var topic = elevator + "/" + "doorclosed";
+    // Message = new Paho.MQTT.Message(msg);
+    // Message.destinationName = topic;
+    // mqtt.send(Message);
+    // document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
+    let connectStatus = document.getElementById('connectStatus');
+    if (connectStatus.value !== 'Connected') {
+        alertError("Please connect to the server first")
+        return;
+    }
+
+    alertSuccess("Sent request successfully")
+}
+
 
 function bytesToHex(bytes) {
     var hexString = "";
@@ -203,7 +237,12 @@ function handleInput(input) {
     var d7 = input.substring(14, 16);
 
     // Convert d1, d2, d3 from hex to decimal
-    var floor = convertHex(d0) +convertHex(d1)+convertHex(d2);
+    var floor = convertHex(d0) + convertHex(d1) + convertHex(d2);
+
+    // Bỏ ký tự 0 ở đâu nếu ký tự thứ 2 là chữ
+    if (floor.length > 1 && floor[0] === '0' && isNaN(floor[1])) {
+        floor = floor.substring(1);
+    }
 
 
     // Direction based on d3
@@ -218,7 +257,7 @@ function handleInput(input) {
         direction = "Run Down";
     } else if (d3 === "00") {
         direction = "Staying";
-    }  else {
+    } else {
         direction = "Unknown";
     }
 
@@ -235,7 +274,7 @@ function handleInput(input) {
     } else if (d4.charAt(3) === "1") {
         status = "Full";
     } else {
-        status = "Unknown";
+        status = "Available";
     }
 
     var door = "";
@@ -251,10 +290,17 @@ function handleInput(input) {
     console.log("Door: " + door);
     $('#display').val(floor);
 
-    if(direction != "Unknown") {
+    if (direction != "Unknown") {
         $('#direction').val(direction);
     }
     $('#onoff').val(status);
+    if(door == "Open") {
+        document.getElementById("doorImage").src = "/images/dooropen";
+    } else if(door == "Close") {
+        document.getElementById("doorImage").src = "/images/doorclose";
+    }
+
+
     // alert("d0: " + d0 + "\n" +
     //     "d1: " + d1 + "\n" +
     //     "d2: " + d2 + "\n" +
@@ -262,7 +308,9 @@ function handleInput(input) {
     //     "d4: " + d4 + "\n\n" +
     //     "Floor: " + floor + "\n" +
     //     "Direction: " + direction + "\n" +
-    //     "Status: " + status);
+    //     "Status: " + status + "\n" +
+    //     "Door: " + door);
+
 
 }
 function convertHex(hexInput) {
