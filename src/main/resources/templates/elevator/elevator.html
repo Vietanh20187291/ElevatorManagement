@@ -138,7 +138,7 @@
                 <th>Direction</th>
                 <th>Status</th>
                 <th>Door</th>
-                <th>Auto</th>
+<!--                <th>Auto</th>-->
                 <th>ATT</th>
             </tr>
             </thead>
@@ -151,7 +151,7 @@
 <!--                    <input id="doorstatus" name="doorstatus" readonly type="text" value="Open">-->
                     <img id="doorImage" src="/images/dooropen" alt="Door Status" style="height: 2em; width: auto;">
                 </td>
-                <td><input id="liftstatus" name="liftstatus" readonly type="text" value="Auto"></td>
+<!--                <td><input id="liftstatus" name="liftstatus" readonly type="text" value="Auto"></td>-->
                 <td><input id="att" onclick="attClick()" readonly type="text" value="Active"></td>
                 <!-- Add more rows for additional floors -->
             </tbody>
@@ -173,11 +173,11 @@
                             Status: <input id="connectStatus" class="input-info" name="connectStatus" readonly value="Disconnected">
                         </div>
                         <div class="text-center">
-                            <button class="btn btn-primary btn-lg mr-2" id="btnConnect" onclick="startConnect()"
+                            <button class="btn btn-primary btn-lg mr-2 float-left" id="btnConnect" onclick="startConnect()"
                                     type="button">Connect
                             </button>
-                            <button class="btn btn-danger btn-lg" id="btnDisconnect" onclick="startDisconnect()"
-                                    type="button">Disconnect
+                            <button class="btn btn-danger btn-lg float-left" id="btnDisconnect" onclick="startDisconnect()"
+                                    type="button" hidden>Disconnect
                             </button>
                         </div>
                     </div>

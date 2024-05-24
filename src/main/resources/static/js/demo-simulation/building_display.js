@@ -84,7 +84,7 @@ function ext_choose_indoor_direction_display(elevator_no) {
     return $('.elevator-direction.' + elevator_no)
 }
 
-function set_indoor_floor_number_display(floor_no, elevator_no) {
+function set_indoor_floor_display(floor_no, elevator_no) {
     ext_choose_indoor_floor_number_display(elevator_no).html('' + floor_no)
 }
 

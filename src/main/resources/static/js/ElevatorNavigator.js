@@ -50,21 +50,24 @@ function startConnect() {
     }
     console.log("Host=");
 
-    console.log("Host=" + host + ", port=" + port + ", path=" + path + " TLS = " + useTLS + " username=" + username + " password=" + password);
+    alert("Host=" + host + ", port=" + port + ", path=" + path + " TLS = " + useTLS + " username=" + username + " password=" + password);
     mqtt.connect(options);
 }
 
 function onConnect() {
     $('#connectStatus').val('Connected');//status "+ host + ':' + port + path"
+    document.getElementById('btnConnect').hidden = true;
+    document.getElementById('btnDisconnect').hidden = false;
+    alertSuccess("Connected successfully");
     var subscribetopicindicator = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator";
     mqtt.subscribe(subscribetopicindicator, {qos: 0});
-    alertSuccess("Connected successfully");
+    // alertSuccess("Connected successfully");
 }
 
 function onConnectionLost(response) {
-    setTimeout(MQTTconnect, reconnectTimeout);
-    $('#connectStatus').val("connection lost");
-    alertError("connection lost: ")
+    alertError("Disconnected")
+    document.getElementById('btnConnect').hidden = false;
+    document.getElementById('btnDisconnect').hidden = true;
 
 }
 
@@ -90,6 +93,8 @@ function onMessageArrived(message) {
 function startDisconnect() {
     $('#connectStatus').val('Disconnected');
     mqtt.disconnect();
+    document.getElementById('btnConnect').hidden = false;
+    document.getElementById('btnDisconnect').hidden = true;
 
 
 }
@@ -109,6 +114,7 @@ $(document).ready(function () {
 // }
 
 
+
 function carcallClick() {
 
     var input = document.getElementById("carcall").value;
@@ -119,6 +125,8 @@ function carcallClick() {
 }
 
 function handleCallClick(input,topic) {
+
+
     try {
         var value = parseInt(input);
     }catch (e) {
@@ -133,11 +141,18 @@ function handleCallClick(input,topic) {
     var floors = [];
     floors.push(value)
 
+    let connectStatus = document.getElementById('connectStatus');
+    if (connectStatus.value !== 'Connected') {
+        alertError("Please connect to the server first")
+        return;
+    }
+
     var signal = generateElevatorCallSignal(floors);
     // mqtt.publish(topic, signal, {qos: 0});
     let message = new Paho.MQTT.Message(signal);
     message.destinationName = topic;
     mqtt.send(message);
+    alertSuccess("Send signal to elevator successfully");
 }
 
 function callupClick() {
@@ -201,7 +216,9 @@ function handleInput(input) {
         direction = "Down";
     } else if (d3 === "21") {
         direction = "Run Down";
-    } else {
+    } else if (d3 === "00") {
+        direction = "Staying";
+    }  else {
         direction = "Unknown";
     }
 

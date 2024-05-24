@@ -15,6 +15,12 @@ var numFloors = parseInt(document.getElementById("numFloors").value);
 console.log(elevator);
 
 function startConnect() {
+    let elements = document.getElementsByClassName('floor_number');
+    if (elements.length > 0) {
+        elements[0].innerHTML = '12A';
+    }
+
+
     if (typeof path == "undefined") {
         path = '/mqtt';
     }
@@ -68,8 +74,8 @@ function onConnect() {
 }
 
 function onConnectionLost(response) {
-    setTimeout(MQTTconnect, reconnectTimeout);
-    $('#connectStatus').val("connection lost");
+    // setTimeout(MQTTconnect, reconnectTimeout);
+    // $('#connectStatus').val("connection lost");
     alertError("Connection lost");
 
 }
@@ -78,7 +84,7 @@ function onMessageArrived(message) {
     // alert("onMessageArrived")
     var topic = message.destinationName;
     var payload = message.payloadString;
-    alert('hi'+topic+'payload'+payload)
+    // alert('hi'+topic+'payload'+payload)
 
     // Alert the formatted hexadecimal payload
     // alert("Hexadecimal Payload: " + payloadHex);
@@ -101,13 +107,12 @@ function onMessageArrived(message) {
         handleInput(payloadHex.replace(/\s/g, ''));
     }
     if(topic == "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callcar"){
-        alert('ho')
         var payloadBytes = message.payloadBytes;
         var payloadHex = bytesToHex(payloadBytes);
 
         var floors = signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2))
         alert(floors)
-        highlightFloors(floors)
+        highlightFloors(1,floors)
     }
     if(topic == "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callhallup"){
         var payloadBytes = message.payloadBytes;
@@ -189,6 +194,7 @@ function handleCallClick(input,topic) {
     let message = new Paho.MQTT.Message(signal);
     message.destinationName = topic;
     mqtt.send(message);
+    alertSuccess("Sent request successfully")
 }
 
 function callupClick(input) {
@@ -228,15 +234,6 @@ function insertSpaceEveryNChars(str, n) {
     return result.trim(); // Remove trailing space
 }
 function handleInput(input) {
-    // var input = document.getElementById("input").value;
-
-    // // Check if input is valid
-    // if (input.length !== 10) {
-    //     alert("Invalid input length. Please enter a 12-character input.");
-    //     return;
-    // }
-    // alert("Input: " + input);
-    // Extracting d0, d1, d2, d3, d4 from input
     var d0 = input.substring(0, 2);
     var d1 = input.substring(2, 4);
     var d2 = input.substring(4, 6);
@@ -296,7 +293,7 @@ function handleInput(input) {
     if(direction != "Unknown") {
         $('#direction').val(direction);
     }
-    $('#onoff').val(status);
+    // $('#onoff').val(status);
     // alert("d0: " + d0 + "\n" +
     //     "d1: " + d1 + "\n" +
     //     "d2: " + d2 + "\n" +
@@ -305,6 +302,35 @@ function handleInput(input) {
     //     "Floor: " + floor + "\n" +
     //     "Direction: " + direction + "\n" +
     //     "Status: " + status);
+    //
+    // if (direction == "Up" || direction == "Run Up") {
+    //     set_indoor_direction_display(1, DIRECTION_UP);
+    // }
+    // else if (direction == "Down" || direction == "Run Down") {
+    //     set_indoor_direction_display(1, DIRECTION_DOWN);
+    // }else {
+    //     set_indoor_direction_display(1, DIRECTION_STILL);
+    // }
+
+    if (d3 === "10") {
+        direction = "Up";
+    } else if (d3 === "11") {
+        direction = "Run Up";
+    } else if (d3 === "20") {
+        direction = "Down";
+    } else if (d3 === "21") {
+        direction = "Run Down";
+    } else {
+        direction = "-";
+    }
+    // if(direction == "Up" || direction == "Run Up") {
+    //     set_indoor_direction_display(1, DIRECTION_UP);
+    // }else if(direction == "Down" || direction == "Run Down") {
+    //     set_indoor_direction_display(1, DIRECTION_DOWN);
+    // }else{
+    //     set_indoor_direction_display(1, DIRECTION_STILL);
+    // }
+
     controller_move(1,floor)
 
 
@@ -374,7 +400,7 @@ function signalCalledFloorsToOutput(signalInput) {
         for (var j = 0; j < binaryString.length; j++) {
             if (binaryString[j] === '1') {
                 var floorNumber = (i * 8) + (8 - j);
-                alert(floorNumber)
+                // alert(floorNumber)
                 result.push(floorNumber);
             }
         }
@@ -382,16 +408,18 @@ function signalCalledFloorsToOutput(signalInput) {
     return result;
 }
 // Hàm để bật sáng các nút theo danh sách các tầng
-function highlightFloors(floorList) {
-    let elevator_no = 1; // Giả sử là thang máy số 1, bạn có thể điều chỉnh nếu cần
+function highlightFloors(elevator_no,floorList) {
+    try {
+        // Tắt tất cả các nút trước
+        $('.choose-floor-button').css({'background': 'white'});
 
-    // Tắt tất cả các nút trước
-    $('.choose-floor-button').css({'background': 'white'});
-
-    // Bật sáng các nút trong danh sách floorList
-    floorList.forEach(floor_no => {
-        set_indoor_floor_switch_state(floor_no, elevator_no, ON);
-    });
+        // Bật sáng các nút trong danh sách floorList
+        floorList.forEach(floor_no => {
+            set_indoor_floor_switch_state(floor_no, elevator_no, ON);
+        });
+    } catch (e) {
+        console.log(e);
+    }
 }
 function highlightButtonUpFloors(floorList) {
     let elevator_no = 1; // Giả sử là thang máy số 1, bạn có thể điều chỉnh nếu cần

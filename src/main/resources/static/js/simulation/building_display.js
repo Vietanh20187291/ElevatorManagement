@@ -9,28 +9,42 @@ function set_building_display(floor_nums, elevator_nums) {
     cal_elevator_main_first_top()
     $('.elevator-line').height(cal_elevator_line_height(floor_nums) + 'px')
 }
-function controller_move(elevator_no,targetFloor) {
-    // var targetFloor = Math.floor(Math.random() * (7 - 3 + 1)) + 3;
-    console.log('controller_move')
-    console.log('targetFloor'+targetFloor);
-    let current_floor = get_current_floor(elevator_no);
 
-    if (current_floor > targetFloor) {
-        let floorsToMove = current_floor - targetFloor;
-        controller_move_down_N_floors(elevator_no, floorsToMove);
-    } else if (current_floor < targetFloor) {
-        let floorsToMove = targetFloor - current_floor;
-        controller_move_up_N_floors(elevator_no, floorsToMove);
-    }
-    setTimeout(function() {
-        set_indoor_floor_number_display(targetFloor, 1);
-    }, 2000);
+function controller_move(elevator_no, targetFloor) {
+    console.log('controller_move');
+    console.log('targetFloor' + targetFloor);
 
-// Gọi hàm set_indoor_direction_display với độ trễ 2 giây (2000 milliseconds)
-    setTimeout(function() {
-        set_indoor_direction_display(1, DIRECTION_STILL);
-    }, 2000);
+    // Lấy tọa độ hiện tại của thang máy
+    let current_top = parseFloat($('.elevator-main.' + elevator_no).css('top'));
+
+    // Tính toán tọa độ của tầng muốn đến dựa trên chiều cao của tầng và số tầng cần di chuyển
+    let targetTop = elevator_main_first_top - (targetFloor - 1) * floor_height;
+
+    // Di chuyển thang máy đến tọa độ của tầng muốn đến
+    $('.elevator-main.' + elevator_no).animate({ top: targetTop + 'px' }, {
+        duration: Math.abs(targetTop - current_top) * moving_speed_millisecond_per_pixel,
+        easing: "linear",
+        progress: function() {
+            // Tính lại tầng hiện tại dựa trên tọa độ mới của thang máy
+            let current_floor = Math.round((elevator_main_first_top - parseFloat($(this).css('top'))) / floor_height) + 1;
+            // Hiển thị số tầng hiện tại trong thang máy
+            set_indoor_floor_number_display("0"+current_floor, elevator_no);
+            if(current_floor>targetFloor) {
+                set_indoor_direction_display(elevator_no, DIRECTION_DOWN);
+            } else if(current_floor<targetFloor) {
+                set_indoor_direction_display(elevator_no, DIRECTION_UP);
+            }
+        },
+        complete: function() {
+            // Khi di chuyển hoàn thành, hiển thị hướng di chuyển là đứng yên
+            set_indoor_direction_display(elevator_no, DIRECTION_STILL);
+            // Hiển thị số tầng đến mà thang máy đã di chuyển đến
+            set_indoor_floor_number_display(targetFloor, elevator_no);
+        }
+    });
 }
+
+
 function get_current_floor(elevator_no) {
     // Get the current top position of the elevator main container
     let current_top = parseFloat($('.elevator-main.' + elevator_no).css('top'));
@@ -130,10 +144,9 @@ function set_outdoor_switch(floor_no, direct, state) {
 
 function set_indoor_floor_switch_state(floor_no, elevator_no, state) {
     if (state === ON) {
-
-        ext_choose_indoor_foor_switch(floor_no, elevator_no).css({'background': 'orange'})
+        ext_choose_indoor_floor_switch(floor_no, elevator_no).css({'background': 'orange'})
     } else {
-        ext_choose_indoor_foor_switch(floor_no, elevator_no).css({'background': 'white'})
+        ext_choose_indoor_floor_switch(floor_no, elevator_no).css({'background': 'white'})
     }
 }
 
@@ -145,7 +158,7 @@ function choose_outdoor_witches(floor_no, direct) {
     }
 }
 
-function ext_choose_indoor_foor_switch(floor_no, elevator_no) {
+function ext_choose_indoor_floor_switch(floor_no, elevator_no) {
     return $('.choose-floor-block.' + elevator_no + ' .choose-floor-button.' + floor_no)
 }
 

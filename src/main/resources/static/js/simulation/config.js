@@ -22,7 +22,7 @@ let elevators = []
 let outdoor_buttons_state = []
 
 let toggle_door_secs = 3000
-let moving_speed_millisecond_per_pixel = 7
+let moving_speed_millisecond_per_pixel = 5
 let waiting_for_enter_duration = 3000
 
 let wall_side_with = '170px'
