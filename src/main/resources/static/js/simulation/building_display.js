@@ -211,7 +211,7 @@ function set_indoor_direction_display(elevator_no, direct) {
 }
 
 
-let tempalte_of_choose_floor_button = '<button onclick="carcallClick(mark-of-fno)" class="btn btn-default btn-circle  choose-floor-button mark-of-fno" type="button">mark-of-fno</button>\n' +
+let tempalte_of_choose_floor_button = '<button onclick="carcallClick(mark-of-fno)" class="btn btn-default btn-circle  choose-floor-button mark-of-fno" type="button">name-of-fno</button>\n' +
     '                    '
 let template_of_open_close_buttons = '' +
     '            <div class="open-close-buttons">\n' +
@@ -237,7 +237,7 @@ function div_html_of_choose_floor_block(floor_nums, elevator_no, elevator_name){
         '\n' +
         '                    </div>').replace(/mark-of-eno/g, elevator_no)
     for (let k = 1; k <= floor_nums; k++) {
-        res += tempalte_of_choose_floor_button.replace(/mark-of-fno/g, k)
+        res += tempalte_of_choose_floor_button.replace(/mark-of-fno/g, k).replace(/name-of-fno/g, getNameByFloorLevel(k))
     }
     res += div_html_of_open_close_buttons()
     res += '<h1>mark-of-eno</h1>'.replace(/mark-of-eno/g, elevator_name)

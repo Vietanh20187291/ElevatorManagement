@@ -182,16 +182,16 @@ function carcallClick(input) {
 }
 
 function handleCallClick(input,topic) {
-    try {
-        var value = parseInt(input);
-    }catch (e) {
-        alertError("Invalid type of input")
-        return;
-    }
-    if (isNaN(value) || value < 0 || value > numFloors) {
-        alertError("Invalid Floor Number")
-        return;
-    }
+    // try {
+        var value = input;
+    // }catch (e) {
+    //     alertError("Invalid type of input")
+    //     return;
+    // }
+    // if (isNaN(value) || value < 0 || value > numFloors) {
+    //     alertError("Invalid Floor Number")
+    //     return;
+    // }
 
     var floors = [];
     floors.push(value)
