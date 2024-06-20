@@ -80,15 +80,17 @@ public class AreaController {
         Area area = areaService.getAreaById(areaId);
         model.addAttribute("elevator", elevator);
         model.addAttribute("area", area);
-        model.addAttribute("floor-list", "");
+        model.addAttribute("floorsList", "124");
         return "elevator/add";
     }
 
     @PostMapping("/{areaId}/add-elevator")
     public String addElevatorToArea(@PathVariable Integer areaId,
                                     @ModelAttribute("elevator") Elevator elevator,
+                                    @ModelAttribute("floorsList") String floorList,
                                     RedirectAttributes redirectAttributes) {
-        elevator.setTopic("Elevator");
+        System.out.println(elevator.toString());
+        System.out.println("floorList: "+floorList);
         int elevator_id = elevatorService.addElevator(elevator);
         System.out.println("elevator_id: "+elevator_id);
         return "redirect:/area/" + areaId;

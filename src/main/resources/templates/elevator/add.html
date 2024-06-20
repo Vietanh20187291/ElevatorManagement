@@ -12,13 +12,32 @@
     <h1>Add Elevator</h1>
     <div th:replace="fragments/message :: div"></div>
     <form th:action="@{/area/{areaId}/add-elevator(areaId=${area.id})}" method="post">
-        <div class="form-group">
-            <label for="elevatorCode">Elevator Code:</label>
-            <input type="text" class="form-control" id="elevatorCode" name="code" required>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="elevatorName">Elevator Name:</label>
+                <input type="text" class="form-control" id="elevatorName" name="name" required th:value="${elevator.name}">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="numFloors">Number of Floors:</label>
+                <div class="input-group">
+                    <input type="number" class="form-control" id="numFloors" name="num_floors" required th:field="*{elevator.numFloors}">
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-outline-secondary" id="generateFloors">Generate Floor List</button>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="form-group">
-            <label for="numFloors">Number of Floors:</label>
-            <input type="number" class="form-control" id="numFloors" name="numFloors" required>
+            <label for="floorsList">List of Floors:</label>
+            <input type="text" class="form-control" id="floorsList" name="floorsList" th:value="${floorsList}" readonly required>
+        </div>
+        <div class="form-group">
+            <label for="elevatorTopic">Topic:</label>
+            <input type="text" class="form-control" id="elevatorTopic" name="topic" required th:value="${elevator.topic}">
+        </div>
+        <div class="form-group">
+            <label for="areaId">Area ID:</label>
+            <input type="number" class="form-control" id="areaId" name="area_id" th:value="${area.id}" readonly>
         </div>
         <button type="submit" class="btn btn-primary">Save</button>
         <a class="btn btn-secondary" th:href="@{/area/{areaId}(areaId=${area.id})}">Back</a>
@@ -28,5 +47,29 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.getElementById('generateFloors').addEventListener('click', function() {
+        var numFloors = document.getElementById('numFloors').value;
+        if (numFloors.trim() === '') {
+            alert('Please enter the number of floors.');
+            return;
+        }
+
+        var floorsList = document.getElementById('floorsList');
+        var floors = [];
+        for (var i = 1; i <= numFloors; i++) {
+            floors.push(i);
+        }
+        floorsList.value = floors.join('->');
+        document.getElementById('numFloors').readOnly = true;
+        floorsList.readOnly = false;
+    });
+
+    document.getElementById('floorsList').addEventListener('input', function() {
+        var floorsList = document.getElementById('floorsList').value;
+        var numFloors = floorsList.split('->').length;
+        document.getElementById('numFloors').value = numFloors;
+    });
+</script>
 </body>
 </html>
