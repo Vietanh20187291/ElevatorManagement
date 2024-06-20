@@ -154,24 +154,21 @@ function attClick() {
     document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
 }
 
-function opendoor(){
-    // var msg = "door is opened";
-    // // var topic = document.getElementById("elevator").value +"/"+ "dooropened";
-    // var topic = "/abc";
-    // Message = new Paho.MQTT.Message(msg);
-    // Message.destinationName = topic;
-    // mqtt.send(Message);
-    // document.getElementById("messages").innerHTML += "<span> Message to topic "+topic+ " with value = " +msg + " is sent </span><br>";
+function openDoorClick(){
+    var msg = new Uint8Array([0x01]);
+    var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/status";
+    Message = new Paho.MQTT.Message(msg.buffer);
+    Message.destinationName = topic;
+    mqtt.send(Message);
     alertSuccess("Sent request successfully")
 }
 
-function closedoor() {
-    // var msg = "door is closed";
-    // var topic = elevator + "/" + "doorclosed";
-    // Message = new Paho.MQTT.Message(msg);
-    // Message.destinationName = topic;
-    // mqtt.send(Message);
-    // document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
+function closeDoorClick() {
+    var msg = new Uint8Array([0x02]);
+    var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/status";
+    Message = new Paho.MQTT.Message(msg.buffer);
+    Message.destinationName = topic;
+    mqtt.send(Message);
     alertSuccess("Sent request successfully")
 }
 
@@ -454,23 +451,5 @@ function highlightButtonDownFloors(floorList) {
     floorList.forEach(floor_no => {
         pressButtonDown(floor_no)
     });
-}
-
-function getNameByFloorLevel(floorLevel) {
-    for (var i = 0; i < floors.length; i++) {
-        if (floors[i].floorLevel === floorLevel) {
-            return floors[i].name;
-        }
-    }
-    return null;
-}
-
-function getFloorLevelByName(name) {
-    for (var i = 0; i < floors.length; i++) {
-        if (floors[i].name === name) {
-            return floors[i].floorLevel;
-        }
-    }
-    return null;
 }
 

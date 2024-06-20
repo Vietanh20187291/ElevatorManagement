@@ -215,9 +215,9 @@ let tempalte_of_choose_floor_button = '<button onclick="carcallClick(mark-of-fno
     '                    '
 let template_of_open_close_buttons = '' +
     '            <div class="open-close-buttons">\n' +
-    '                <button class="btn btn-default btn-circle open-close indoor-open-door choose-floor-button" type="button">◀|▶\n' +
+    '                <button onclick="openDoorClick()" class="btn btn-default btn-circle open-close choose-floor-button" type="button">◀|▶\n' +
     '                </button>\n' +
-    '                <button class="btn btn-default btn-circle open-close indoor-close-door choose-floor-button" type="button">▶|◀\n' +
+    '                <button onclick="closeDoorClick()" class="btn btn-default btn-circle open-close indoor-close-door choose-floor-button" type="button">▶|◀\n' +
     '                </button>\n' +
     '\n' +
     '            </div>'
@@ -432,50 +432,6 @@ function controller_stop_waiting_for_timeout_and_callback(elevator_no, callBack)
     callBack()
 }
 
-// function controller_move_up(elevator_no, callback) {
-//     $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
-//         $('.elevator-main.' + elevator_no).animate({top: '-=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
-//     });
-// }
-//
-// function controller_move_down(elevator_no, callback) {
-//     $('.elevator-main.' + elevator_no + ' .elevator-line').animate({height: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", function() {
-//         $('.elevator-main.' + elevator_no).animate({top: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
-//     });
-// }
-// function controller_move_up_N_floors(elevator_no, floors, callback) {
-//     var total_height = floors * floor_height;
-//     $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
-//         { height: '-=' + total_height + 'px' },
-//         total_height * moving_speed_millisecond_per_pixel,
-//         "linear",
-//         function() {
-//             $('.elevator-main.' + elevator_no).animate(
-//                 { top: '-=' + total_height + 'px' },
-//                 total_height * moving_speed_millisecond_per_pixel,
-//                 "linear",
-//                 callback
-//             );
-//         }
-//     );
-// }
-//
-// function controller_move_down_N_floors(elevator_no, floors, callback) {
-//     var total_height = floors * floor_height;
-//     $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
-//         { height: '+=' + total_height + 'px' },
-//         total_height * moving_speed_millisecond_per_pixel,
-//         "linear",
-//         function() {
-//             $('.elevator-main.' + elevator_no).animate(
-//                 { top: '+=' + total_height + 'px' },
-//                 total_height * moving_speed_millisecond_per_pixel,
-//                 "linear",
-//                 callback
-//             );
-//         }
-//     );
-// }
 
 
 function controller_close_door(elevator_no) {
@@ -645,3 +601,21 @@ function pressButtonDown(floor_no) {
 function pressButtonUp(floor_no) {
     set_outdoor_switch(floor_no, DIRECTION_UP, ON);
 }
+function getNameByFloorLevel(floorLevel) {
+    for (var i = 0; i < floors.length; i++) {
+        if (floors[i].floorLevel === floorLevel) {
+            return floors[i].name;
+        }
+    }
+    return null;
+}
+
+function getFloorLevelByName(name) {
+    for (var i = 0; i < floors.length; i++) {
+        if (floors[i].name === name) {
+            return floors[i].floorLevel;
+        }
+    }
+    return null;
+}
+

@@ -369,3 +369,31 @@ function generateSignal(floors) {
 
     return result.join(' ');
 }
+
+function openDoorClick(){
+    let connectStatus = document.getElementById('connectStatus');
+    if (connectStatus.value !== 'Connected') {
+        alertError("Please connect to the server first")
+        return;
+    }
+    var msg = new Uint8Array([0x01]);
+    var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/status";
+    Message = new Paho.MQTT.Message(msg.buffer);
+    Message.destinationName = topic;
+    mqtt.send(Message);
+    alertSuccess("Sent request successfully")
+}
+
+function closeDoorClick() {
+    let connectStatus = document.getElementById('connectStatus');
+    if (connectStatus.value !== 'Connected') {
+        alertError("Please connect to the server first")
+        return;
+    }
+    var msg = new Uint8Array([0x02]);
+    var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/status";
+    Message = new Paho.MQTT.Message(msg.buffer);
+    Message.destinationName = topic;
+    mqtt.send(Message);
+    alertSuccess("Sent request successfully")
+}
