@@ -36,20 +36,20 @@ public class ElevatorController {
     }
 
 
-    @GetMapping("/{elevatorId}/edit")
-    public String showEditElevatorForm(@PathVariable int elevatorId, Model model, HttpServletRequest request) {
-        cookieHelper.addCookieAttributes(request, model);
-        Elevator elevator = elevatorService.getElevatorById(elevatorId);
-        model.addAttribute("elevator", elevator);
-        return "elevator/edit";
-    }
-
-    @PostMapping("/{elevatorId}/edit")
-    public String updateElevator(@PathVariable int elevatorId, @ModelAttribute("elevator") Elevator elevator) {
-        elevator.setId(elevatorId);
-        elevatorService.updateElevator(elevator);
-        return "redirect:/elevator/" + elevatorId;
-    }
+//    @GetMapping("/{elevatorId}/edit")
+//    public String showEditElevatorForm(@PathVariable int elevatorId, Model model, HttpServletRequest request) {
+//        cookieHelper.addCookieAttributes(request, model);
+//        Elevator elevator = elevatorService.getElevatorById(elevatorId);
+//        model.addAttribute("elevator", elevator);
+//        return "elevator/edit";
+//    }
+//
+//    @PostMapping("/{elevatorId}/edit")
+//    public String updateElevator(@PathVariable int elevatorId, @ModelAttribute("elevator") Elevator elevator) {
+//        elevator.setId(elevatorId);
+//        elevatorService.updateElevator(elevator);
+//        return "redirect:/elevator/" + elevatorId;
+//    }
 
     @PostMapping("/delete/{elevatorId}")
     public String deleteElevator(@PathVariable Integer elevatorId, RedirectAttributes redirectAttributes, HttpServletRequest request) {
@@ -70,6 +70,31 @@ public class ElevatorController {
         }
     }
 
+    @GetMapping("/{elevatorId}/edit")
+    public String showEditElevatorForm(@PathVariable Integer elevatorId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
+        Elevator elevator = elevatorService.getElevatorById(elevatorId);
+        model.addAttribute("elevator", elevator);
+        return "elevator/edit";
+    }
+
+    @PostMapping("/{elevatorId}/edit")
+    public String editElevator(@PathVariable Integer elevatorId,
+                               @ModelAttribute("elevator") Elevator elevator,
+                               RedirectAttributes redirectAttributes) {
+        int numFloorsCount = countFloors(elevator.getListFloors()) + countFloors(elevator.getListBasements());
+        elevator.setNumFloors(numFloorsCount);
+        System.out.println("update"+elevator.toString());
+        elevatorService.updateElevator(elevator);
+        return "redirect:/area/" + elevator.getAreaId();
+    }
+    private int countFloors(String listFloors) {
+        if (listFloors == null || listFloors.isEmpty() || listFloors == "") {
+            return 0;
+        }
+        // Split by '->' and count elements
+        return listFloors.split("->").length;
+    }
 
 //    @GetMapping("/area/{areaId}")
 //    public String getElevatorsByAreaId(@PathVariable int areaId, Model model) {

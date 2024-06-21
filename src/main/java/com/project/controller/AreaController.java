@@ -95,7 +95,7 @@ public class AreaController {
     }
 
     private int countFloors(String listFloors) {
-        if (listFloors == null || listFloors.isEmpty()) {
+        if (listFloors == null || listFloors.isEmpty() || listFloors == "") {
             return 0;
         }
         // Split by '->' and count elements
