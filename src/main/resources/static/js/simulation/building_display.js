@@ -341,21 +341,21 @@ let template_of_td_elevator_wall_side = '        ' +
     '                mark_floor_no\n' +
     '            </div>\n' +
     '\n' +
-    '            <img class="potting" src="mark-of-potting-path">\n' +
+    // '            <img class="potting" src="mark-of-potting-path">\n' +
     '\n' +
     '</div>'
 
 function div_html_of_elevator_wall_side(floor_no) {
-    return template_of_td_elevator_wall_side.replace(/mark_floor_no/g, floor_no).replace(/mark-of-potting-path/g, path_of_potting)
+    return template_of_td_elevator_wall_side.replace(/mark_floor_no/g, "F"+getNameByFloorLevel(floor_no)).replace(/mark-of-potting-path/g, path_of_potting)
 }
 
 function divs_html_of_elevator_wall(floor_no, elevator_nums) {
     let res = ''
-    res += div_html_of_elevator_wall_side('F' + floor_no)
+    res += div_html_of_elevator_wall_side(floor_no)
     for (let i = 1; i <= elevator_nums; i++) {
         res += div_html_of_elevator_window(floor_no, i)
     }
-    res += div_html_of_elevator_wall_side('')
+    res += div_html_of_elevator_wall_side(floor_no)
     return res
 }
 

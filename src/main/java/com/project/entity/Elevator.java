@@ -24,14 +24,15 @@ public class Elevator {
     @Column(name = "num_floors", nullable = false)
     private int numFloors;
 
+    @Column(name = "list_floors", columnDefinition = "TEXT")
+    private String listFloors;
+
+    @Column(name = "list_basements", columnDefinition = "TEXT")
+    private String listBasements;
+
     @Column(name = "area_id", nullable = false)
     private int areaId;
 
     @Column(name = "topic", nullable = false, unique = true)
     private String topic;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "area_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Area area;
-
 }

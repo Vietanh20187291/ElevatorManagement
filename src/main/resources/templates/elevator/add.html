@@ -11,36 +11,49 @@
 <div class="container mt-5">
     <h1>Add Elevator</h1>
     <div th:replace="fragments/message :: div"></div>
-    <form th:action="@{/area/{areaId}/add-elevator(areaId=${area.id})}" method="post">
+    <form th:action="@{/area/{areaId}/add-elevator(areaId=${areaId})}" method="post">
+        <div class="form-group">
+            <label for="elevatorName">Elevator Name:</label>
+            <input type="text" class="form-control" id="elevatorName" name="name" required th:value="${elevator.name}">
+        </div>
         <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="elevatorName">Elevator Name:</label>
-                <input type="text" class="form-control" id="elevatorName" name="name" required th:value="${elevator.name}">
-            </div>
             <div class="form-group col-md-6">
                 <label for="numFloors">Number of Floors:</label>
                 <div class="input-group">
-                    <input type="number" class="form-control" id="numFloors" name="num_floors" required th:field="*{elevator.numFloors}">
+                    <input type="number" class="form-control" id="numFloors" name="numFloors" required>
                     <div class="input-group-append">
                         <button type="button" class="btn btn-outline-secondary" id="generateFloors">Generate Floor List</button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="numBasements">Number of Basements:</label>
+                <div class="input-group">
+                    <input type="number" class="form-control" id="numBasements" name="numBasements" required>
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-outline-secondary" id="generateBasements">Generate Basement List</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="form-group">
             <label for="floorsList">List of Floors:</label>
-            <input type="text" class="form-control" id="floorsList" name="floorsList" th:value="${floorsList}" readonly required>
+            <input type="text" class="form-control" id="floorsList" name="listFloors" th:value="${elevator.listFloors}" readonly required>
+        </div>
+        <div class="form-group">
+            <label for="basementsList">List of Basements:</label>
+            <input type="text" class="form-control" id="basementsList" name="listBasements" th:value="${elevator.listBasements}" readonly>
         </div>
         <div class="form-group">
             <label for="elevatorTopic">Topic:</label>
             <input type="text" class="form-control" id="elevatorTopic" name="topic" required th:value="${elevator.topic}">
         </div>
-        <div class="form-group">
+        <div class="form-group" hidden>
             <label for="areaId">Area ID:</label>
-            <input type="number" class="form-control" id="areaId" name="area_id" th:value="${area.id}" readonly>
+            <input type="number" class="form-control" id="areaId" name="areaId" th:value="${areaId}" readonly>
         </div>
         <button type="submit" class="btn btn-primary">Save</button>
-        <a class="btn btn-secondary" th:href="@{/area/{areaId}(areaId=${area.id})}">Back</a>
+        <a class="btn btn-secondary" th:href="@{/area/{areaId}(areaId=${areaId})}">Back</a>
     </form>
 </div>
 
@@ -61,7 +74,7 @@
             floors.push(i);
         }
         floorsList.value = floors.join('->');
-        document.getElementById('numFloors').readOnly = true;
+        // document.getElementById('numFloors').readOnly = true;
         floorsList.readOnly = false;
     });
 
@@ -69,6 +82,29 @@
         var floorsList = document.getElementById('floorsList').value;
         var numFloors = floorsList.split('->').length;
         document.getElementById('numFloors').value = numFloors;
+    });
+
+    document.getElementById('generateBasements').addEventListener('click', function() {
+        var numBasements = document.getElementById('numBasements').value;
+        if (numBasements.trim() === '') {
+            alert('Please enter the number of basements.');
+            return;
+        }
+
+        var basementsList = document.getElementById('basementsList');
+        var basements = [];
+        for (var i = 1; i <= numBasements; i++) {
+            basements.push('B' + i);
+        }
+        basementsList.value = basements.join('->');
+        // document.getElementById('numBasements').readOnly = true;
+        basementsList.readOnly = false;
+    });
+
+    document.getElementById('basementsList').addEventListener('input', function() {
+        var basementsList = document.getElementById('basementsList').value;
+        var numBasements = basementsList.split('->').length;
+        document.getElementById('numBasements').value = numBasements;
     });
 </script>
 </body>

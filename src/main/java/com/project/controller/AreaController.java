@@ -77,23 +77,29 @@ public class AreaController {
     public String showAddElevatorForm(@PathVariable Integer areaId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
         Elevator elevator = new Elevator();
-        Area area = areaService.getAreaById(areaId);
         model.addAttribute("elevator", elevator);
-        model.addAttribute("area", area);
-        model.addAttribute("floorsList", "124");
+        model.addAttribute("areaId", areaId);
         return "elevator/add";
     }
 
     @PostMapping("/{areaId}/add-elevator")
     public String addElevatorToArea(@PathVariable Integer areaId,
                                     @ModelAttribute("elevator") Elevator elevator,
-                                    @ModelAttribute("floorsList") String floorList,
                                     RedirectAttributes redirectAttributes) {
+        int numFloorsCount = countFloors(elevator.getListFloors()) + countFloors(elevator.getListBasements());
+        elevator.setNumFloors(numFloorsCount);
         System.out.println(elevator.toString());
-        System.out.println("floorList: "+floorList);
         int elevator_id = elevatorService.addElevator(elevator);
         System.out.println("elevator_id: "+elevator_id);
         return "redirect:/area/" + areaId;
+    }
+
+    private int countFloors(String listFloors) {
+        if (listFloors == null || listFloors.isEmpty()) {
+            return 0;
+        }
+        // Split by '->' and count elements
+        return listFloors.split("->").length;
     }
 
     @PostMapping("/delete/{areaId}")

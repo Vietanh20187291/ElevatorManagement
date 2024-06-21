@@ -57,7 +57,7 @@ public class ElevatorController {
         try {
             int actor = Integer.valueOf(cookieHelper.getUserId(request));
             Elevator elevator = elevatorService.getElevatorById(elevatorId);
-            int areaId = elevator.getArea().getId();
+            int areaId = elevator.getAreaId();
             elevatorService.deleteElevator(elevatorId);
             redirectAttributes.addFlashAttribute("message", "Elevator has been deleted successfully");
             redirectAttributes.addFlashAttribute("messageType","success");
