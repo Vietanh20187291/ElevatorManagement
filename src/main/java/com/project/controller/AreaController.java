@@ -77,8 +77,10 @@ public class AreaController {
     public String showAddElevatorForm(@PathVariable Integer areaId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
         Elevator elevator = new Elevator();
+        Area area = areaService.getAreaById(areaId);
+        model.addAttribute("area", area);
         model.addAttribute("elevator", elevator);
-        model.addAttribute("areaId", areaId);
+//        model.addAttribute("areaId", areaId);
         return "elevator/add";
     }
 

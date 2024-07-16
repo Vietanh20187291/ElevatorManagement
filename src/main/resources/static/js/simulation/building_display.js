@@ -170,6 +170,7 @@ function ext_choose_indoor_floor_switch(floor_no, elevator_no) {
     return $('.choose-floor-block.' + elevator_no + ' .choose-floor-button.' + floor_no)
 }
 
+
 function ext_choose_indoor_open_door_switch(elevator_no) {
     return $('.choose-floor-block.' + elevator_no + ' .indoor-open-door')
 }
@@ -251,52 +252,34 @@ function div_html_off_choose_floor_block_side() {
     return template_of_choose_floor_block_side
 }
 
-
 function set_panel_body(floor_nums, elevator_nums,list_elevators) {
     let res = div_html_off_choose_floor_block_side()
-    // for (let k = 1; k <= elevator_nums; k++) {
-    //     console.log("floor_nums:", floor_nums);
-    //     console.log("k:", k);
-    //     console.log("\"ujk\":", "ujk");
-    //     // res += div_html_of_choose_floor_block(floor_nums, k,"ujk")
-    // }
     console.log(list_elevators)
-    for (let Id in list_elevators) {
-        if (list_elevators.hasOwnProperty(Id)) {
-            let elevator = list_elevators[Id];
-            let elevatorId = elevator["elevator-id"];
-            let elevatorName = elevator["elevator-name"];
-            let elevatorNumFloors = elevator["elevator-num-floors"];
+    // for (let i = 0; i < elevatorList.length; i++) {
+        res += div_html_of_choose_floor_block(elevatorList[0].numFloors, elevatorList[0].id, elevatorList[0].name);
 
-            // console.log("elevatorNumFloors:",elevatorNumFloors);
-            // console.log("elevatorId:",elevatorId);
-            // console.log("elevatorId:",typeof elevatorId);
-            // console.log("elevatorName:",elevatorName);
-
-
-            res += div_html_of_choose_floor_block(elevatorNumFloors, elevatorId, elevatorName);
-        }
-    }
+    // }
 
     res += div_html_off_choose_floor_block_side()
+
     $('#g-panel-body').html(res)
     let grid_template_columns_of_panel_body =
         wall_side_with + string_repeat(' ' + wall_main_with, elevator_nums) + ' ' + wall_side_with
     $('#g-panel-body').css('grid-template-columns', grid_template_columns_of_panel_body)
     $('.take-place-panel').css({'height': $('#g-panel-content').height()})
 
-    for (let i = 1; i <= elevator_nums; i++) {
-        elevators[i].set_now_floor_no(elevators[i].state.now_floor_no)
-        elevators[i].set_now_direction(elevators[i].state.now_direction)
-    }
+    // for (let i = 1; i <= elevator_nums; i++) {
+        elevators[0].set_now_floor_no(elevators[i].state.now_floor_no)
+        elevators[0].set_now_direction(elevators[i].state.now_direction)
+    // }
 
-    for (let elevatorId in list_elevators) {
-        if (list_elevators.hasOwnProperty(elevatorId)) {
-            elevators[elevatorId].set_now_floor_no(elevators[elevatorId].state.now_floor_no)
-            elevators[elevatorId].set_now_direction(elevators[elevatorId].state.now_direction)
-        }
-    }
-    pin_element_to_bottom('g-panel-content')
+    // for (let elevatorId in list_elevators) {
+    //     if (list_elevators.hasOwnProperty(elevatorId)) {
+            elevators[0].set_now_floor_no(elevators[0].state.now_floor_no)
+            elevators[0].set_now_direction(elevators[0].state.now_direction)
+    //     }
+    // }
+    pin_elements_to_right_by_class('choose-floor-block')
 }
 
 

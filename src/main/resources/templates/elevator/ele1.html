@@ -20,11 +20,10 @@
     <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js}"
             type="text/javascript"></script>
 
-    <!--    <script th:src="@{../static/js/ElevatorNavigator.js}" type="text/javascript"></script>-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/static/js/MqttController.js" type="text/javascript"></script>
     <script src="/static/js/ElevatorNavigator.js" type="text/javascript"></script>
     <script src="/static/js/AlertError.js" type="text/javascript"></script>
-    <!--    <script src="../static/js/ElevatorNavigator.js" type="text/javascript"></script>-->
     <style>
         #elevator-panel {
             max-width: 80vw;
@@ -97,30 +96,6 @@
 <div th:replace="fragments/header :: header"></div>
 
 <div class="container" id="elevator-panel"style="margin-top: 0; padding-top: 0;">
-    <!--    <input id="messages" readonly>-->
-
-
-    <!--    <div class="row">-->
-    <!--        <div class="col-md-3">-->
-    <!--            <div class="bg-dark text-white p-2 mb-2">Item Selected</div>-->
-    <!--        </div>-->
-    <!--        <div class="col-md-3">-->
-    <!--            <div class="bg-danger text-white p-2 mb-2 d-flex justify-content-between align-items-center">-->
-    <!--                Timelife Door | <span class="arrow">&#9658;</span>-->
-    <!--                <div class="bg-danger text-white px-2 rounded">100,000</div>-->
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--    </div>-->
-    <!--    <div class="row">-->
-    <!--        <div class="col-md-3">-->
-    <!--            <div class="bg-dark text-white p-2 mb-2">Ref Value</div>-->
-    <!--        </div>-->
-    <!--        <div class="col-md-3">-->
-    <!--            <div class="bg-success text-white p-2 mb-2 d-flex justify-content-between align-items-center">-->
-    <!--                80,000 <span class="arrow">&#9658;</span>-->
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--    </div>-->
 
 
     <div class="row">
@@ -173,10 +148,10 @@
                             Status: <input id="connectStatus" class="input-info" name="connectStatus" readonly value="Disconnected">
                         </div>
                         <div class="text-center">
-                            <button class="btn btn-primary btn-lg mr-2" id="btnConnect" onclick="startConnect()"
+                            <button class="btn btn-primary btn-lg mr-2" id="btnConnect" onclick="GUIstartConnect()"
                                     type="button">Connect
                             </button>
-                            <button class="btn btn-danger btn-lg" id="btnDisconnect" onclick="startDisconnect()"
+                            <button class="btn btn-danger btn-lg" id="btnDisconnect" onclick="GUIStartDisconnect()"
                                     type="button" hidden>Disconnect
                             </button>
                         </div>
@@ -207,7 +182,7 @@
                                     </td>
 
                                     <td class="text-center">
-                                        <button class="btn btn-secondary btn-lg float-center btn-call" onclick="callupClick()"
+                                        <button class="btn btn-secondary btn-lg float-center btn-call" onclick="GUICallupClick()"
                                                 type="button"> Call Up
                                         </button>
                                     </td>
@@ -222,7 +197,7 @@
                                     </td>
 
                                     <td class="text-center">
-                                        <button class="btn btn-secondary btn-lg float-center btn-call" onclick="calldnClick()"
+                                        <button class="btn btn-secondary btn-lg float-center btn-call" onclick="GUICalldnClick()"
                                                 type="button">Call Down
                                         </button>
                                     </td>
@@ -237,17 +212,17 @@
                                     </td>
 
                                     <td class="text-center">
-                                        <button class="btn btn-secondary btn-lg float-center btn-call" onclick="carcallClick()"
+                                        <button class="btn btn-secondary btn-lg float-center btn-call" onclick="GUICarcallClick()"
                                                 type="button"> Car Call
                                         </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-center" colspan="2">
-                                        <button class="btn btn-success btn-lg" onclick="openDoorClick()" type="button">&lt;|&gt;
+                                        <button class="btn btn-success btn-lg" onclick="GUIOpenDoorClick()" type="button">&lt;|&gt;
                                             Open
                                         </button>
-                                        <button class="btn btn-danger btn-lg" onclick="closeDoorClick()" type="button">&gt;|&lt;
+                                        <button class="btn btn-danger btn-lg" onclick="GUICloseDoorClick()" type="button">&gt;|&lt;
                                             Close
                                         </button>
                                     </td>
@@ -322,6 +297,7 @@
     var port = parseInt(document.getElementById("port").value);
     var username = document.getElementById("username").value;
     var password = document.getElementById("password").value;
+    var numFloors = parseInt(document.getElementById("numFloors").value);
 
 </script>
 <script crossorigin="anonymous"

@@ -105,12 +105,17 @@ function create_elevators_objects(number_of_elevators,list_elevators) {
     console.log(elevatorNames);
     console.log(list_elevators);
 
-    for (let Id in list_elevators) {
-        if (list_elevators.hasOwnProperty(Id)) {
-            let elevator = list_elevators[Id];
-            let i = elevator["elevator-id"];
+    for (let i = 0; i < elevatorList.length; i++) {
+        // if (list_elevators.hasOwnProperty(Id)) {
+        //     let elevator = elevatorList[i];
+            // let i = elevator["elevator-id"];
             elevators[i] = {
-                elevator_no: i,
+                elevator_no: elevatorList[i].id,
+                topic: elevatorList[i].topic,
+                name:elevatorList[i].id,
+                num_floors: elevatorList[i].id,
+                list_floors: elevatorList[i].listFloors,
+                // list_basements: elevatorList[i].listBasements,
                 state: {
                     now_floor_no: 1,
                     now_direction: DIRECTION_STILL,// 1 up , 0 still , -1 down
@@ -515,7 +520,7 @@ function create_elevators_objects(number_of_elevators,list_elevators) {
                 }
             }
         }
-    }
+    // }
 }
 
 function toggle_AI_mode() {

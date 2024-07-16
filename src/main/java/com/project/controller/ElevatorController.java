@@ -1,8 +1,10 @@
 package com.project.controller;
 
+import com.project.entity.Area;
 import com.project.entity.Elevator;
 import com.project.entity.MqttConnection;
 import com.project.helper.CookieHelper;
+import com.project.service.AreaService;
 import com.project.service.ElevatorService;
 import com.project.service.MqttConnectionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/elevator")
 public class ElevatorController {
+    @Autowired
+    private AreaService areaService;
 
     @Autowired
     private ElevatorService elevatorService;
@@ -75,6 +79,8 @@ public class ElevatorController {
         cookieHelper.addCookieAttributes(request, model);
         Elevator elevator = elevatorService.getElevatorById(elevatorId);
         model.addAttribute("elevator", elevator);
+        Area area = areaService.getAreaById(elevator.getAreaId());
+        model.addAttribute("area", area);
         return "elevator/edit";
     }
 
