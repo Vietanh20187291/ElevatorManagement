@@ -85,6 +85,7 @@ public class ElevatorController {
         cookieHelper.addCookieAttributes(request, model);
         Elevator elevator = elevatorService.getElevatorById(elevatorId);
         model.addAttribute("elevator", elevator);
+        System.out.println(elevator.toString()+"edit");
         Area area = areaService.getAreaById(elevator.getAreaId());
         model.addAttribute("area", area);
         return "elevator/edit";
@@ -94,11 +95,21 @@ public class ElevatorController {
     public String editElevator(@PathVariable Integer elevatorId,
                                @ModelAttribute("elevator") Elevator elevator,
                                RedirectAttributes redirectAttributes) {
-        int numFloorsCount = countFloors(elevator.getListFloors()) + countFloors(elevator.getListBasements());
-        elevator.setNumFloors(numFloorsCount);
-        System.out.println("update"+elevator.toString());
-        elevatorService.updateElevator(elevator);
-        return "redirect:/area/" + elevator.getAreaId();
+        try {
+            int numFloorsCount = countFloors(elevator.getListFloors());
+            elevator.setNumFloors(numFloorsCount);
+            elevator.setId(elevatorId);
+            System.out.println("update" + elevator.toString());
+            elevatorService.updateElevator(elevator);
+            redirectAttributes.addFlashAttribute("message", "Elevator has been updated successfully");
+            redirectAttributes.addFlashAttribute("messageType","success");
+            return "redirect:/area/"+elevator.getAreaId();
+        } catch (Exception e) {
+            String errorMessage = e.getMessage();
+            redirectAttributes.addFlashAttribute("message", errorMessage);
+            redirectAttributes.addFlashAttribute("messageType","error");
+            return "redirect:/elevator/"+elevatorId;
+        }
     }
     private int countFloors(String listFloors) {
         if (listFloors == null || listFloors.isEmpty() || listFloors == "") {
@@ -107,6 +118,5 @@ public class ElevatorController {
         // Split by '->' and count elements
         return listFloors.split("->").length;
     }
-
 
 }

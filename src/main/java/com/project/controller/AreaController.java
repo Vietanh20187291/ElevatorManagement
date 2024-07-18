@@ -88,7 +88,7 @@ public class AreaController {
     public String addElevatorToArea(@PathVariable Integer areaId,
                                     @ModelAttribute("elevator") Elevator elevator,
                                     RedirectAttributes redirectAttributes) {
-        int numFloorsCount = countFloors(elevator.getListFloors()) + countFloors(elevator.getListBasements());
+        int numFloorsCount = countFloors(elevator.getListFloors());
         elevator.setNumFloors(numFloorsCount);
         System.out.println(elevator.toString());
         int elevator_id = elevatorService.addElevator(elevator);

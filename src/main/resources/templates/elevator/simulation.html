@@ -662,9 +662,7 @@
     // var floors = /*[[${floors}]]*/ [];
     var elevatorList = /*[[${elevators}]]*/ [];
     var mqttConnection = /*[[${mqttConnection}]]*/ {};
-    alert(elevatorList[0].listFloors)
     var floors = parseFloorString(elevatorList[0].listFloors);
-    alert(floors)
     function parseFloorString(floorString) {
         var floors = [];
         var floorArray = floorString.split(/->/);

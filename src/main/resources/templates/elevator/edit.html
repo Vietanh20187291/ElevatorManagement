@@ -11,12 +11,13 @@
 <div class="container mt-5">
     <h1>Edit Elevator</h1>
     <div th:replace="fragments/message :: div"></div>
-    <form th:action="@{/area/{areaId}/edit-elevator/{elevatorId}(areaId=${area.id}, elevatorId=${elevator.id})}" method="post">
+    <form th:action="@{/elevator/{elevatorId}/edit(elevatorId=${elevator.id})}" method="post">
         <input type="text" id="country" th:value="${area.building.country}" hidden>
         <input type="text" id="city" th:value="${area.building.city}" hidden>
         <input type="text" id="building" th:value="${area.building.name}" hidden>
         <input type="text" id="area" th:value="${area.name}" hidden>
         <div class="form-row">
+            <input type="number" id="elevatorId" th:value="${elevator.id}" hidden>
             <div class="form-group col-md-6">
                 <label for="elevatorName">Elevator Name:</label>
                 <input type="text" class="form-control" id="elevatorName" name="name" required th:value="${elevator.name}">

@@ -3,6 +3,8 @@ package com.project.service;
 import com.project.entity.Elevator;
 import com.project.repository.ElevatorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,7 +25,7 @@ public class ElevatorService {
     }
 
     public void updateElevator(Elevator elevator) {
-        elevatorRepository.save(elevator);
+        elevatorRepository.updateElevator(elevator);
     }
 
     public int addElevator(Elevator elevator) {
@@ -39,4 +41,5 @@ public class ElevatorService {
     public Elevator getElevatorById(int elevatorId) {
         return elevatorRepository.findById(elevatorId).orElse(null);
     }
+
 }

@@ -238,7 +238,7 @@ function handleInput(input,eleno) {
     } else if (d3 === "21") {
         direction = "Run Down";
     } else {
-        direction = "-";
+        direction = "Staying";
     }
 
     //Status based on d4
