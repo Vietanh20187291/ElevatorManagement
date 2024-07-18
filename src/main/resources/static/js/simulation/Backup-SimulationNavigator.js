@@ -452,3 +452,4 @@ function highlightButtonDownFloors(floorList) {
         pressButtonDown(floor_no)
     });
 }
+

@@ -31,5 +31,4 @@ public class MqttConnection {
     @Column(name = "path")
     private String path;
 
-    // Constructors, getters, setters và các phương thức khác
 }

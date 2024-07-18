@@ -55,30 +55,32 @@ public class AreaController {
         model.addAttribute("elevators", elevators);
         return "area/findById";
     }
-    @GetMapping("/{areaId}/elevator-simulation")
-    public String elevatorSimulation(@PathVariable Integer areaId, Model model, HttpServletRequest request) {
-        cookieHelper.addCookieAttributes(request, model);
-        Area area = areaService.getAreaById(areaId);
-        List<Elevator> elevators = elevatorService.getElevatorsByAreaId(areaId);
-        model.addAttribute("area", area);
-        model.addAttribute("elevators", elevators);
-        model.addAttribute("numFloors",elevators.get(0).getNumFloors());
-        System.out.println("numFloors: "+elevators.get(0).getNumFloors());
-        model.addAttribute("numElevators",elevators.size());
-        System.out.println("numElevators: "+elevators.size());
-        MqttConnection mqttConnection = mqttConnectionService.getMqttConnection();
-        model.addAttribute("mqttConnection", mqttConnection);
-        List<Floor> floors = floorService.getAllFloorsByElevatorId(1);
-        model.addAttribute("floors", floors);
-        return "elevator/simulation";
-    }
+//    @GetMapping("/{areaId}/elevator-simulation")
+//    public String elevatorSimulation(@PathVariable Integer areaId, Model model, HttpServletRequest request) {
+//        cookieHelper.addCookieAttributes(request, model);
+//        Area area = areaService.getAreaById(areaId);
+//        List<Elevator> elevators = elevatorService.getElevatorsByAreaId(areaId);
+//        model.addAttribute("area", area);
+//        model.addAttribute("elevators", elevators);
+//        model.addAttribute("numFloors",elevators.get(0).getNumFloors());
+//        System.out.println("numFloors: "+elevators.get(0).getNumFloors());
+//        model.addAttribute("numElevators",elevators.size());
+//        System.out.println("numElevators: "+elevators.size());
+//        MqttConnection mqttConnection = mqttConnectionService.getMqttConnection();
+//        model.addAttribute("mqttConnection", mqttConnection);
+//        List<Floor> floors = floorService.getAllFloorsByElevatorId(1);
+//        model.addAttribute("floors", floors);
+//        return "elevator/simulation";
+//    }
 
     @GetMapping("/{areaId}/add-elevator")
     public String showAddElevatorForm(@PathVariable Integer areaId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
         Elevator elevator = new Elevator();
+        Area area = areaService.getAreaById(areaId);
+        model.addAttribute("area", area);
         model.addAttribute("elevator", elevator);
-        model.addAttribute("areaId", areaId);
+//        model.addAttribute("areaId", areaId);
         return "elevator/add";
     }
 

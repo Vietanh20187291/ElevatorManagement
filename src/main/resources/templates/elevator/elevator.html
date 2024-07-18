@@ -5,6 +5,10 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Elevator Control Panel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <script th:src="@{https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js}"></script>
     <script th:src="@{https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js}"></script>
     <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/lodash.js/1.3.1/lodash.min.js}"></script>
@@ -16,11 +20,8 @@
     <script th:src="@{https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js}"
             type="text/javascript"></script>
 
-<!--    <script th:src="@{../static/js/ElevatorNavigator.js}" type="text/javascript"></script>-->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/static/js/AlertError.js" type="text/javascript"></script>
-    <script src="/static/js/ElevatorNavigator.js" type="text/javascript"></script>
-    <script src="../static/js/ElevatorNavigator.js" type="text/javascript"></script>
     <style>
         #elevator-panel {
             max-width: 80vw;
@@ -93,36 +94,8 @@
 <div th:replace="fragments/header :: header"></div>
 
 <div class="container" id="elevator-panel"style="margin-top: 0; padding-top: 0;">
-<!--    <input id="messages" readonly>-->
 
 
-<!--    <div class="row">-->
-<!--        <div class="col-md-3">-->
-<!--            <div class="bg-dark text-white p-2 mb-2">Item Selected</div>-->
-<!--        </div>-->
-<!--        <div class="col-md-3">-->
-<!--            <div class="bg-danger text-white p-2 mb-2 d-flex justify-content-between align-items-center">-->
-<!--                Timelife Door | <span class="arrow">&#9658;</span>-->
-<!--                <div class="bg-danger text-white px-2 rounded">100,000</div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="row">-->
-<!--        <div class="col-md-3">-->
-<!--            <div class="bg-dark text-white p-2 mb-2">Ref Value</div>-->
-<!--        </div>-->
-<!--        <div class="col-md-3">-->
-<!--            <div class="bg-success text-white p-2 mb-2 d-flex justify-content-between align-items-center">-->
-<!--                80,000 <span class="arrow">&#9658;</span>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-
-    <div th:text="${mqttConnection.host}" id="host"></div>
-    <div th:text="${mqttConnection.port}" id="port"></div>
-    <div th:text="${mqttConnection.username}" id="username"></div>
-    <div th:text="${mqttConnection.password}" id="password"></div>
-    <div th:text="${mqttConnection.path}" id="path"></div>
     <div class="row">
         <div class="col text-center">
             <h1>Elevator Controlling</h1>
@@ -148,7 +121,7 @@
                 <td><input id="direction" name="direction" readonly type="text" value="▲"></td>
                 <td><input id="onoff" name="onoff" readonly type="text" value="ON"></td>
                 <td>
-<!--                    <input id="doorstatus" name="doorstatus" readonly type="text" value="Open">-->
+                    <!--                    <input id="doorstatus" name="doorstatus" readonly type="text" value="Open">-->
                     <img id="doorImage" src="/images/dooropen" alt="Door Status" style="height: 2em; width: auto;">
                 </td>
 <!--                <td><input id="liftstatus" name="liftstatus" readonly type="text" value="Auto"></td>-->
@@ -164,19 +137,19 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="text-start mb-3">
-                            Elevator: <input id="elevator" class="input-info" name="elevator" readonly th:value="${elevator.name}">
+                            Elevator: <input id="elevator" class="input-info" name="elevator" readonly th:value="${elevatorList[0].name}">
                         </div>
                         <div class="text-start mb-3">
-                            Floors: <input class="input-info" id="numFloors" name="elevator" readonly th:value="${elevator.numFloors}">
+                            Floors: <input class="input-info" id="numFloors" name="elevator" readonly th:value="${elevatorList[0].name}">
                         </div>
                         <div class="text-start mb-3">
                             Status: <input id="connectStatus" class="input-info" name="connectStatus" readonly value="Disconnected">
                         </div>
                         <div class="text-center">
-                            <button class="btn btn-primary btn-lg mr-2 float-left" id="btnConnect" onclick="startConnect()"
+                            <button class="btn btn-primary btn-lg mr-2" id="btnConnect" onclick="GUIstartConnect()"
                                     type="button">Connect
                             </button>
-                            <button class="btn btn-danger btn-lg float-left" id="btnDisconnect" onclick="startDisconnect()"
+                            <button class="btn btn-danger btn-lg" id="btnDisconnect" onclick="GUIStartDisconnect()"
                                     type="button" hidden>Disconnect
                             </button>
                         </div>
@@ -207,7 +180,7 @@
                                     </td>
 
                                     <td class="text-center">
-                                        <button class="btn btn-secondary btn-lg float-center btn-call" onclick="callupClick()"
+                                        <button class="btn btn-secondary btn-lg float-center btn-call" onclick="GUICallupClick()"
                                                 type="button"> Call Up
                                         </button>
                                     </td>
@@ -222,7 +195,7 @@
                                     </td>
 
                                     <td class="text-center">
-                                        <button class="btn btn-secondary btn-lg float-center btn-call" onclick="calldnClick()"
+                                        <button class="btn btn-secondary btn-lg float-center btn-call" onclick="GUICalldnClick()"
                                                 type="button">Call Down
                                         </button>
                                     </td>
@@ -237,17 +210,17 @@
                                     </td>
 
                                     <td class="text-center">
-                                        <button class="btn btn-secondary btn-lg float-center btn-call" onclick="carcallClick()"
+                                        <button class="btn btn-secondary btn-lg float-center btn-call" onclick="GUICarcallClick()"
                                                 type="button"> Car Call
                                         </button>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="text-center" colspan="2">
-                                        <button class="btn btn-success btn-lg" onclick="opendoor()" type="button">&lt;|&gt;
+                                        <button class="btn btn-success btn-lg" onclick="GUIOpenDoorClick()" type="button">&lt;|&gt;
                                             Open
                                         </button>
-                                        <button class="btn btn-danger btn-lg" onclick="closedoor()" type="button">&gt;|&lt;
+                                        <button class="btn btn-danger btn-lg" onclick="GUICloseDoorClick()" type="button">&gt;|&lt;
                                             Close
                                         </button>
                                     </td>
@@ -266,18 +239,39 @@
             <tr>
                 <td class="bg-dark text-white">Item Selected</td>
                 <td class="bg-danger text-white d-flex justify-content-between align-items-center">
-                    Timelife Door | <span class="arrow">&#9658;</span>
-                    <span class="bg-white text-danger rounded px-2">100,000</span>
+<!--                    Timelife Door | <span class="arrow">&#9658;</span>-->
+<!--&lt;!&ndash;                    <span class="bg-white text-danger rounded px-2">100,000</span>&ndash;&gt;-->
+                    <div class="dropdown">
+                        <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span style="font-weight: bold; text-align: left;">Timelife Door</span>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="#">Door Rollers</a>
+                            <a class="dropdown-item" href="#">Times of Trip</a>
+                            <a class="dropdown-item" href="#">Scheduled Maintain</a>
+                            <a class="dropdown-item" href="#">Error Codes</a>
+                            <a class="dropdown-item" href="#">Warning Issue</a>
+                            <a class="dropdown-item" href="#">Timelife Ropes</a>
+                            <a class="dropdown-item" href="#">Timelife Inverter</a>
+                            <a class="dropdown-item" href="#">Timelife Mother Board</a>
+                        </div>
+                    </div>
                 </td>
             </tr>
             <tr>
                 <td class="bg-dark text-white">Ref Value</td>
-                <td class="bg-danger text-white"></td>
+<!--                <td class="bg-danger text-white"></td>-->
+                <td class="bg-danger text-white d-flex justify-content-between align-items-center text-center">
+                    100,000
+
+<!--                    <span class="arrow">&#9658;</span>-->
+                </td>
             </tr>
             <tr>
                 <td class="bg-dark text-white">Now Value</td>
-                <td class="bg-success text-white d-flex justify-content-between align-items-center">
-                    80,000 <span class="arrow">&#9658;</span>
+                <td class="bg-success text-white d-flex justify-content-between align-items-center text-center">
+                    80,000
+                    <!--                    <span class="arrow">&#9658;</span>-->
                 </td>
             </tr>
         </table>
@@ -286,318 +280,23 @@
 
     </div>
     <div class="text-end">
-        <a class="btn btn-secondary" th:href="@{/area/{areaid}(areaid=${elevator.areaId})}">
+        <a class="btn btn-secondary" th:href="@{/area/{areaid}(areaid=${elevatorList[0].areaId})}">
             Back
         </a>
     </div>
-</div>
-<script type="text/javascript">
-    // var host = 'tkevn.ddns.net';
-    // var port = 8001;
-    // var useTLS = false;
-    // var username = "user1";
-    // var password = "minh";
-    // cleansession = true;
-    // var mqtt;
-    // var reconnectTimeout = 2000;
-    // var elevator = document.getElementById("elevator").value;
-    // var numFloors = parseInt(document.getElementById("numFloors").value);
-    // console.log(elevator);
-    //
-    // function startConnect() {
-    //     if (typeof path == "undefined") {
-    //         path = '/mqtt';
-    //     }
-    //     mqtt = new Paho.MQTT.Client(
-    //         host,
-    //         port,
-    //         path,
-    //         "web_1",
-    //         // "" + parseInt(Math.random() * 100, 10),
-    //     );
-    //     var options = {
-    //         timeout: 3,
-    //         keepAliveInterval: 60,
-    //         useSSL: useTLS,
-    //
-    //         //keyPath: 'client.key',
-    //         //certPath: 'client.crt',
-    //         //rejectUnauthorized : false,
-    //         //The CA list will be used to determine if server is authorized
-    //         //protocol: 'wss',
-    //         // protocolId: 'MQTT',
-    //         cleanSession: cleansession,
-    //         onSuccess: onConnect,
-    //         onFailure: function (message) {
-    //             alertError("Connection failed: " + message.errorMessage + "Retrying");
-    //             setTimeout(MQTTconnect, reconnectTimeout);
-    //         }
-    //     };
-    //
-    //
-    //             // alertError("Connected failed: " + message.errorMessage + "Retrying")
-    //
-    //     mqtt.onConnectionLost = onConnectionLost;
-    //     mqtt.onMessageArrived = onMessageArrived;
-    //
-    //     if (username != null) {
-    //         options.userName = username;
-    //         options.password = password;
-    //     }
-    //     console.log("Host=");
-    //
-    //     console.log("Host=" + host + ", port=" + port + ", path=" + path + " TLS = " + useTLS + " username=" + username + " password=" + password);
-    //     mqtt.connect(options);
-    // }
-    //
-    // function onConnect() {
-    //     $('#connectStatus').val('Connected');//status "+ host + ':' + port + path"
-    //
-    //     // Connection succeeded; subscribe to lift of topic:display
-    //     // for (var i = 0; i < 8; i++) {
-    //
-    //         var subscribetopicdisplay = elevator + "/display";
-    //         mqtt.subscribe(subscribetopicdisplay, {qos: 0});
-    //         console.log(subscribetopicdisplay)
-    //         $('#subscribetopic').val(subscribetopicdisplay);
-    //         var subscribetopicdoorstatus = elevator + "/doorstatus";
-    //         mqtt.subscribe(subscribetopicdoorstatus, {qos: 0});
-    //         console.log(subscribetopicdisplay)
-    //         $('#subscribetopicdisplay').val(subscribetopicdoorstatus);
-    //         var subscribetopicdirection = elevator + "/direction";
-    //         mqtt.subscribe(subscribetopicdirection, {qos: 0});
-    //         $('#subscribetopic').val(subscribetopicdirection);
-    //         var subscribetopiconoff = elevator + "/onoff";
-    //         mqtt.subscribe(subscribetopiconoff, {qos: 0});
-    //         $('#subscribetopic').val(subscribetopiconoff);
-    //         var subscribetopicliftstatus = elevator + "/liftstatus";
-    //         mqtt.subscribe(subscribetopicliftstatus, {qos: 0});
-    //         $('#subscribetopic').val(subscribetopicliftstatus);
-    //     // }
-    //     /*
-    //      // Connection succeeded; subscribe to lift of topic:doorstatus
-    //     mqtt.subscribe(doorstatusp, {qos: 0});
-    //     $('#doorstatusp').val(doorstatusp);
-    //      // Connection succeeded; subscribe to lift of topic:direction
-    //     mqtt.subscribe(directionp, {qos: 0});
-    //     $('#directionp').val(directionp);
-    //      // Connection succeeded; subscribe to lift of topic:onoff
-    //     mqtt.subscribe(onoffp, {qos: 0});
-    //     $('#onoffp').val(onoffp);
-    //     // Connection succeeded; subscribe to lift of topic:liftstatus
-    //     mqtt.subscribe(liftstatusp, {qos: 0});
-    //     $('#liftstatusp').val(liftstatusp);
-    //    */
-    // }
-    //
-    // function onConnectionLost(response) {
-    //     setTimeout(MQTTconnect, reconnectTimeout);
-    //     $('#connectStatus').val("connection lost: " + responseObject.errorMessage + ". Reconnecting");
-    //
-    // }
-    //
-    // function onMessageArrived(message) {
-    //
-    //     var topic = message.destinationName;
-    //     var payload = message.payloadString;
-    //     if (topic == elevator + "/doorstatus") //
-    //     {
-    //         if (payload.toUpperCase() == "CLOSED") {
-    //             document.getElementById("doorImage").src = "/images/doorclose";
-    //             // $('#doorstatus').val(payload.toUpperCase());
-    //         } else if (payload.toUpperCase() == "OPENED") {
-    //             document.getElementById("doorImage").src = "/images/dooropen";
-    //             // $('#doorstatus').val(payload.toUpperCase());
-    //         }
-    //     } else if (topic == elevator + "/display") {
-    //         if (payload.toUpperCase() == "1" || payload.toUpperCase() == "2" || payload.toUpperCase() == "3" || payload.toUpperCase() == "4" || payload.toUpperCase() == "5" ||
-    //             payload.toUpperCase() == "6" || payload.toUpperCase() == "7" || payload.toUpperCase() == "8" || payload.toUpperCase() == "9" || payload.toUpperCase() == "10" ||
-    //             payload.toUpperCase() == "11" || payload.toUpperCase() == "12" || payload.toUpperCase() == "13" || payload.toUpperCase() == "14" || payload.toUpperCase() == "15" ||
-    //             payload.toUpperCase() == "16" || payload.toUpperCase() == "17" || payload.toUpperCase() == "18" || payload.toUpperCase() == "19" || payload.toUpperCase() == "20" ||
-    //             payload.toUpperCase() == "21" || payload.toUpperCase() == "22" || payload.toUpperCase() == "23" || payload.toUpperCase() == "24" || payload.toUpperCase() == "25" ||
-    //             payload.toUpperCase() == "26" || payload.toUpperCase() == "27" || payload.toUpperCase() == "28" || payload.toUpperCase() == "29" || payload.toUpperCase() == "30" ||
-    //             payload.toUpperCase() == "31" || payload.toUpperCase() == "32" || payload.toUpperCase() == "33" || payload.toUpperCase() == "34" || payload.toUpperCase() == "35" ||
-    //             payload.toUpperCase() == "36" || payload.toUpperCase() == "37" || payload.toUpperCase() == "38" || payload.toUpperCase() == "39" || payload.toUpperCase() == "40" ||
-    //             payload.toUpperCase() == "B1" || payload.toUpperCase() == "B2" || payload.toUpperCase() == "B3" || payload.toUpperCase() == "G" || payload.toUpperCase() == "M" ||
-    //             payload.toUpperCase() == "B" || payload.toUpperCase() == "12A" || payload.toUpperCase() == "12B" || payload.toUpperCase() == "A" || payload.toUpperCase() == "3A") {
-    //             $('#display').val(payload.toUpperCase());
-    //         }
-    //
-    //     } else if (topic == elevator + "/direction") {
-    //         if (payload.toUpperCase() == "UP") {
-    //             // $('#direction').val('\u2191')
-    //              $('#direction').val('▲')
-    //         } else if (payload.toUpperCase() == "DN") {
-    //             // $('#direction').val('\u2193')
-    //             $('#direction').val('▼')
-    //         } else if (payload.toUpperCase() == "STP") {
-    //             $('#direction').val('_')
-    //         }
-    //     } else if (topic == elevator + "/onoff") {
-    //         if (payload.toUpperCase() == "STP") {
-    //             $('#direction').val('LIFT-OFF')
-    //         } else if (payload.toUpperCase() == "ON") {
-    //             $('#onoff').val('ON');
-    //             $('#onoff').blur();
-    //         } else if (payload.toUpperCase() == "OFF") {
-    //             $('#onoff').val('OFF')
-    //
-    //         }
-    //     } else if (topic == elevator + "/liftstatus") {
-    //         if (payload.toUpperCase() == "JU" || payload.toUpperCase() == "IF" || payload.toUpperCase() == "AUTO" || payload.toUpperCase() == "FULL" ||
-    //             payload.toUpperCase() == "FIRE" || payload.toUpperCase() == "OVERLOAD" || payload.toUpperCase() == "--" || payload.toUpperCase() == "ATT"
-    //             || payload.toUpperCase() == "PAK")
-    //             $('#liftstatus').val(payload.toUpperCase())
-    //     }
-    //
-    //     //$('#ws').prepend(' ' + payload);
-    //
-    // }
-    //
-    // function startDisconnect() {
-    //     $('#connectStatus').val('Disconnected');
-    //     mqtt.disconnect();
-    //
-    // }
-    //
-    // //Luu y cho nay vì da thay NQTTconect bang startConnect, this line will make a auto connect when lunch app and keep alive to broker
-    // $(document).ready(function () {
-    //     startConnect();
-    // });
-    //
-    // function publishMessage() {
-    //     var msg = document.getElementById("messagep").value;
-    //     var topic = document.getElementById("topic_p").value;
-    //     Message = new Paho.MQTT.Message(msg);
-    //     Message.destinationName = topic;
-    //     mqtt.send(Message);
-    //     document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
-    // }//set timer interval event
-    // setInterval(myTimer, 3000);
-    // var i = 1;
-    // var msg2 = "up";
-    //
-    // //function in clycle
-    // function myTimer() {
-    //     var msg1 = i.toString();
-    //     var topic1 = elevator+ "/display";
-    //     var msg2 = "up";
-    //     var topic2 = elevator+ "/direction";
-    //     var msg3 = "on";
-    //     var topic3 = elevator+ "/onoff";
-    //     var msg4 = "closed";
-    //     var topic4 = elevator+ "/doorstatus";
-    //     var msg5 = "auto";
-    //     var topic5 = elevator+ "/liftstatus";
-    //     if (i % 3 == 0) msg4 = "opened";
-    //     Message1 = new Paho.MQTT.Message(msg1);
-    //     Message1.destinationName = topic1;
-    //     Message2 = new Paho.MQTT.Message(msg2);
-    //     Message2.destinationName = topic2;
-    //     Message3 = new Paho.MQTT.Message(msg3);
-    //     Message3.destinationName = topic3;
-    //     Message4 = new Paho.MQTT.Message(msg4);
-    //     Message4.destinationName = topic4;
-    //     Message5 = new Paho.MQTT.Message(msg5);
-    //     Message5.destinationName = topic5;
-    //     mqtt.send(Message1);
-    //     mqtt.send(Message2);
-    //     mqtt.send(Message3);
-    //     mqtt.send(Message4);
-    //     mqtt.send(Message5);
-    //     i++;
-    //     if (i > 40) i = 1;
-    // }
-    //
-    // function attClick() {
-    //     var msg = "att activation";
-    //     var topic = elevator + "/" + "att";
-    //     Message = new Paho.MQTT.Message(msg);
-    //     Message.destinationName = topic;
-    //     mqtt.send(Message);
-    //     document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
-    // }
-    //
-    // function opendoor() {
-    //     var msg = "door is opened";
-    //     var topic = elevator + "/" + "dooropened";
-    //     Message = new Paho.MQTT.Message(msg);
-    //     Message.destinationName = topic;
-    //     mqtt.send(Message);
-    //     document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
-    // }
-    //
-    // function closedoor() {
-    //     var msg = "door is closed";
-    //     var topic = elevator + "/" + "doorclosed";
-    //     Message = new Paho.MQTT.Message(msg);
-    //     Message.destinationName = topic;
-    //     mqtt.send(Message);
-    //     document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
-    // }
-    //
-    // function carcallClick() {
-    //     var msg = document.getElementById("carcall").value;
-    //     var topic = elevator + "/" + "carcall";
-    //
-    //     var value = parseInt(msg);
-    //     if (isNaN(value) || value < 0 || value > numFloors) {
-    //         alertError("Invalid Floor Number")
-    //         return;
-    //     }
-    //
-    //     Message = new Paho.MQTT.Message(msg);
-    //     Message.destinationName = topic;
-    //     mqtt.send(Message);
-    //     document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
-    // }
-    //
-    // function callupClick() {
-    //     var msg = document.getElementById("callup").value;
-    //     var topic = elevator + "/" + "callup";
-    //
-    //     var value = parseInt(msg);
-    //     if (isNaN(value) || value < 0 || value > numFloors) {
-    //         alertError("Invalid Floor Number")
-    //         return;
-    //     }
-    //
-    //     Message = new Paho.MQTT.Message(msg);
-    //     Message.destinationName = topic;
-    //     mqtt.send(Message);
-    //     document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
-    // }
-    //
-    // function calldnClick() {
-    //     var msg = document.getElementById("calldn").value;
-    //     var topic = elevator + "/" + "calldn";
-    //
-    //     var value = parseInt(msg);
-    //     if (isNaN(value) || value < 0 || value > numFloors) {
-    //         alertError("Invalid Floor Number")
-    //         return;
-    //     }
-    //
-    //     Message = new Paho.MQTT.Message(msg);
-    //     Message.destinationName = topic;
-    //     mqtt.send(Message);
-    //     document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
-    // }
-    //
-    // // document.addEventListener('DOMContentLoaded', function() {
-    // //     var inputFloorNums = document.getElementById('input-floor-nums');
-    // //
-    // //     inputFloorNums.addEventListener('input', function() {
-    // //         var value = parseInt(inputFloorNums.value);
-    // //
-    // //         if (isNaN(value) || value > 50) {
-    // //             inputFloorNums.value = '';
-    // //             alertError("Invalid Floor Number")
-    // //         }
-    // //     });
-    // // });
+    <input class="input-info" id="host" name="mqttConnectionHost" readonly th:value="${mqttConnection.host}" hidden>
+    <input class="input-info" id="port" name="mqttConnectionPort" readonly th:value="${mqttConnection.port}" hidden>
+    <input class="input-info" id="username" name="mqttConnectionUsername" readonly th:value="${mqttConnection.username}" hidden>
+    <input class="input-info" id="password" name="mqttConnectionPassword" readonly th:value="${mqttConnection.password}" hidden>
 
+</div>
+<script th:inline="javascript">
+    var mqttConnection = /*[[${mqttConnection}]]*/ {};
+    var numFloors = parseInt(document.getElementById("numFloors").value);
+    var elevatorList = /*[[${elevatorList}]]*/ [];
 </script>
+<script src="/static/js/MqttController.js" type="text/javascript"></script>
+<script src="/static/js/ElevatorNavigator.js" type="text/javascript"></script>
 <script crossorigin="anonymous"
         integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5/9gG0G5HQpO/pL3E9wKmODFFPng5G0yJGoi6S9D"
         src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

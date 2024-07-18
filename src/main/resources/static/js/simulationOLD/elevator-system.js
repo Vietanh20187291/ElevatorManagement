@@ -105,12 +105,17 @@ function create_elevators_objects(number_of_elevators,list_elevators) {
     console.log(elevatorNames);
     console.log(list_elevators);
 
-    for (let Id in list_elevators) {
-        if (list_elevators.hasOwnProperty(Id)) {
-            let elevator = list_elevators[Id];
-            let i = elevator["elevator-id"];
+    for (let i = 0; i < elevatorList.length; i++) {
+        // if (list_elevators.hasOwnProperty(Id)) {
+        //     let elevator = elevatorList[i];
+            // let i = elevator["elevator-id"];
             elevators[i] = {
-                elevator_no: i,
+                elevator_no: elevatorList[i].id,
+                topic: elevatorList[i].topic,
+                name:elevatorList[i].id,
+                num_floors: elevatorList[i].id,
+                list_floors: elevatorList[i].listFloors,
+                // list_basements: elevatorList[i].listBasements,
                 state: {
                     now_floor_no: 1,
                     now_direction: DIRECTION_STILL,// 1 up , 0 still , -1 down
@@ -515,7 +520,7 @@ function create_elevators_objects(number_of_elevators,list_elevators) {
                 }
             }
         }
-    }
+    // }
 }
 
 function toggle_AI_mode() {
@@ -715,13 +720,13 @@ function dispatch_request(floor_no, direct) {
 
 }
 function call_move_down(elevator_id, to_floor_no) {
-    elevators[elevator_id].move_down(
-        function () {
-            // elevators[elevator_id].set_now_floor_no(to_floor_no)
-            // controller_directly_go_to_floor(elevator_id, to_floor_no)
+                        elevators[elevator_id].move_down(
+                            function () {
+                                // elevators[elevator_id].set_now_floor_no(to_floor_no)
+                                // controller_directly_go_to_floor(elevator_id, to_floor_no)
 
-            // elevators[elevator_id].running_AI_mode()
-        })
+                                // elevators[elevator_id].running_AI_mode()
+                            })
 }
 
 function call_update_floor(elevator_no, floor_no) {
@@ -740,80 +745,30 @@ function move_up(callBack) {
     })
 }
 
-function call_check_and_move(eno, floorno) {
-    // The request for this direction on this floor has been processed and is closed.
-    this.time += 1;
-    this.log('check now :fno ' + this.state.now_floor_no + ' dir :' + this.state.now_direction + ' time: ' + this.time);
+    function call_check_and_move(eno, floorno) {
+        // The request for this direction on this floor has been processed and is closed.
+        this.time += 1;
+        this.log('check now :fno ' + this.state.now_floor_no + ' dir :' + this.state.now_direction + ' time: ' + this.time);
 
-    // If elevator is in still mode, start waiting to launch AI mode
-    if (this.state.now_direction === DIRECTION_STILL) {
-        this.start_waiting_to_launch_AI_mode();
-        return;
-    }
-
-    // Determine direction based on floorno
-    let direction = floorno > this.state.now_floor_no ? DIRECTION_UP : DIRECTION_DOWN;
-
-    // Check if there are inner requests or outer requests in current direction
-    let direct_has_inner_requests = 0;
-    let direct_has_outter_requests = 0;
-
-    let request_floors = Array(floor_nums * 2 + 1).fill(0);
-    let going_elevators = Array(floor_nums * 2 + 1).fill(0);
-
-    for (let k = this.state.now_floor_no + this.state.now_direction; k >= 1 && k <= floor_nums; k += this.state.now_direction) {
-        if (this.state.indoor_switches[k] === ON) {
-            direct_has_inner_requests = 1;
-            break;
+        // If elevator is in still mode, start waiting to launch AI mode
+        if (this.state.now_direction === DIRECTION_STILL) {
+            this.start_waiting_to_launch_AI_mode();
+            return;
         }
-        if (outdoor_buttons_state[k][DIRECTION_UP] === ON || outdoor_buttons_state[k][DIRECTION_DOWN] === ON) {
-            request_floors[k] = 1;
-        }
-    }
 
-    for (let otherEno = 1; otherEno <= elevator_nums; otherEno++) {
-        if (otherEno !== eno && elevators[otherEno].state.now_direction === direction) {
-            going_elevators[elevators[otherEno].state.now_floor_no] += 1;
-        }
-    }
+        // Determine direction based on floorno
+        let direction = floorno > this.state.now_floor_no ? DIRECTION_UP : DIRECTION_DOWN;
 
-    let now_enum = 0;
-    let now_fnum = 0;
-    let threash = 1.8;
-    for (let k = this.state.now_floor_no; k >= 1 && k <= floor_nums; k += this.state.now_direction) {
-        now_enum += going_elevators[k];
-        now_fnum += request_floors[k];
-        if ((now_enum === 0 && now_fnum !== 0) || (now_enum !== 0 && now_fnum / now_enum >= threash)) {
-            direct_has_outter_requests = 1;
-            break;
-        }
-    }
+        // Check if there are inner requests or outer requests in current direction
+        let direct_has_inner_requests = 0;
+        let direct_has_outter_requests = 0;
 
-    this.log('dir has req ' + direct_has_inner_requests + ' outer ' + direct_has_outter_requests);
+        let request_floors = Array(floor_nums * 2 + 1).fill(0);
+        let going_elevators = Array(floor_nums * 2 + 1).fill(0);
 
-    if (direct_has_inner_requests || direct_has_outter_requests) {
-        this.log(' now fno: ' + floorno);
-        if (direction === DIRECTION_UP) {
-            this.move_up();
-            elevators[eno].on_reach_floor(floorno + 1);
-        } else {
-            this.move_down();
-            elevators[eno].on_reach_floor(floorno - 1);
-        }
-    } else {
-        // Reverse direction
-        let rev_direction = direction === DIRECTION_UP ? DIRECTION_DOWN : DIRECTION_UP;
-
-        // Check if there are inner requests or outer requests in reversed direction
-        let rev_direct_has_inner_requests = 0;
-        let rev_direct_has_outer_requests = 0;
-
-        request_floors = Array(floor_nums * 2 + 1).fill(0);
-        going_elevators = Array(floor_nums * 2 + 1).fill(0);
-
-        for (let k = this.state.now_floor_no; k >= 1 && k <= floor_nums; k += rev_direction) {
+        for (let k = this.state.now_floor_no + this.state.now_direction; k >= 1 && k <= floor_nums; k += this.state.now_direction) {
             if (this.state.indoor_switches[k] === ON) {
-                rev_direct_has_inner_requests = 1;
+                direct_has_inner_requests = 1;
                 break;
             }
             if (outdoor_buttons_state[k][DIRECTION_UP] === ON || outdoor_buttons_state[k][DIRECTION_DOWN] === ON) {
@@ -822,28 +777,78 @@ function call_check_and_move(eno, floorno) {
         }
 
         for (let otherEno = 1; otherEno <= elevator_nums; otherEno++) {
-            if (otherEno !== eno && elevators[otherEno].state.now_direction === rev_direction) {
+            if (otherEno !== eno && elevators[otherEno].state.now_direction === direction) {
                 going_elevators[elevators[otherEno].state.now_floor_no] += 1;
             }
         }
 
-        now_enum = 0;
-        now_fnum = 0;
-        for (let k = this.state.now_floor_no; k >= 1 && k <= floor_nums; k += rev_direction) {
+        let now_enum = 0;
+        let now_fnum = 0;
+        let threash = 1.8;
+        for (let k = this.state.now_floor_no; k >= 1 && k <= floor_nums; k += this.state.now_direction) {
             now_enum += going_elevators[k];
             now_fnum += request_floors[k];
             if ((now_enum === 0 && now_fnum !== 0) || (now_enum !== 0 && now_fnum / now_enum >= threash)) {
-                rev_direct_has_outer_requests = 1;
+                direct_has_outter_requests = 1;
                 break;
             }
         }
 
-        if (rev_direct_has_inner_requests || rev_direct_has_outer_requests) {
-            this.need_direction(rev_direction, 1);
+        this.log('dir has req ' + direct_has_inner_requests + ' outer ' + direct_has_outter_requests);
+
+        if (direct_has_inner_requests || direct_has_outter_requests) {
+            this.log(' now fno: ' + floorno);
+            if (direction === DIRECTION_UP) {
+                this.move_up();
+                elevators[eno].on_reach_floor(floorno + 1);
+            } else {
+                this.move_down();
+                elevators[eno].on_reach_floor(floorno - 1);
+            }
         } else {
-            this.need_direction(DIRECTION_STILL, 1);
+            // Reverse direction
+            let rev_direction = direction === DIRECTION_UP ? DIRECTION_DOWN : DIRECTION_UP;
+
+            // Check if there are inner requests or outer requests in reversed direction
+            let rev_direct_has_inner_requests = 0;
+            let rev_direct_has_outer_requests = 0;
+
+            request_floors = Array(floor_nums * 2 + 1).fill(0);
+            going_elevators = Array(floor_nums * 2 + 1).fill(0);
+
+            for (let k = this.state.now_floor_no; k >= 1 && k <= floor_nums; k += rev_direction) {
+                if (this.state.indoor_switches[k] === ON) {
+                    rev_direct_has_inner_requests = 1;
+                    break;
+                }
+                if (outdoor_buttons_state[k][DIRECTION_UP] === ON || outdoor_buttons_state[k][DIRECTION_DOWN] === ON) {
+                    request_floors[k] = 1;
+                }
+            }
+
+            for (let otherEno = 1; otherEno <= elevator_nums; otherEno++) {
+                if (otherEno !== eno && elevators[otherEno].state.now_direction === rev_direction) {
+                    going_elevators[elevators[otherEno].state.now_floor_no] += 1;
+                }
+            }
+
+            now_enum = 0;
+            now_fnum = 0;
+            for (let k = this.state.now_floor_no; k >= 1 && k <= floor_nums; k += rev_direction) {
+                now_enum += going_elevators[k];
+                now_fnum += request_floors[k];
+                if ((now_enum === 0 && now_fnum !== 0) || (now_enum !== 0 && now_fnum / now_enum >= threash)) {
+                    rev_direct_has_outer_requests = 1;
+                    break;
+                }
+            }
+
+            if (rev_direct_has_inner_requests || rev_direct_has_outer_requests) {
+                this.need_direction(rev_direction, 1);
+            } else {
+                this.need_direction(DIRECTION_STILL, 1);
+            }
         }
-    }
 
 
 }

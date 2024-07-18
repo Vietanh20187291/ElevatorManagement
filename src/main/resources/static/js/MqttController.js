@@ -1,40 +1,12 @@
-// var host = 'tkevn.id.vn';
-// var port = 8001;
-// var username = 'user1';
-// var password = 'minh';
-// alert(host)
-// alert(port)
-// alert(username)
-// alert(password)
-
-var host = document.getElementById("host").value;
-var port = parseInt(document.getElementById("port").value);
-var username = document.getElementById("username").value;
-var password = document.getElementById("password").value;
-var useTLS = false;
-cleansession = true;
-var mqtt;
-var reconnectTimeout = 2000;
-var elevator = document.getElementById("elevator").value;
-var numFloors = parseInt(document.getElementById("numFloors").value);
-console.log(elevator);
-
-function startConnect() {
-    let elements = document.getElementsByClassName('floor_number');
-    if (elements.length > 0) {
-        elements[0].innerHTML = '12A';
-    }
-
-
-    if (typeof path == "undefined") {
-        path = '/mqtt';
+function MQTTStartConnect() {
+    if (typeof mqttConnection.path == "undefined" || mqttConnection.path == null || mqttConnection.path == "") {
+        mqttConnection.path = '/mqtt';
     }
     mqtt = new Paho.MQTT.Client(
-        host,
-        port,
-        path,
+        mqttConnection.host,
+        mqttConnection.port,
+        mqttConnection.path,
         "web_1",
-        // "" + parseInt(Math.random() * 100, 10),
     );
 
     var options = {
@@ -42,10 +14,9 @@ function startConnect() {
         keepAliveInterval: 60,
         useSSL: useTLS,
         cleanSession: cleansession,
-        onSuccess: onConnect,
+        onSuccess: MQTTOnConnect,
         onFailure: function (message) {
-            alertError("Connection failed: "+message.errorMessage);
-            // setTimeout(MQTTconnect, reconnectTimeout);
+            alertError("Connection failed "+message.errorMessage);
 
         }
     };
@@ -53,142 +24,138 @@ function startConnect() {
 
     // alertError("Connected failed: " + message.errorMessage + "Retrying")
 
-    mqtt.onConnectionLost = onConnectionLost;
-    mqtt.onMessageArrived = onMessageArrived;
+    mqtt.onConnectionLost = MQTTOnConnectionLost;
+    mqtt.onMessageArrived = MQTTOnMessageArrived;
 
-    if (username != null) {
-        options.userName = username;
-        options.password = password;
+    if (mqttConnection.username != null) {
+        options.userName = mqttConnection.username;
+        options.password = mqttConnection.password;
     }
     console.log("Host=");
 
-    console.log("Host=" + host + ", port=" + port + ", path=" + path + " TLS = " + useTLS + " username=" + username + " password=" + password);
+    console.log("Host=" + mqttConnection.host + ", port=" + mqttConnection.port + ", path=" + mqttConnection.path + " TLS = " + useTLS + " username=" + mqttConnection.username + " password=" + mqttConnection.password);
     mqtt.connect(options);
 }
 
-function onConnect() {
-    $('#connectStatus').val('Connected');//status "+ host + ':' + port + path"
-    var subscribetopicindicator = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator";
-    mqtt.subscribe(subscribetopicindicator, {qos: 0});
-    var subscribetopiccallcar = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callcar";
-    mqtt.subscribe(subscribetopiccallcar, {qos: 0});
-    var subscribetopiccallup = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callhallup";
-    mqtt.subscribe(subscribetopiccallup, {qos: 0});
-    var subscribetopiccalldown = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callhalldown";
-    mqtt.subscribe(subscribetopiccalldown, {qos: 0});
-    alertSuccess("Connected successfully");
+function MQTTOnConnect() {
+
+    for (var i = 0; i < elevatorList.length; i++) {
+        var slug = elevatorList[i].topic;
+        var subscribetopicindicator = slug + "/elvtopc/indicator";
+        mqtt.subscribe(subscribetopicindicator, { qos: 0 });
+
+        var subscribetopiccallcar = slug + "/elvtopc/callcar";
+        mqtt.subscribe(subscribetopiccallcar, { qos: 0 });
+
+        var subscribetopiccallup = slug + "/elvtopc/callhallup";
+        mqtt.subscribe(subscribetopiccallup, { qos: 0 });
+
+        var subscribetopiccalldown = slug + "/elvtopc/callhalldown";
+        mqtt.subscribe(subscribetopiccalldown, { qos: 0 });
+    }
+    GUIOnConnect();
 }
 
-function onConnectionLost(response) {
-    // setTimeout(MQTTconnect, reconnectTimeout);
-    // $('#connectStatus').val("connection lost");
-    alertError("Connection lost");
-
+function MQTTOnConnectionLost() {
+    GUIOnConnectionLost();
 }
-
-function onMessageArrived(message) {
-    // alert("onMessageArrived")
+// Tạo hàm bọc để truyền thêm topic
+function MQTTOnMessageArrived(message) {
     var topic = message.destinationName;
     var payload = message.payloadString;
-    // alert('hi'+topic+'payload'+payload)
 
-    // Alert the formatted hexadecimal payload
-    // alert("Hexadecimal Payload: " + payloadHex);
-    if (topic ==  "Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator"){
-        var payloadBytes = message.payloadBytes;
+    for (var i = 0; i < elevatorList.length; i++) {
 
-        // Convert payload bytes to hexadecimal string
-        var payloadHex = bytesToHex(payloadBytes);
-        // Insert space after every two characters
-        payloadHex = insertSpaceEveryNChars(payloadHex, 4);
-        handleInput(payloadHex.replace(/\s/g, ''));
-    }
-    if (topic ==  "Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator"){
-        var payloadBytes = message.payloadBytes;
+        var slug = elevatorList[i].topic;
+        if (topic == slug + "/elvtopc/indicator") {
+            var payloadBytes = message.payloadBytes;
 
-        // Convert payload bytes to hexadecimal string
-        var payloadHex = bytesToHex(payloadBytes);
-        // Insert space after every two characters
-        payloadHex = insertSpaceEveryNChars(payloadHex, 4);
-        handleInput(payloadHex.replace(/\s/g, ''));
-    }
-    if(topic == "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callcar"){
-        var payloadBytes = message.payloadBytes;
-        var payloadHex = bytesToHex(payloadBytes);
+            // Convert payload bytes to hexadecimal string
+            var payloadHex = bytesToHex(payloadBytes);
+            // Insert space after every two characters
+            payloadHex = insertSpaceEveryNChars(payloadHex, 4);
+            var info = handleInput(payloadHex.replace(/\s/g, ''),i);
+            GUIShowIndicator(info, elevatorList[i].id);
+        }
+        // if (topic == slugs[i] + "Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator") {
+        //     var payloadBytes = message.payloadBytes;
+        //
+        //     // Convert payload bytes to hexadecimal string
+        //     var payloadHex = bytesToHex(payloadBytes);
+        //     // Insert space after every two characters
+        //     payloadHex = insertSpaceEveryNChars(payloadHex, 4);
+        //     handleInput(payloadHex.replace(/\s/g, ''));
+        // }
+        if (topic == slug + "/elvtopc/callcar") {
+            var payloadBytes = message.payloadBytes;
+            var payloadHex = bytesToHex(payloadBytes);
 
-        var floors = signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2))
+            var floors = signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2))
 
-        highlightFloors(1,floors)
-    }
-    if(topic == "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callhallup"){
-        var payloadBytes = message.payloadBytes;
-        var payloadHex = bytesToHex(payloadBytes);
-        highlightButtonUpFloors(signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2)))
-    }
-    if(topic == "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callhalldown"){
-        var payloadBytes = message.payloadBytes;
-        var payloadHex = bytesToHex(payloadBytes);
-        highlightButtonDownFloors(signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2)))
+            highlightFloors(0, floors)
+        }
+        if (topic == slug + "/elvtopc/callhallup") {
+            var payloadBytes = message.payloadBytes;
+            var payloadHex = bytesToHex(payloadBytes);
+            highlightButtonUpFloors(signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2)))
+        }
+        if (topic == slug + "/elvtopc/callhalldown") {
+            var payloadBytes = message.payloadBytes;
+            var payloadHex = bytesToHex(payloadBytes);
+            highlightButtonDownFloors(signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2)))
+        }
     }
 
 }
 
-function startDisconnect() {
-    $('#connectStatus').val('Disconnected');
+function MQTTstartDisconnect() {
     mqtt.disconnect();
-
-
 }
 
 //Luu y cho nay vì da thay NQTTconect bang startConnect, this line will make a auto connect when lunch app and keep alive to broker
 $(document).ready(function () {
-    startConnect();
+    GUIstartConnect();
 });
 
-function attClick() {
-    var msg = "att activation";
-    var topic = elevator + "/" + "att";
-    Message = new Paho.MQTT.Message(msg);
-    Message.destinationName = topic;
-    mqtt.send(Message);
-    document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
-}
+// function attClick(mqtt) {
+//     var msg = "att activation";
+//     var topic = elevator + "/" + "att";
+//     Message = new Paho.MQTT.Message(msg);
+//     Message.destinationName = topic;
+//     mqtt.send(Message);
+//     document.getElementById("messages").innerHTML += "<span> Message to topic " + topic + " with value = " + msg + " is sent </span><br>";
+// }
 
-function openDoorClick(){
+function MQTTOpenDoor(eleid){
+    var elevator = elevatorList.find(elevator => elevator.id === eleid);
+
     var msg = new Uint8Array([0x01]);
-    var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/status";
+    var topic = elevator.topic +"/pctoelv/status";
     Message = new Paho.MQTT.Message(msg.buffer);
     Message.destinationName = topic;
     mqtt.send(Message);
     alertSuccess("Sent request successfully")
 }
 
-function closeDoorClick() {
+function MQTTCloseDoor(eleid) {
+    var elevator = elevatorList.find(elevator => elevator.id === eleid);
+
     var msg = new Uint8Array([0x02]);
-    var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/status";
+    var topic = elevator.topic+"/pctoelv/status";
     Message = new Paho.MQTT.Message(msg.buffer);
     Message.destinationName = topic;
     mqtt.send(Message);
     alertSuccess("Sent request successfully")
 }
 
-function carcallClick(input) {
-    var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/callcar";
+function MQTTcarCall(input, eleid) {
+    var elevator = elevatorList.find(elevator => elevator.id === eleid);
+    var topic = elevator.topic + "/pctoelv/callcar";
     handleCallClick(input,topic);
-
 }
 
 function handleCallClick(input,topic) {
-    // try {
     var value = input;
-    // }catch (e) {
-    //     alertError("Invalid type of input")
-    //     return;
-    // }
-    // if (isNaN(value) || value < 0 || value > numFloors) {
-    //     alertError("Invalid Floor Number")
-    //     return;
-    // }
 
     var floors = [];
     floors.push(value)
@@ -199,22 +166,19 @@ function handleCallClick(input,topic) {
     let message = new Paho.MQTT.Message(signal);
     message.destinationName = topic;
     mqtt.send(message);
-    alertSuccess("Sent request successfully")
+
 }
 
-function callupClick(input) {
-    // alert(input)
-    // var msg = document.getElementById("callup").value;
-    var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/callhallup";
-
-    handleCallClick(input,topic);
+function MQTTcallUp(input, eleid) {
+    var elevator = elevatorList.find(elevator => elevator.id === eleid);
+    var topic = elevator.topic + "/pctoelv/callhallup";
+    handleCallClick(input,topic, mqtt);
 }
 
 
-function calldnClick(input) {
-    // var msg = document.getElementById("calldn").value;
-    var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/callhalldown";
-
+function MQTTcallDn(input, eleid) {
+    var elevator = elevatorList.find(elevator => elevator.id === eleid);
+    var topic = elevator.topic+"/pctoelv/callhalldown";
     handleCallClick(input,topic);
 }
 
@@ -238,7 +202,7 @@ function insertSpaceEveryNChars(str, n) {
     }
     return result.trim(); // Remove trailing space
 }
-function handleInput(input) {
+function handleInput(input,eleno) {
     var d0 = input.substring(0, 2);
     var d1 = input.substring(2, 4);
     var d2 = input.substring(4, 6);
@@ -250,9 +214,17 @@ function handleInput(input) {
 
     // Convert d1, d2, d3 from hex to decimal
     var floor = convertHex(d0) +convertHex(d1)+convertHex(d2);
-    // Bỏ ký tự 0 ở đâu nếu ký tự thứ 2 là chữ
-    if (floor.length > 1 && floor[0] === '0' && isNaN(floor[1])) {
-        floor = floor.substring(1);
+    // // Bỏ ký tự 0 ở đâu nếu ký tự thứ 2 là chữ
+    // if (floor.length > 1 && floor[0] === '0' && isNaN(floor[1])) {
+    //     floor = floor.substring(1);
+    // }
+
+    // Xóa tất cả các số 0 ở đầu chuỗi
+    floor = floor.replace(/^0+/, '');
+
+    // Nếu chuỗi rỗng (trường hợp toàn bộ chuỗi chỉ chứa các số 0), thì trả về '0'
+    if (floor === '') {
+        floor = '0';
     }
 
     // Direction based on d3
@@ -296,11 +268,11 @@ function handleInput(input) {
     console.log("Direction: " + direction);
     console.log("Status: " + status);
     console.log("Door: " + door);
-    $('#display').val(floor);
+    // $('#display').val(floor);
 
-    if(direction != "Unknown") {
-        $('#direction').val(direction);
-    }
+    // if(direction != "Unknown") {
+    //     $('#direction').val(direction);
+    // }
     // $('#onoff').val(status);
     // alert("d0: " + d0 + "\n" +
     //     "d1: " + d1 + "\n" +
@@ -331,15 +303,16 @@ function handleInput(input) {
     } else {
         direction = "-";
     }
-    // if(direction == "Up" || direction == "Run Up") {
-    //     set_indoor_direction_display(1, DIRECTION_UP);
-    // }else if(direction == "Down" || direction == "Run Down") {
-    //     set_indoor_direction_display(1, DIRECTION_DOWN);
-    // }else{
-    //     set_indoor_direction_display(1, DIRECTION_STILL);
-    // }
+    var info = {
+        floor: floor,
+        direction: direction,
+        status: status,
+        door: door
+    };
 
-    controller_move(1,floor,door)
+    // controller_move(1,floor,door)
+
+    return info;
 
 
 }
@@ -408,8 +381,6 @@ function signalCalledFloorsToOutput(signalInput) {
         for (var j = 0; j < binaryString.length; j++) {
             if (binaryString[j] === '1') {
                 var floorNumber = (i * 8) + (8 - j);
-
-                // alert(floorNumber)
                 result.push(floorNumber);
             }
         }
@@ -452,3 +423,4 @@ function highlightButtonDownFloors(floorList) {
         pressButtonDown(floor_no)
     });
 }
+

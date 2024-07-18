@@ -1,9 +1,13 @@
 package com.project.controller;
 
+import com.project.entity.Area;
 import com.project.entity.Elevator;
+import com.project.entity.Floor;
 import com.project.entity.MqttConnection;
 import com.project.helper.CookieHelper;
+import com.project.service.AreaService;
 import com.project.service.ElevatorService;
+import com.project.service.FloorService;
 import com.project.service.MqttConnectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,14 +16,20 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
 @RequestMapping("/elevator")
 public class ElevatorController {
+    @Autowired
+    private AreaService areaService;
 
     @Autowired
     private ElevatorService elevatorService;
+    @Autowired
+    private FloorService floorService;
     @Autowired
     private CookieHelper cookieHelper;
     @Autowired
@@ -29,27 +39,27 @@ public class ElevatorController {
     public String getElevatorById(@PathVariable int elevatorId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
         Elevator elevator = elevatorService.getElevatorById(elevatorId);
-        model.addAttribute("elevator", elevator);
+        List<Elevator> elevatorList = Arrays.asList(elevator);
+        model.addAttribute("elevatorList", elevatorList);
         MqttConnection mqttConnection = mqttConnectionService.getMqttConnection();
         model.addAttribute("mqttConnection", mqttConnection);
-        return "elevator/ele1";
+        return "elevator/elevator";
     }
 
 
-//    @GetMapping("/{elevatorId}/edit")
-//    public String showEditElevatorForm(@PathVariable int elevatorId, Model model, HttpServletRequest request) {
-//        cookieHelper.addCookieAttributes(request, model);
-//        Elevator elevator = elevatorService.getElevatorById(elevatorId);
-//        model.addAttribute("elevator", elevator);
-//        return "elevator/edit";
-//    }
-//
-//    @PostMapping("/{elevatorId}/edit")
-//    public String updateElevator(@PathVariable int elevatorId, @ModelAttribute("elevator") Elevator elevator) {
-//        elevator.setId(elevatorId);
-//        elevatorService.updateElevator(elevator);
-//        return "redirect:/elevator/" + elevatorId;
-//    }
+    @GetMapping("/simulation/{elevatorId}")
+    public String elevatorSimulation(@PathVariable Integer elevatorId, Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
+        Elevator elevator = elevatorService.getElevatorById(elevatorId);
+        List<Elevator> elevators = Arrays.asList(elevator);
+//        model.addAttribute("area", area);
+        model.addAttribute("elevators", elevators);
+        model.addAttribute("numFloors",elevators.get(0).getNumFloors());
+        model.addAttribute("numElevators",elevators.size());
+        MqttConnection mqttConnection = mqttConnectionService.getMqttConnection();
+        model.addAttribute("mqttConnection", mqttConnection);
+        return "elevator/simulation";
+    }
 
     @PostMapping("/delete/{elevatorId}")
     public String deleteElevator(@PathVariable Integer elevatorId, RedirectAttributes redirectAttributes, HttpServletRequest request) {
@@ -75,6 +85,8 @@ public class ElevatorController {
         cookieHelper.addCookieAttributes(request, model);
         Elevator elevator = elevatorService.getElevatorById(elevatorId);
         model.addAttribute("elevator", elevator);
+        Area area = areaService.getAreaById(elevator.getAreaId());
+        model.addAttribute("area", area);
         return "elevator/edit";
     }
 
@@ -96,10 +108,5 @@ public class ElevatorController {
         return listFloors.split("->").length;
     }
 
-//    @GetMapping("/area/{areaId}")
-//    public String getElevatorsByAreaId(@PathVariable int areaId, Model model) {
-//        List<Elevator> elevators = elevatorService.getElevatorsByAreaId(areaId);
-//        model.addAttribute("elevators", elevators);
-//        return "elevator/elevators";
-//    }
+
 }

@@ -180,7 +180,7 @@ function carcallClick(input) {
 
 function handleCallClick(input,topic) {
     // try {
-    var value = input;
+        var value = input;
     // }catch (e) {
     //     alertError("Invalid type of input")
     //     return;
@@ -452,3 +452,4 @@ function highlightButtonDownFloors(floorList) {
         pressButtonDown(floor_no)
     });
 }
+

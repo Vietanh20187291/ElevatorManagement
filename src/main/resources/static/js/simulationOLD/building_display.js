@@ -228,36 +228,23 @@ function div_html_of_open_close_buttons() {
 }
 
 function div_html_of_choose_floor_block(floor_nums, elevator_no, elevator_name){
-    // Determine the number of buttons per row based on the floor numbers
-    let numButtonsPerRow = (floor_nums < 10) ? 3 : 4;
-
-    let res = ('<div class="elevator-window choose-floor-block mark-of-eno" style="position: fixed !important; right: 0 !important; top: 0 !important; width: auto !important;">\n' +
+    let res = ('<div class="g-panel-item-wrapper"><div class="elevator-window choose-floor-block mark-of-eno">\n' +
         '<div class="take-place elevator-info">\n' +
+        // '                        <p class="choose-floor-prompt"><span class="a">#mark-of-eno</span></p>\n' +
+        '\n' +
         '     <div class="now-floor-info">\n' +
-        '         <div class="floor-info-decoration"></div>\n' +
-        '         <div class="elevator-direction mark-of-eno">￬</div><div class="floor-number mark-of-eno">1</div>\n' +
-        '     </div>\n' +
-        ' </div>\n').replace(/mark-of-eno/g, elevator_no);
-
-    // Calculate the width of the container based on the number of buttons per row
-    res += '<div class="floor-buttons-container" style="width: calc(' + numButtonsPerRow + ' * 50px + ' + (numButtonsPerRow - 1) + ' * 2px); margin: auto;">\n';
+        '                        <div class="floor-info-decoration"></div>\n' +
+        '                        <div class="elevator-direction mark-of-eno">￬</div><div class="floor-number mark-of-eno">1</div></div>\n' +
+        '\n' +
+        '                    </div>').replace(/mark-of-eno/g, elevator_no)
     for (let k = 1; k <= floor_nums; k++) {
-        res += tempalte_of_choose_floor_button.replace(/mark-of-fno/g, k).replace(/name-of-fno/g, getNameByFloorLevel(k));
+        res += tempalte_of_choose_floor_button.replace(/mark-of-fno/g, k).replace(/name-of-fno/g, getNameByFloorLevel(k))
     }
-    res += '</div>\n';
-
-    res += div_html_of_open_close_buttons();
-    res += '<h1 style="width: 100%;">mark-of-eno</h1>'.replace(/mark-of-eno/g, elevator_name);
-    res += '</div>';
-    return res;
+    res += div_html_of_open_close_buttons()
+    res += '<h1>mark-of-eno</h1>'.replace(/mark-of-eno/g, elevator_name)
+    res += '</div></div>'
+    return res
 }
-
-
-
-
-
-
-
 
 let template_of_choose_floor_block_side = '<div class="g-panel-item-wrapper"><div class="elevator-window choose-floor-block panel-side"></div></div>'
 
@@ -269,7 +256,7 @@ function set_panel_body(floor_nums, elevator_nums,list_elevators) {
     let res = div_html_off_choose_floor_block_side()
     console.log(list_elevators)
     // for (let i = 0; i < elevatorList.length; i++) {
-    res += div_html_of_choose_floor_block(elevatorList[0].numFloors, elevatorList[0].id, elevatorList[0].name);
+        res += div_html_of_choose_floor_block(elevatorList[0].numFloors, elevatorList[0].id, elevatorList[0].name);
 
     // }
 
@@ -282,14 +269,14 @@ function set_panel_body(floor_nums, elevator_nums,list_elevators) {
     $('.take-place-panel').css({'height': $('#g-panel-content').height()})
 
     // for (let i = 1; i <= elevator_nums; i++) {
-    elevators[0].set_now_floor_no(elevators[i].state.now_floor_no)
-    elevators[0].set_now_direction(elevators[i].state.now_direction)
+        elevators[0].set_now_floor_no(elevators[i].state.now_floor_no)
+        elevators[0].set_now_direction(elevators[i].state.now_direction)
     // }
 
     // for (let elevatorId in list_elevators) {
     //     if (list_elevators.hasOwnProperty(elevatorId)) {
-    elevators[0].set_now_floor_no(elevators[0].state.now_floor_no)
-    elevators[0].set_now_direction(elevators[0].state.now_direction)
+            elevators[0].set_now_floor_no(elevators[0].state.now_floor_no)
+            elevators[0].set_now_direction(elevators[0].state.now_direction)
     //     }
     // }
     pin_elements_to_right_by_class('choose-floor-block')
@@ -414,8 +401,8 @@ function cal_floor_height() {
 }
 
 function controller_directly_go_to_floor(elevator_no, floor_no) {
-    -
-        $('.elevator-main.' + elevator_no + ' .elevator-line').css({'height': elevator_line_height - (floor_no - 1) * floor_height + 'px'})
+-
+    $('.elevator-main.' + elevator_no + ' .elevator-line').css({'height': elevator_line_height - (floor_no - 1) * floor_height + 'px'})
 
 }
 

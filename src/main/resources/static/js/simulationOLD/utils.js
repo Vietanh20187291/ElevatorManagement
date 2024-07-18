@@ -177,11 +177,27 @@ function scrollMsgTip(id) {
 
 
 let pin_to_bottom_elements_ids = []
+let pin_to_right_elements_ids = []
+function pin_elements_to_right_by_class(className) {
+    // Get all elements by the class name
+    var elements = document.getElementsByClassName(className);
 
-function pin_element_to_bottom(id) {
-    pin_to_bottom_elements_ids.push(id)
-    scrollMsgTip(id);
+    // Convert the HTMLCollection to an array and iterate over each element
+    Array.prototype.forEach.call(elements, function(element) {
+        // Apply CSS styles to pin the element to the right with !important
+        element.style.setProperty('position', 'fixed', 'important');
+        element.style.setProperty('right', '0', 'important');
+        element.style.setProperty('top', '0', 'important'); // or set another value if you want to adjust the vertical position
+        element.style.setProperty('background-color', 'red', 'important'); // change background color to red
+    });
 }
+
+
+
+// function pin_element_to_bottom(id) {
+//     pin_to_bottom_elements_ids.push(id)
+//     scrollMsgTip(id);
+// }
 
 function pin_to_bottom_elements() {
     for (let i = 0; i < pin_to_bottom_elements_ids.length; i++) {
@@ -192,6 +208,7 @@ function pin_to_bottom_elements() {
 window.onload = pin_to_bottom_elements;
 window.onscroll = pin_to_bottom_elements;
 window.onresize = pin_to_bottom_elements;
+
 
 
 
