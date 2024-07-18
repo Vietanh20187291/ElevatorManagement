@@ -1,12 +1,3 @@
-// var host = 'tkevn.id.vn';
-// var port = 8001;
-// var username = 'user1';
-// var password = 'minh';
-// alert(host)
-// alert(port)
-// alert(username)
-// alert(password)
-
 var host = document.getElementById("host").value;
 var port = parseInt(document.getElementById("port").value);
 var username = document.getElementById("username").value;
@@ -132,6 +123,201 @@ function onMessageArrived(message) {
     }
 
 }
+function handleInput(input) {
+    var d0 = input.substring(0, 2);
+    var d1 = input.substring(2, 4);
+    var d2 = input.substring(4, 6);
+    var d3 = input.substring(6, 8);
+    var d4 = input.substring(8, 10);
+    var d5 = input.substring(10, 12);
+    var d6 = input.substring(12, 14);
+    var d7 = input.substring(14, 16);
+
+    // Convert d1, d2, d3 from hex to decimal
+    var floor = convertHex(d0) +convertHex(d1)+convertHex(d2);
+    // Bỏ ký tự 0 ở đâu nếu ký tự thứ 2 là chữ
+    // if (floor.length > 1 && floor[0] === '0' && isNaN(floor[1])) {
+    //     floor = floor.substring(1);
+    // }
+    controller_move(1,floor,door)
+    // Direction based on d3
+    var direction = "";
+    if (d3 === "10") {
+        direction = "Up";
+    } else if (d3 === "11") {
+        direction = "Run Up";
+    } else if (d3 === "20") {
+        direction = "Down";
+    } else if (d3 === "21") {
+        direction = "Run Down";
+    } else {
+        direction = "-";
+    }
+    if(direction == "Up" || direction == "Run Up") {
+        set_indoor_direction_display(1, DIRECTION_UP);
+    }else if(direction == "Down" || direction == "Run Down") {
+        set_indoor_direction_display(1, DIRECTION_DOWN);
+    }else{
+        set_indoor_direction_display(1, DIRECTION_STILL);
+    }
+
+    //Status based on d4
+    var status = "";
+    if (d4.charAt(7) === "1") {
+        status = "Parking";
+    } else if (d4.charAt(6) === "1") {
+        status = "Overload";
+    } else if (d4.charAt(5) === "1") {
+        status = "Priority";
+    } else if (d4.charAt(4) === "1") {
+        status = "Fire";
+    } else if (d4.charAt(3) === "1") {
+        status = "Full";
+    } else {
+        status = "Available";
+    }
+
+    var door = "";
+    if (d5 === "04") {
+        door = "Open";
+    } else if (d5 === "08") {
+        door = "Close";
+    }
+
+    // console.log("Floor: " + floor);
+    // console.log("Direction: " + direction);
+    // console.log("Status: " + status);
+    // console.log("Door: " + door);
+    // $('#display').val(floor);
+    //
+    // if(direction != "Unknown") {
+    //     $('#direction').val(direction);
+    // }
+    // $('#onoff').val(status);
+    // alert("d0: " + d0 + "\n" +
+    //     "d1: " + d1 + "\n" +
+    //     "d2: " + d2 + "\n" +
+    //     "d3: " + d3 + " (" + direction + ")\n" +
+    //     "d4: " + d4 + "\n\n" +
+    //     "Floor: " + floor + "\n" +
+    //     "Direction: " + direction + "\n" +
+    //     "Status: " + status);
+    //
+    // if (direction == "Up" || direction == "Run Up") {
+    //     set_indoor_direction_display(1, DIRECTION_UP);
+    // }
+    // else if (direction == "Down" || direction == "Run Down") {
+    //     set_indoor_direction_display(1, DIRECTION_DOWN);
+    // }else {
+    //     set_indoor_direction_display(1, DIRECTION_STILL);
+    // }
+
+    // if (d3 === "10") {
+    //     direction = "Up";
+    // } else if (d3 === "11") {
+    //     direction = "Run Up";
+    // } else if (d3 === "20") {
+    //     direction = "Down";
+    // } else if (d3 === "21") {
+    //     direction = "Run Down";
+    // } else {
+    //     direction = "-";
+    // }
+    // if(direction == "Up" || direction == "Run Up") {
+    //     set_indoor_direction_display(1, DIRECTION_UP);
+    // }else if(direction == "Down" || direction == "Run Down") {
+    //     set_indoor_direction_display(1, DIRECTION_DOWN);
+    // }else{
+    //     set_indoor_direction_display(1, DIRECTION_STILL);
+    // }
+
+
+
+
+}
+
+function removeLeadingZeros(input) {
+    var str = String(input);
+    // Kiểm tra nếu chuỗi chỉ chứa toàn số 0
+    if (/^0+$/.test(str)) {
+        return '0';
+    }
+
+    // Xóa các số 0 ở đầu chuỗi
+    return str.replace(/^0+/, '');
+}
+function getNameByFloorLevel(floorLevel) {
+    floorLevel = removeLeadingZeros(floorLevel)
+    for (var i = 0; i < floors.length; i++) {
+        if (floors[i].floorLevel == floorLevel) {
+            return floors[i].name;
+        }
+    }
+    return floorLevel;
+}
+
+function getFloorLevelByName(name) {
+    name = removeLeadingZeros(name)
+    for (var i = 0; i < floors.length; i++) {
+        if (floors[i].name == name) {
+            return floors[i].floorLevel;
+        }
+    }
+    return name;
+}
+
+
+
+function controller_move(elevator_no, targetFloor, door) {
+    // console.log('controller_move');
+    // alert('targetFloor' + targetFloor);
+
+    targetFloor = getFloorLevelByName(targetFloor);
+    // Lấy tọa độ hiện tại của thang máy
+    let current_top = parseFloat($('.elevator-main.' + elevator_no).css('top'));
+
+    // Tính toán tọa độ của tầng muốn đến dựa trên chiều cao của tầng và số tầng cần di chuyển
+    let targetTop = elevator_main_first_top - (targetFloor - 1) * floor_height;
+    $('.elevator-main.' + elevator_no).animate({ top: targetTop + 'px' }, {
+        duration: Math.abs(targetTop - current_top) * moving_speed_millisecond_per_pixel,
+        easing: "linear",
+        progress: function() {
+            // // Tính lại tầng hiện tại dựa trên tọa độ mới của thang máy
+            // let current_floor = Math.round((elevator_main_first_top - parseFloat($(this).css('top'))) / floor_height) + 1;
+            // // Hiển thị số tầng hiện tại trong thang máy
+            // set_indoor_floor_number_display(getNameByFloorLevel(current_floor), elevator_no);
+            // // set_indoor_floor_number_display(current_floor, elevator_no);
+            // if(current_floor>targetFloor) {
+            //     set_indoor_direction_display(elevator_no, DIRECTION_DOWN);
+            // } else if(current_floor<targetFloor) {
+            //     set_indoor_direction_display(elevator_no, DIRECTION_UP);
+            // }
+        },
+        complete: function() {
+            // Khi di chuyển hoàn thành, hiển thị hướng di chuyển là đứng yên
+            // set_indoor_direction_display(elevator_no, DIRECTION_STILL);
+            // Hiển thị số tầng đến mà thang máy đã di chuyển đến
+            set_indoor_floor_number_display(getNameByFloorLevel(targetFloor), elevator_no);
+        }
+    });
+}
+function convertHex(hexInput) {
+    var decimalValue = parseInt(hexInput, 16);
+    if (decimalValue == 0) {
+        // Convert using first method
+        var result = 0;
+        return result;
+    }else if (decimalValue >= 4 && decimalValue <= 44) {
+        // Convert using first method
+        var result = decimalValue - 4 + 10;
+        return result;
+    } else {
+        // Convert using second method
+        var asciiCharacter = String.fromCharCode(decimalValue);
+        return asciiCharacter;
+    }
+}
+
 
 function startDisconnect() {
     $('#connectStatus').val('Disconnected');
@@ -237,127 +423,6 @@ function insertSpaceEveryNChars(str, n) {
         result += str.substr(i, n) + ' ';
     }
     return result.trim(); // Remove trailing space
-}
-function handleInput(input) {
-    var d0 = input.substring(0, 2);
-    var d1 = input.substring(2, 4);
-    var d2 = input.substring(4, 6);
-    var d3 = input.substring(6, 8);
-    var d4 = input.substring(8, 10);
-    var d5 = input.substring(10, 12);
-    var d6 = input.substring(12, 14);
-    var d7 = input.substring(14, 16);
-
-    // Convert d1, d2, d3 from hex to decimal
-    var floor = convertHex(d0) +convertHex(d1)+convertHex(d2);
-    // Bỏ ký tự 0 ở đâu nếu ký tự thứ 2 là chữ
-    if (floor.length > 1 && floor[0] === '0' && isNaN(floor[1])) {
-        floor = floor.substring(1);
-    }
-
-    // Direction based on d3
-    var direction = "";
-    if (d3 === "10") {
-        direction = "Up";
-    } else if (d3 === "11") {
-        direction = "Run Up";
-    } else if (d3 === "20") {
-        direction = "Down";
-    } else if (d3 === "21") {
-        direction = "Run Down";
-    } else {
-        direction = "-";
-    }
-
-    //Status based on d4
-    var status = "";
-    if (d4.charAt(7) === "1") {
-        status = "Parking";
-    } else if (d4.charAt(6) === "1") {
-        status = "Overload";
-    } else if (d4.charAt(5) === "1") {
-        status = "Priority";
-    } else if (d4.charAt(4) === "1") {
-        status = "Fire";
-    } else if (d4.charAt(3) === "1") {
-        status = "Full";
-    } else {
-        status = "Available";
-    }
-
-    var door = "";
-    if (d5 === "04") {
-        door = "Open";
-    } else if (d5 === "08") {
-        door = "Close";
-    }
-
-    console.log("Floor: " + floor);
-    console.log("Direction: " + direction);
-    console.log("Status: " + status);
-    console.log("Door: " + door);
-    $('#display').val(floor);
-
-    if(direction != "Unknown") {
-        $('#direction').val(direction);
-    }
-    // $('#onoff').val(status);
-    // alert("d0: " + d0 + "\n" +
-    //     "d1: " + d1 + "\n" +
-    //     "d2: " + d2 + "\n" +
-    //     "d3: " + d3 + " (" + direction + ")\n" +
-    //     "d4: " + d4 + "\n\n" +
-    //     "Floor: " + floor + "\n" +
-    //     "Direction: " + direction + "\n" +
-    //     "Status: " + status);
-    //
-    // if (direction == "Up" || direction == "Run Up") {
-    //     set_indoor_direction_display(1, DIRECTION_UP);
-    // }
-    // else if (direction == "Down" || direction == "Run Down") {
-    //     set_indoor_direction_display(1, DIRECTION_DOWN);
-    // }else {
-    //     set_indoor_direction_display(1, DIRECTION_STILL);
-    // }
-
-    if (d3 === "10") {
-        direction = "Up";
-    } else if (d3 === "11") {
-        direction = "Run Up";
-    } else if (d3 === "20") {
-        direction = "Down";
-    } else if (d3 === "21") {
-        direction = "Run Down";
-    } else {
-        direction = "-";
-    }
-    // if(direction == "Up" || direction == "Run Up") {
-    //     set_indoor_direction_display(1, DIRECTION_UP);
-    // }else if(direction == "Down" || direction == "Run Down") {
-    //     set_indoor_direction_display(1, DIRECTION_DOWN);
-    // }else{
-    //     set_indoor_direction_display(1, DIRECTION_STILL);
-    // }
-
-    controller_move(1,floor,door)
-
-
-}
-function convertHex(hexInput) {
-    var decimalValue = parseInt(hexInput, 16);
-    if (decimalValue == 0) {
-        // Convert using first method
-        var result = 0;
-        return result;
-    }else if (decimalValue >= 4 && decimalValue <= 44) {
-        // Convert using first method
-        var result = decimalValue - 4 + 10;
-        return result;
-    } else {
-        // Convert using second method
-        var asciiCharacter = String.fromCharCode(decimalValue);
-        return asciiCharacter;
-    }
 }
 
 function generateElevatorCallSignal(floors) {

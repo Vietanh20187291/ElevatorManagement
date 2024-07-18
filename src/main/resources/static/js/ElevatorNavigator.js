@@ -40,7 +40,7 @@ function GUIOnConnectionLost(response) {
 //     }
 //
 // }
-function GUIShowIndicator(info,eleno) {
+function GUIShowIndicator(info,eleid) {
     $('#display').val(info.floor);
 
     if (info.direction != "Unknown") {
