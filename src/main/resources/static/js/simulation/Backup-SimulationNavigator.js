@@ -139,7 +139,16 @@ function handleInput(input) {
     // if (floor.length > 1 && floor[0] === '0' && isNaN(floor[1])) {
     //     floor = floor.substring(1);
     // }
+    var door = "";
+    if (d5 === "04") {
+        door = "Open";
+    } else if (d5 === "08") {
+        door = "Close";
+    }
+
     controller_move(1,floor,door)
+
+
     // Direction based on d3
     var direction = "";
     if (d3 === "10") {
@@ -153,7 +162,6 @@ function handleInput(input) {
     } else {
         direction = "-";
     }
-    alert(direction)
     if(direction == "Up" || direction == "Run Up") {
         set_indoor_direction_display(1, DIRECTION_UP);
     }else if(direction == "Down" || direction == "Run Down") {
@@ -178,61 +186,10 @@ function handleInput(input) {
         status = "Available";
     }
 
-    var door = "";
-    if (d5 === "04") {
-        door = "Open";
-    } else if (d5 === "08") {
-        door = "Close";
-    }
-
-    // console.log("Floor: " + floor);
-    // console.log("Direction: " + direction);
-    // console.log("Status: " + status);
-    // console.log("Door: " + door);
-    // $('#display').val(floor);
+    // controller_open_door(1,2)
     //
-    // if(direction != "Unknown") {
-    //     $('#direction').val(direction);
-    // }
-    // $('#onoff').val(status);
-    // alert("d0: " + d0 + "\n" +
-    //     "d1: " + d1 + "\n" +
-    //     "d2: " + d2 + "\n" +
-    //     "d3: " + d3 + " (" + direction + ")\n" +
-    //     "d4: " + d4 + "\n\n" +
-    //     "Floor: " + floor + "\n" +
-    //     "Direction: " + direction + "\n" +
-    //     "Status: " + status);
-    //
-    // if (direction == "Up" || direction == "Run Up") {
-    //     set_indoor_direction_display(1, DIRECTION_UP);
-    // }
-    // else if (direction == "Down" || direction == "Run Down") {
-    //     set_indoor_direction_display(1, DIRECTION_DOWN);
-    // }else {
-    //     set_indoor_direction_display(1, DIRECTION_STILL);
-    // }
-
-    // if (d3 === "10") {
-    //     direction = "Up";
-    // } else if (d3 === "11") {
-    //     direction = "Run Up";
-    // } else if (d3 === "20") {
-    //     direction = "Down";
-    // } else if (d3 === "21") {
-    //     direction = "Run Down";
-    // } else {
-    //     direction = "-";
-    // }
-    // if(direction == "Up" || direction == "Run Up") {
-    //     set_indoor_direction_display(1, DIRECTION_UP);
-    // }else if(direction == "Down" || direction == "Run Down") {
-    //     set_indoor_direction_display(1, DIRECTION_DOWN);
-    // }else{
-    //     set_indoor_direction_display(1, DIRECTION_STILL);
-    // }
-
-
+    // controller_close_door(1,2)
+    // controller_move(1,1,door)
 
 
 }
@@ -251,7 +208,7 @@ function getNameByFloorLevel(floorLevel) {
     floorLevel = removeLeadingZeros(floorLevel)
     for (var i = 0; i < floors.length; i++) {
         if (floors[i].floorLevel == floorLevel) {
-            if (floors[i].name >= 1 && floors[i].name <= 9) {
+            if (floors[i].name >= 1 && floors[i].name <= 9 && floors[i].name.length == 1) {
                 return "0" + floors[i].name;
             }else{
                 return floors[i].name;
@@ -274,19 +231,27 @@ function getFloorLevelByName(name) {
 
 
 function controller_move(elevator_no, targetFloor, door) {
-    // console.log('controller_move');
-    // alert('targetFloor' + targetFloor);
-
     targetFloor = getFloorLevelByName(targetFloor);
     // Lấy tọa độ hiện tại của thang máy
     let current_top = parseFloat($('.elevator-main.' + elevator_no).css('top'));
 
     // Tính toán tọa độ của tầng muốn đến dựa trên chiều cao của tầng và số tầng cần di chuyển
     let targetTop = elevator_main_first_top - (targetFloor - 1) * floor_height;
+
+    if(current_top != targetTop && door_state == 'opened'){
+        alert("Move")
+        let currentFloor = Math.round((elevator_main_first_top - current_top) / floor_height) + 1;
+        controller_close_door(elevator_no, currentFloor);
+        door_state = 'closed';
+    }
+
+
+
     $('.elevator-main.' + elevator_no).animate({ top: targetTop + 'px' }, {
         duration: Math.abs(targetTop - current_top) * moving_speed_millisecond_per_pixel,
         easing: "linear",
         progress: function() {
+
             // // Tính lại tầng hiện tại dựa trên tọa độ mới của thang máy
             // let current_floor = Math.round((elevator_main_first_top - parseFloat($(this).css('top'))) / floor_height) + 1;
             // // Hiển thị số tầng hiện tại trong thang máy
@@ -299,9 +264,20 @@ function controller_move(elevator_no, targetFloor, door) {
             // }
         },
         complete: function() {
+
             // Khi di chuyển hoàn thành, hiển thị hướng di chuyển là đứng yên
             // set_indoor_direction_display(elevator_no, DIRECTION_STILL);
             // Hiển thị số tầng đến mà thang máy đã di chuyển đến
+            if(door == "Open" && door_state == 'closed') {
+
+                alert('open')
+                controller_open_door(elevator_no, targetFloor);
+                door_state = 'opened';
+
+            } else if(door == "Close" && door_state == 'opened') {
+                controller_close_door(elevator_no, targetFloor);
+                door_state = 'closed';
+            }
             set_indoor_floor_number_display(getNameByFloorLevel(targetFloor), elevator_no);
         }
     });

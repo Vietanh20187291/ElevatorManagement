@@ -414,9 +414,9 @@ function controller_stop_waiting_for_timeout_and_callback(elevator_no, callBack)
 
 
 
-function controller_close_door(elevator_no) {
-    let current_floor = Math.round((elevator_main_first_top - parseFloat($(this).css('top'))) / floor_height) + 1;
-    let elevator_window_mark = current_floor + '-' + elevator_no
+function controller_close_door(elevator_no,floor_no) {
+    // let current_floor = Math.round((elevator_main_first_top - parseFloat($(this).css('top'))) / floor_height) + 1;
+    let elevator_window_mark = floor_no + '-' + elevator_no
     $('.elevator-main.' + elevator_no).animate({opacity: '75%'}, toggle_door_secs, "linear")
     $('.elevator-window.' + elevator_window_mark + ' .elevator-door').animate({width: '50%'}, toggle_door_secs, "linear")
 }
@@ -428,9 +428,9 @@ function controller_stop_closing_door(floor_no, elevator_no, callBack) {
     callBack()
 }
 
-function controller_open_door(elevator_no,ele_no) {
+function controller_open_door(elevator_no,floor_no) {
     // let current_floor = Math.round((elevator_main_first_top - parseFloat($(this).css('top'))) / floor_height) + 1;
-    let elevator_window_mark = ele_no + '-' + elevator_no
+    let elevator_window_mark = floor_no + '-' + elevator_no
     $('.elevator-main.' + elevator_no).animate({opacity: '100%'}, toggle_door_secs, "linear")
     $('.elevator-window.' + elevator_window_mark + ' .elevator-door').animate({width: '0%'}, toggle_door_secs, "linear")
 

@@ -32,8 +32,8 @@ $(function () {
     set_building_configs_and_rebuild(numFloors, numElevators,listElevators)
     // call_move_up(1)
     // call_move_down(1)
-    call_open_door(1,elevators[1].state.now_floor_no)
-    call_close_door(1,elevators[1].state.now_floor_no)
+    // call_open_door(1,elevators[1].state.now_floor_no)
+    // call_close_door(1,elevators[1].state.now_floor_no)
     // call_move_up(2)
     // call_move_up(1)
     // call_move_up(1)
@@ -104,11 +104,11 @@ function create_elevators_objects(number_of_elevators,list_elevators) {
     console.log("ck");
     console.log(elevatorNames);
     console.log(list_elevators);
-
     for (let Id in list_elevators) {
         if (list_elevators.hasOwnProperty(Id)) {
             let elevator = list_elevators[Id];
-            let i = elevator["elevator-id"];
+            // let i = elevator["elevator-id"];
+            let i = 0
             elevators[i] = {
                 elevator_no: i,
                 state: {
@@ -516,6 +516,7 @@ function create_elevators_objects(number_of_elevators,list_elevators) {
             }
         }
     }
+    // alert(elevators[1].state.door_state)
 }
 
 function toggle_AI_mode() {
