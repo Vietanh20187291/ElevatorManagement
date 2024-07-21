@@ -169,27 +169,47 @@ function handleInput(input) {
     }else{
         set_indoor_direction_display(1, DIRECTION_STILL);
     }
-
+    // alert(d4)
+    // alert(d4.charAt(4))
     //Status based on d4
+    // var payloadBytes = message.payloadBytes;
+    // var payloadHex = bytesToHex(payloadBytes);
+
+    var status_signal = signalCalledFloorsToOutput(d4)
+    var status_result = status_signal[0]
+
     var status = "";
-    if (d4.charAt(7) === "1") {
-        status = "Parking";
-    } else if (d4.charAt(6) === "1") {
-        status = "Overload";
-    } else if (d4.charAt(5) === "1") {
-        status = "Priority";
-    } else if (d4.charAt(4) === "1") {
-        status = "Fire";
-    } else if (d4.charAt(3) === "1") {
-        status = "Full";
-    } else {
-        status = "Available";
+    switch (status_result) {
+        case 1:
+            status = "FAULT";
+            break;
+        case 2:
+            status = "JU";
+            break;
+        case 3:
+            status = "IF";
+            break;
+        case 4:
+            status = "PARKING";
+            break;
+        case 5:
+            status = "OVERLOAD";
+            break;
+        case 6:
+            status = "PRIORITY";
+            break;
+        case 7:
+            status = "FIRE";
+            break;
+        case 8:
+            status = "FULL";
+            break;
+        default:
+            status = "ACTIVE";
     }
 
-    // controller_open_door(1,2)
-    //
-    // controller_close_door(1,2)
-    // controller_move(1,1,door)
+    document.getElementById("status").innerHTML = status;
+
 
 
 }
@@ -239,7 +259,6 @@ function controller_move(elevator_no, targetFloor, door) {
     let targetTop = elevator_main_first_top - (targetFloor - 1) * floor_height;
 
     if(current_top != targetTop && door_state == 'opened'){
-        alert("Move")
         let currentFloor = Math.round((elevator_main_first_top - current_top) / floor_height) + 1;
         controller_close_door(elevator_no, currentFloor);
         door_state = 'closed';
@@ -269,8 +288,6 @@ function controller_move(elevator_no, targetFloor, door) {
             // set_indoor_direction_display(elevator_no, DIRECTION_STILL);
             // Hiển thị số tầng đến mà thang máy đã di chuyển đến
             if(door == "Open" && door_state == 'closed') {
-
-                alert('open')
                 controller_open_door(elevator_no, targetFloor);
                 door_state = 'opened';
 
