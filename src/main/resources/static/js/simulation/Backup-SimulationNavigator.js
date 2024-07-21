@@ -153,6 +153,7 @@ function handleInput(input) {
     } else {
         direction = "-";
     }
+    alert(direction)
     if(direction == "Up" || direction == "Run Up") {
         set_indoor_direction_display(1, DIRECTION_UP);
     }else if(direction == "Down" || direction == "Run Down") {
@@ -250,7 +251,11 @@ function getNameByFloorLevel(floorLevel) {
     floorLevel = removeLeadingZeros(floorLevel)
     for (var i = 0; i < floors.length; i++) {
         if (floors[i].floorLevel == floorLevel) {
-            return floors[i].name;
+            if (floors[i].name >= 1 && floors[i].name <= 9) {
+                return "0" + floors[i].name;
+            }else{
+                return floors[i].name;
+            }
         }
     }
     return floorLevel;

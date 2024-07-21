@@ -97,43 +97,6 @@ function controller_move_down(elevator_no, callback) {
         $('.elevator-main.' + elevator_no).animate({top: '+=' + floor_height + 'px'}, floor_height * moving_speed_millisecond_per_pixel, "linear", callback);
     });
 }
-function controller_move_up_N_floors(elevator_no, floors) {
-    console.log('controller_move_up_N_floors');
-    var total_height = floors * floor_height;
-    console.log('total_height'+total_height);
-    $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
-        { height: '-=' + total_height + 'px' },
-        total_height * moving_speed_millisecond_per_pixel,
-        "linear",
-        function() {
-            $('.elevator-main.' + elevator_no).animate(
-                { top: '-=' + total_height + 'px' },
-                total_height * moving_speed_millisecond_per_pixel,
-                "linear",
-                // callback
-            );
-        }
-    );
-}
-
-function controller_move_down_N_floors(elevator_no, floors) {
-    console.log('controller_move_down_N_floors');
-    var total_height = floors * floor_height;
-    console.log('total_height'+total_height);
-    $('.elevator-main.' + elevator_no + ' .elevator-line').animate(
-        { height: '+=' + total_height + 'px' },
-        total_height * moving_speed_millisecond_per_pixel,
-        "linear",
-        function() {
-            $('.elevator-main.' + elevator_no).animate(
-                { top: '+=' + total_height + 'px' },
-                total_height * moving_speed_millisecond_per_pixel,
-                "linear",
-                // callback
-            );
-        }
-    );
-}
 
 function set_g_container_grid_template(floor_nums, elevator_nums) {
     let column_res = wall_side_with + string_repeat(' ' + wall_main_with, elevator_nums) + ' ' + wall_side_with
@@ -256,7 +219,7 @@ function div_html_of_choose_floor_block(floor_nums, elevator_no, elevator_name){
         '<div class="take-place elevator-info">\n' +
         '     <div class="now-floor-info">\n' +
         '         <div class="floor-info-decoration"></div>\n' +
-        '         <div class="elevator-direction mark-of-eno"  style="line-height: calc(100% + 15px);"">￪</div><div class="floor-number mark-of-eno" style="line-height: calc(100% + 13px);"">12A</div>\n' +
+        '         <div class="elevator-direction mark-of-eno"  style="line-height: calc(100% + 15px);"">￪</div><div class="floor-number mark-of-eno" style="line-height: calc(100% + 13px);"">1</div>\n' +
         '     </div>\n' +
         ' </div>\n').replace(/mark-of-eno/g, elevator_no);
 
@@ -363,7 +326,7 @@ let template_of_td_elevator_wall_side = '        ' +
     '</div>'
 
 function div_html_of_elevator_wall_side(floor_no) {
-    return template_of_td_elevator_wall_side.replace(/mark_floor_no/g, "F"+getNameByFloorLevel(floor_no)).replace(/mark-of-potting-path/g, path_of_potting)
+    return template_of_td_elevator_wall_side.replace(/mark_floor_no/g, getNameByFloorLevel(floor_no)).replace(/mark-of-potting-path/g, path_of_potting)
 }
 
 function divs_html_of_elevator_wall(floor_no, elevator_nums) {
