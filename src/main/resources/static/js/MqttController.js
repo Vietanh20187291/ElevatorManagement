@@ -53,6 +53,7 @@ function MQTTOnConnect() {
         var subscribetopiccalldown = slug + "/elvtopc/callhalldown";
         mqtt.subscribe(subscribetopiccalldown, { qos: 0 });
     }
+
     GUIOnConnect();
 }
 
@@ -115,6 +116,7 @@ function MQTTstartDisconnect() {
 //Luu y cho nay vì da thay NQTTconect bang startConnect, this line will make a auto connect when lunch app and keep alive to broker
 $(document).ready(function () {
     GUIstartConnect();
+
 });
 
 // function attClick(mqtt) {
@@ -240,7 +242,6 @@ function handleInput(input,eleno) {
     } else {
         direction = "Staying";
     }
-
     //Status based on d4
     var status = "";
     if (d4.charAt(7) === "1") {

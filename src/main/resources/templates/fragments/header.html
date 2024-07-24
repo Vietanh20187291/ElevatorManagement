@@ -1,49 +1,86 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+<!--  <meta charset="UTF-8">-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Project Management</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <title>Project Management</title>
+<!--  <link rel="stylesheet" th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/5.2.0/css/bootstrap.min.css}">-->
+<!--  <script th:src="@{https://maxcdn.bootstrapcdn.com/bootstrap/5.2.0/js/bootstrap.min.js}"></script>-->
+  <!-- Bạn có thể bao gồm tệp jQuery từ một nguồn tĩnh hoặc sử dụng CDN -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Bao gồm tệp Popper.js -->
+  <script src="https://unpkg.com/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+
+  <!-- Bao gồm tệp JavaScript của Bootstrap -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
-        <div class="container">
-            <a class="navbar-brand ml-4" href="#">I-Connect</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
+    <div class="container">
+      <a class="navbar-brand ml-4" href="#">I-Connect</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-            <div class="collapse navbar-collapse justify-content-end mr-4" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item ml-auto">
-                        <a th:if="${role == 'ADMIN' || role == 'MANAGER'}" class="nav-link navbar-text" href="/user">Users</a>
-                    </li>
-                    <li class="nav-item ml-auto">
-                        <a class="nav-link navbar-text" href="/building/1">Building</a>
-                    </li>
-                    <li class="nav-item ml-auto">
-                        <a th:if="${role == 'ADMIN'}" class="nav-link navbar-text" href="/permission">Permission</a>
-                    </li>
-                    <li class="nav-item ml-auto">
-                        <a th:if="${role == 'ADMIN' || role == 'MANAGER'}" class="nav-link navbar-text" href="/mqtt-connection">MQTT Config</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/user/password">Password</a>
-                    </li>
-                    <li class="nav-item">
-                        <form th:action="@{/logout}" method="post">
-                            <button type="submit" class="nav-link btn btn-link">Logout</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+      <div class="collapse navbar-collapse justify-content-end mr-4" id="navbarNav">
+        <ul class="navbar-nav">
+<!--          <li class="nav-item ml-auto">-->
+<!--            <a class="nav-link navbar-text" th:href="@{/noti/{userId}(userId=${userId})}">Notification</a>-->
+<!--          </li>-->
+<!--          <li class="nav-item ml-auto">-->
+<!--            <a th:if="${role == 'ADMIN'}" class="nav-link navbar-text" href="/user">Users</a>-->
+<!--          </li>-->
+<!--          <li class="nav-item ml-auto">-->
+<!--            <a th:if="${role == 'MANAGER'}" class="nav-link navbar-text" href="/project">Project</a>-->
+<!--          </li>-->
+<!--          <li class="nav-item ml-auto">-->
+<!--            <a th:if="${role == 'MANAGER'}" class="nav-link navbar-text" href="/task/upcoming-days">Upcoming Tasks</a>-->
+<!--          </li>-->
+
+<!--          <li class="nav-item ml-auto">-->
+<!--            <a th:if="${role == 'MANAGER'}" class="nav-link navbar-text" href="/analysis">Analysis</a>-->
+<!--          </li>-->
+          <li class="nav-item ml-auto">
+            <a th:if="${role == 'ADMIN' || role == 'MANAGER'}" class="nav-link navbar-text" href="/user">Users</a>
+          </li>
+
+          <li class="nav-item ml-auto">
+            <a class="nav-link navbar-text" href="/building/1">Building</a>
+          </li>
+            <li class="nav-item ml-auto">
+                <a th:if="${role == 'ADMIN'}" class="nav-link navbar-text" href="/permission">Permission</a>
+            </li>
+
+
+
+
+
+
+<!--          <li class="nav-item ml-auto">-->
+<!--            <a th:if="${role == 'USER'}" class="nav-link navbar-text" th:href="@{/version/user/{userId}(userId=${userId})}">Project</a>-->
+<!--          </li>-->
+<!--          <li class="nav-item ml-auto">-->
+<!--            <a th:if="${role == 'USER'}" class="nav-link navbar-text" th:href="@{/task/user/{userId}(userId=${userId})}">My Tasks</a>-->
+<!--          </li>-->
+            <li class="nav-item ml-auto">
+                <a th:if="${role == 'ADMIN' || role == 'MANAGER'}" class="nav-link navbar-text" href="/mqtt-connection">MQTT Config</a>
+            </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/password">Password</a>
+          </li>
+          <li class="nav-item">
+            <form th:action="@{/logout}" method="post">
+              <button type="submit" class="nav-link btn btn-link">Logout</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 </header>
 
 <!-- Nội dung trang web ở đây -->

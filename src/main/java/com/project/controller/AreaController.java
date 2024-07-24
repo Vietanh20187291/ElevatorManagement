@@ -42,10 +42,6 @@ public class AreaController {
     @Autowired
     private FloorService floorService;
 
-    @GetMapping("/a")
-        public String getAreaById1() {
-        return "elevator/draft4";
-    }
     @GetMapping("/{areaId}")
     public String getAreaById(@PathVariable Integer areaId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
@@ -53,6 +49,8 @@ public class AreaController {
         List<Elevator> elevators = elevatorService.getElevatorsByAreaId(areaId);
         model.addAttribute("area", area);
         model.addAttribute("elevators", elevators);
+        MqttConnection mqttConnection = mqttConnectionService.getMqttConnection();
+        model.addAttribute("mqttConnection", mqttConnection);
         return "area/findById";
     }
 //    @GetMapping("/{areaId}/elevator-simulation")

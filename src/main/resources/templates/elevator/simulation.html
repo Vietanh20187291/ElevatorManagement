@@ -661,6 +661,7 @@
 <script th:inline="javascript">
     // var floors = /*[[${floors}]]*/ [];
     var elevatorList = /*[[${elevators}]]*/ [];
+    var slug = elevatorList[0].topic
     var mqttConnection = /*[[${mqttConnection}]]*/ {};
     var floors = parseFloorString(elevatorList[0].listFloors);
     function parseFloorString(floorString) {

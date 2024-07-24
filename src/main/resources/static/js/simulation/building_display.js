@@ -219,7 +219,7 @@ function div_html_of_choose_floor_block(floor_nums, elevator_no, elevator_name){
         '<div class="take-place elevator-info">\n' +
         '     <div class="now-floor-info">\n' +
         '         <div class="floor-info-decoration"></div>\n' +
-        '         <div class="elevator-direction mark-of-eno"  style="line-height: calc(100% + 15px);""></div><div class="floor-number mark-of-eno" style="line-height: calc(100% + 13px);"">01</div>\n' +
+        '         <div class="elevator-direction mark-of-eno"  style="line-height: calc(100% + 15px);""></div><div class="floor-number mark-of-eno" style="line-height: calc(100% + 13px);""></div>\n' +
         '     </div>\n' +
         ' </div>\n').replace(/mark-of-eno/g, elevator_no);
 
@@ -231,7 +231,7 @@ function div_html_of_choose_floor_block(floor_nums, elevator_no, elevator_name){
     res += '</div>\n';
 
     res += div_html_of_open_close_buttons();
-    res += '<h1 style="width: 100%; margin-top:2px;color:#FF9900; background-color:black;" id="status">ACTIVE</h1>';
+    res += '<h1 style="width: 100%; margin-top:2px;color:#FF9900; background-color:black;" id="status">INACTIVE</h1>';
     res += '</div>';
     return res;
 }

@@ -8,13 +8,10 @@ var mqtt;
 var reconnectTimeout = 2000;
 var elevator = document.getElementById("elevator").value;
 var numFloors = parseInt(document.getElementById("numFloors").value);
-console.log(elevator);
+
 
 function startConnect() {
-    let elements = document.getElementsByClassName('floor_number');
-    if (elements.length > 0) {
-        elements[0].innerHTML = '12A';
-    }
+
 
 
     if (typeof path == "undefined") {
@@ -59,33 +56,27 @@ function startConnect() {
 
 function onConnect() {
     $('#connectStatus').val('Connected');//status "+ host + ':' + port + path"
-    var subscribetopicindicator = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator";
+    var subscribetopicindicator = slug + "/elvtopc/indicator";
     mqtt.subscribe(subscribetopicindicator, {qos: 0});
-    var subscribetopiccallcar = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callcar";
+    var subscribetopiccallcar = slug + "/elvtopc/callcar";
     mqtt.subscribe(subscribetopiccallcar, {qos: 0});
-    var subscribetopiccallup = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callhallup";
+    var subscribetopiccallup = slug + "/elvtopc/callhallup";
     mqtt.subscribe(subscribetopiccallup, {qos: 0});
-    var subscribetopiccalldown = "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callhalldown";
+    var subscribetopiccalldown = slug + "/elvtopc/callhalldown";
     mqtt.subscribe(subscribetopiccalldown, {qos: 0});
-    alertSuccess("Connected successfully");
+    alertSuccess("Connected to server");
 }
 
 function onConnectionLost(response) {
-    // setTimeout(MQTTconnect, reconnectTimeout);
-    // $('#connectStatus').val("connection lost");
+
     alertError("Connection lost");
 
 }
 
 function onMessageArrived(message) {
-    // alert("onMessageArrived")
     var topic = message.destinationName;
     var payload = message.payloadString;
-    // alert('hi'+topic+'payload'+payload)
-
-    // Alert the formatted hexadecimal payload
-    // alert("Hexadecimal Payload: " + payloadHex);
-    if (topic ==  "Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator"){
+    if (topic ==  slug + "/elvtopc/indicator"){
         var payloadBytes = message.payloadBytes;
 
         // Convert payload bytes to hexadecimal string
@@ -94,7 +85,7 @@ function onMessageArrived(message) {
         payloadHex = insertSpaceEveryNChars(payloadHex, 4);
         handleInput(payloadHex.replace(/\s/g, ''));
     }
-    if (topic ==  "Vietnam/Hanoi/Showzoom/PL1/elvtopc/indicator"){
+    if (topic ==  slug + "/elvtopc/indicator"){
         var payloadBytes = message.payloadBytes;
 
         // Convert payload bytes to hexadecimal string
@@ -103,7 +94,7 @@ function onMessageArrived(message) {
         payloadHex = insertSpaceEveryNChars(payloadHex, 4);
         handleInput(payloadHex.replace(/\s/g, ''));
     }
-    if(topic == "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callcar"){
+    if(topic == slug + "/elvtopc/callcar"){
         var payloadBytes = message.payloadBytes;
         var payloadHex = bytesToHex(payloadBytes);
 
@@ -111,12 +102,12 @@ function onMessageArrived(message) {
 
         highlightFloors(1,floors)
     }
-    if(topic == "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callhallup"){
+    if(topic == slug + "/elvtopc/callhallup"){
         var payloadBytes = message.payloadBytes;
         var payloadHex = bytesToHex(payloadBytes);
         highlightButtonUpFloors(signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2)))
     }
-    if(topic == "Vietnam/Hanoi/Showzoom/PL1/elvtopc/callhalldown"){
+    if(topic == slug + "/elvtopc/callhalldown"){
         var payloadBytes = message.payloadBytes;
         var payloadHex = bytesToHex(payloadBytes);
         highlightButtonDownFloors(signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2)))
@@ -340,7 +331,7 @@ function attClick() {
 
 function openDoorClick(){
     var msg = new Uint8Array([0x01]);
-    var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/status";
+    var topic = slug + "/pctoelv/status";
     Message = new Paho.MQTT.Message(msg.buffer);
     Message.destinationName = topic;
     mqtt.send(Message);
@@ -349,7 +340,7 @@ function openDoorClick(){
 
 function closeDoorClick() {
     var msg = new Uint8Array([0x02]);
-    var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/status";
+    var topic = slug + "/pctoelv/status";
     Message = new Paho.MQTT.Message(msg.buffer);
     Message.destinationName = topic;
     mqtt.send(Message);
@@ -357,7 +348,7 @@ function closeDoorClick() {
 }
 
 function carcallClick(input) {
-    var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/callcar";
+    var topic = slug + "/pctoelv/callcar";
     handleCallClick(input,topic);
 
 }
@@ -387,9 +378,8 @@ function handleCallClick(input,topic) {
 }
 
 function callupClick(input) {
-    // alert(input)
-    // var msg = document.getElementById("callup").value;
-    var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/callhallup";
+
+    var topic = slug + "/pctoelv/callhallup";
 
     handleCallClick(input,topic);
 }
@@ -397,7 +387,7 @@ function callupClick(input) {
 
 function calldnClick(input) {
     // var msg = document.getElementById("calldn").value;
-    var topic = "Vietnam/Hanoi/Showzoom/PL1/pctoelv/callhalldown";
+    var topic = slug + "/pctoelv/callhalldown";
 
     handleCallClick(input,topic);
 }
@@ -426,7 +416,7 @@ function insertSpaceEveryNChars(str, n) {
 function generateElevatorCallSignal(floors) {
     let result = generateSignal(floors);
 
-    // alert(result);
+
 // Chuyển đổi chuỗi hex thành mảng các byte
     let byteArray = result.split(' ').map(byte => parseInt(byte, 16));
 
