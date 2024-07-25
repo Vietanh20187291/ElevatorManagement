@@ -12,9 +12,9 @@
     <h1>Add Elevator</h1>
     <div th:replace="fragments/message :: div"></div>
     <form th:action="@{/area/{areaId}/add-elevator(areaId=${area.id})}" method="post">
-        <input type="text" id="country" th:value="${area.building.country}" hidden>
-        <input type="text" id="city" th:value="${area.building.city}" hidden>
-        <input type="text" id="building" th:value="${area.building.name}" hidden>
+        <input type="text" id="country" th:value="${building.country}" hidden>
+        <input type="text" id="city" th:value="${building.city}" hidden>
+        <input type="text" id="building" th:value="${building.name}" hidden>
         <input type="text" id="area" th:value="${area.name}" hidden>
         <div class="form-row">
             <div class="form-group col-md-6">

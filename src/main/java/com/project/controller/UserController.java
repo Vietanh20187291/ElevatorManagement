@@ -47,6 +47,8 @@ public class UserController {
         cookieHelper.addCookieAttributes(request, model);
         User userRequest = new User();
         model.addAttribute("userRequest", userRequest);
+        List<Building> buildings = buildingService.getAllBuildings();
+        model.addAttribute("buildings", buildings);
         return "user/add";
     }
 
@@ -57,8 +59,8 @@ public class UserController {
                 throw new Exception("You do not right to create Admin or Manager account");
             }
             String token = jwtTokenService.getTokenFromRequest(request);
-            int buildingId = jwtTokenService.getBuildingIdFromToken(token);
-            Building building = buildingService.getBuildingById(buildingId);
+//            int buildingId = jwtTokenService.getBuildingIdFromToken(token);
+            Building building = buildingService.getBuildingById(userRequest.getBuilding().getId());
             userService.addUser(userRequest.getUsername(), userRequest.getPassword(), UserRole.USER, building);
             redirectAttributes.addFlashAttribute("message", "User has been added successfully");
             redirectAttributes.addFlashAttribute("message", "Added successfully");
@@ -131,13 +133,22 @@ public class UserController {
     }
 
 
+//    @GetMapping()
+//    public String getUsersByBuildingId(Model model, HttpServletRequest request) throws Exception {
+//        String token = jwtTokenService.getTokenFromRequest(request);
+//        User user = jwtTokenService.getUserFromToken(token);
+//        User userDetail = userService.getUserById(user.getUserId());
+//        cookieHelper.addCookieAttributes(request, model);
+//        List<UserDTO> users = userService.getUsersByBuildingId(userDetail.getBuilding().getId());
+//        model.addAttribute("users", users);
+//        return "user/users";
+//    }
     @GetMapping()
-    public String getUsersByBuildingId(Model model, HttpServletRequest request) throws Exception {
+    public String getAllUsers(Model model, HttpServletRequest request) throws Exception {
         String token = jwtTokenService.getTokenFromRequest(request);
-        User user = jwtTokenService.getUserFromToken(token);
-        User userDetail = userService.getUserById(user.getUserId());
+//        User user = jwtTokenService.getUserFromToken(token);
         cookieHelper.addCookieAttributes(request, model);
-        List<UserDTO> users = userService.getUsersByBuildingId(userDetail.getBuilding().getId());
+        List<UserDTO> users = userService.getAllUsers();
         model.addAttribute("users", users);
         return "user/users";
     }

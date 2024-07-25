@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <title>Edit Building</title>
+    <title>Add Building</title>
 </head>
 <body>
 <div th:replace="fragments/header :: header"></div>
 <div class="container mt-5">
-    <h1>Edit Building</h1>
+    <h1>Add Building</h1>
     <div th:replace="fragments/message :: div"></div>
-    <form th:action="@{/building/{buildingId}/edit(buildingId=${building.id})}" method="post">
+    <form th:action="@{/building/add}" method="post">
         <div class="form-group">
             <label for="name">Name:</label>
-            <input type="text" class="form-control" id="name" name="name" th:value="${building.name}" required>
+            <input type="text" class="form-control" id="name" name="name" required>
         </div>
         <div class="form-group">
             <label for="country">Country:</label>
@@ -25,17 +25,17 @@
         <div class="form-group">
             <label for="city">City:</label>
             <select class="form-control" id="city" name="city" required>
-                <option th:value="Hanoi" th:selected="${building.city == 'Hanoi'}">Hanoi</option>
-                <option th:value="Hochiminh" th:selected="${building.city == 'Hochiminh'}">Hochiminh</option>
+                <option value="Hanoi">Hanoi</option>
+                <option value="Hochiminh">Hochiminh</option>
             </select>
         </div>
         <div class="form-group">
             <label for="note">Note:</label>
-            <textarea class="form-control" id="note" name="note" rows="3" th:text="${building.note}"></textarea>
+            <textarea class="form-control" id="note" name="note" rows="3"></textarea>
         </div>
 
         <button type="submit" class="btn btn-primary">Save</button>
-        <a class="btn btn-secondary" th:href="@{/building/{buildingId}(buildingId=${building.id})}">Back</a>
+        <a class="btn btn-secondary" th:href="@{/building}">Back</a>
     </form>
 </div>
 

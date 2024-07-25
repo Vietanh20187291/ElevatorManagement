@@ -3,12 +3,15 @@ package com.project.entity;
 import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+
 import java.util.List;
 
 @Entity
 @Table(name = "building")
 @Getter
 @Setter
+@ToString
 public class Building {
 
     @Id
@@ -26,7 +29,7 @@ public class Building {
     @Column(name = "city")
     private String city;
 
-    @Column(name = "note")
+    @Column(name = "note", nullable = true)
     private String note;
 
     @OneToMany(mappedBy = "building", cascade = CascadeType.ALL)

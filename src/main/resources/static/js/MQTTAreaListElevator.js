@@ -13,7 +13,7 @@ function GUIOnConnect() {
     // $('#connectStatus').val('Connected');//status "+ host + ':' + port + path"
     // document.getElementById('btnConnect').hidden = true;
     // document.getElementById('btnDisconnect').hidden = false;
-    alertSuccess("Connected successfully");
+    alertSuccess("Connected to server");
 }
 
 function GUIOnConnectionLost(response) {

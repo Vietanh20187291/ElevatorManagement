@@ -32,7 +32,8 @@ function startConnect() {
         cleanSession: cleansession,
         onSuccess: onConnect,
         onFailure: function (message) {
-            alertError("Connection failed: "+message.errorMessage);
+            alertError("Connection failed. Reload website to retry.");
+            startConnect();
             // setTimeout(MQTTconnect, reconnectTimeout);
 
         }

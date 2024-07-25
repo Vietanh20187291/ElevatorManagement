@@ -218,7 +218,7 @@ public class UserService {
         List<UserDTO> userDTOs = new ArrayList<>();
 
         for (User user : users) {
-            if (user.getRole() != UserRole.ADMIN || user.getRole() != UserRole.MANAGER) {
+            if (user.getRole() != UserRole.ADMIN && user.getRole() != UserRole.MANAGER) {
                 if (user.isActive()) {
                     UserDTO userDTO = new UserDTO(user.getUserId(), user.getUsername(), user.getRole());
                     userDTOs.add(userDTO);

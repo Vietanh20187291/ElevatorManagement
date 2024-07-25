@@ -22,7 +22,12 @@
                     <label for="password">Password:</label>
                     <input class="form-control" id="password" name="password" required value="tke@123">
                 </div>
-
+                <div class="form-group">
+                    <label for="building">Building:</label>
+                    <select class="form-control" id="building" name="building.id" required>
+                        <option th:each="building : ${buildings}" th:value="${building.id}" th:text="${building.name}"></option>
+                    </select>
+                </div>
 
 <!--                <div class="form-group">-->
 <!--                    <label for="role">Role:</label>-->

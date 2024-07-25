@@ -74,11 +74,12 @@ public class AreaController {
     @GetMapping("/{areaId}/add-elevator")
     public String showAddElevatorForm(@PathVariable Integer areaId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
-        Elevator elevator = new Elevator();
         Area area = areaService.getAreaById(areaId);
+        Building building = buildingService.getBuildingByAreaId(areaId);
+        model.addAttribute("building", building);
         model.addAttribute("area", area);
-        model.addAttribute("elevator", elevator);
-//        model.addAttribute("areaId", areaId);
+        model.addAttribute("elevator", new Elevator());
+
         return "elevator/add";
     }
 
@@ -108,7 +109,7 @@ public class AreaController {
         try {
             int actor = Integer.valueOf(cookieHelper.getUserId(request));
             Area area = areaService.getAreaById(areaId);
-            int buildingId = area.getBuilding().getId();
+            int buildingId = area.getBuildingId();
             areaService.deleteArea(areaId);
             redirectAttributes.addFlashAttribute("message", "Area has been deleted successfully");
             redirectAttributes.addFlashAttribute("messageType","success");
@@ -128,9 +129,6 @@ public class AreaController {
     public String showEditAreaForm(@PathVariable Integer areaId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
         Area area = areaService.getAreaById(areaId);
-        System.out.println("PV id"+projectVersionService.getProjectVersionById(1).getProject().getProjectId());
-        System.out.println("building id"+area.getBuilding().getName());
-        area.setBuilding(buildingService.getBuildingById(1));
         model.addAttribute("area", area);
         return "area/edit";
     }

@@ -22,7 +22,6 @@ public class Area {
     @Column(name = "description", length = 1024)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "building_id")
-    private Building building;
+    @Column(name = "building_id")
+    private Integer buildingId;
 }

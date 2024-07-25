@@ -39,7 +39,17 @@ public class BuildingController {
             return "building/not_found";
         }
     }
-
+    @GetMapping("/add")
+    public String showAddBuildingForm(Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
+        model.addAttribute("building", new Building());
+        return "building/add";
+    }
+    @PostMapping("/add")
+    public String addBuilding(@ModelAttribute("building") Building building, HttpServletRequest request) {
+        buildingService.addBuilding(building);
+        return "redirect:/building/all";
+    }
     @GetMapping("/{buildingId}/edit")
     public String showEditBuildingForm(@PathVariable Integer buildingId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
@@ -57,6 +67,7 @@ public class BuildingController {
         return "redirect:/building/" + buildingId;
     }
 
+
     @PostMapping("/{buildingId}/delete")
     public String deleteBuilding(@PathVariable Integer buildingId, HttpServletRequest request) {
         buildingService.deleteBuilding(buildingId);
@@ -70,7 +81,7 @@ public class BuildingController {
         model.addAttribute("building", building);
         Area area = new Area();
         // Đặt toà nhà cho khu vực mới được tạo
-        area.setBuilding(building);
+        area.setBuildingId(building.getId());
         model.addAttribute("area", area);
 
         return "area/add";
@@ -86,8 +97,6 @@ public class BuildingController {
         // Kiểm tra xem toà nhà và khu vực có tồn tại không
         if (building != null) {
             try {
-                // Đặt lại toà nhà cho khu vực (nếu không sử dụng đặt toà nhà trong phương thức GET)
-                area.setBuilding(building);
                 // Thêm khu vực vào toà nhà
                 areaService.addArea(area);
                 // Cập nhật thông tin của toà nhà trong cơ sở dữ liệu
@@ -118,6 +127,20 @@ public class BuildingController {
         model.addAttribute("building", building);
         model.addAttribute("areas", areas);
         return "building/areas";
+    }
+    @GetMapping("/all")
+    public String showAllBuildingsAndAreas(Model model, HttpServletRequest request) {
+        cookieHelper.addCookieAttributes(request, model);
+
+        // Lấy tất cả các building và area
+        List<Building> buildings = buildingService.getAllBuildings();
+        List<Area> areas = areaService.getAllAreas();
+
+        // Thêm vào mô hình
+        model.addAttribute("buildings", buildings);
+        model.addAttribute("areas", areas);
+
+        return "building/all";
     }
 
 

@@ -19,7 +19,7 @@ public interface AreaRepository extends JpaRepository<Area, Integer> {
     Optional<Area> findById(@Param("areaId") Integer areaId);
 
 
-    @Query("SELECT a FROM Area a WHERE a.building.id = :buildingId")
+    @Query("SELECT a FROM Area a WHERE a.buildingId = :buildingId")
     List<Area> findAreasByBuildingId(@Param("buildingId") int buildingId);
 
     @Transactional

@@ -37,4 +37,7 @@ public class AreaService {
     public Area getAreaById(Integer areaId) {
         return areaRepository.findById(areaId).orElse(null);
     }
+    public List<Area> getAllAreas() {
+        return areaRepository.findAll();
+    }
 }

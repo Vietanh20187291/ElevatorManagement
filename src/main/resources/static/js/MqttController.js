@@ -16,7 +16,7 @@ function MQTTStartConnect() {
         cleanSession: cleansession,
         onSuccess: MQTTOnConnect,
         onFailure: function (message) {
-            alertError("Connection failed "+message.errorMessage);
+            alertError("Connection failed. Reload website to retry.");
 
         }
     };
@@ -269,29 +269,6 @@ function handleInput(input,eleno) {
     console.log("Direction: " + direction);
     console.log("Status: " + status);
     console.log("Door: " + door);
-    // $('#display').val(floor);
-
-    // if(direction != "Unknown") {
-    //     $('#direction').val(direction);
-    // }
-    // $('#onoff').val(status);
-    // alert("d0: " + d0 + "\n" +
-    //     "d1: " + d1 + "\n" +
-    //     "d2: " + d2 + "\n" +
-    //     "d3: " + d3 + " (" + direction + ")\n" +
-    //     "d4: " + d4 + "\n\n" +
-    //     "Floor: " + floor + "\n" +
-    //     "Direction: " + direction + "\n" +
-    //     "Status: " + status);
-    //
-    // if (direction == "Up" || direction == "Run Up") {
-    //     set_indoor_direction_display(1, DIRECTION_UP);
-    // }
-    // else if (direction == "Down" || direction == "Run Down") {
-    //     set_indoor_direction_display(1, DIRECTION_DOWN);
-    // }else {
-    //     set_indoor_direction_display(1, DIRECTION_STILL);
-    // }
 
     if (d3 === "10") {
         direction = "Up";

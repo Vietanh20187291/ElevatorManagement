@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,6 +28,7 @@ public class BuildingService {
     }
 
     public void addBuilding(Building building) {
+        System.out.println(building.toString());
         buildingRepository.save(building);
     }
 
@@ -36,5 +38,12 @@ public class BuildingService {
 
     public Building getBuildingById(Integer buildingId) {
         return buildingRepository.findById(buildingId).orElse(null);
+    }
+    public List<Building> getAllBuildings() {
+        return buildingRepository.findAll();
+    }
+
+    public Building getBuildingByAreaId(Integer areaId) {
+        return buildingRepository.getBuildingByAreaId(areaId);
     }
 }
