@@ -1,14 +1,8 @@
 package com.project.controller;
 
-import com.project.entity.Area;
-import com.project.entity.Elevator;
-import com.project.entity.Floor;
-import com.project.entity.MqttConnection;
+import com.project.entity.*;
 import com.project.helper.CookieHelper;
-import com.project.service.AreaService;
-import com.project.service.ElevatorService;
-import com.project.service.FloorService;
-import com.project.service.MqttConnectionService;
+import com.project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +22,8 @@ public class ElevatorController {
 
     @Autowired
     private ElevatorService elevatorService;
+    @Autowired
+    private BuildingService buildingService;
     @Autowired
     private FloorService floorService;
     @Autowired
@@ -88,6 +84,8 @@ public class ElevatorController {
         System.out.println(elevator.toString()+"edit");
         Area area = areaService.getAreaById(elevator.getAreaId());
         model.addAttribute("area", area);
+        Building building = buildingService.getBuildingById(area.getBuildingId());
+        model.addAttribute("building", building);
         return "elevator/edit";
     }
 
