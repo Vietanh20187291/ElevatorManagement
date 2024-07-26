@@ -71,7 +71,7 @@ public class BuildingController {
     @PostMapping("/{buildingId}/delete")
     public String deleteBuilding(@PathVariable Integer buildingId, HttpServletRequest request) {
         buildingService.deleteBuilding(buildingId);
-        return "redirect:/building/list"; // Điều hướng đến trang danh sách toà nhà sau khi xóa toà nhà
+        return "redirect:/building/all"; // Điều hướng đến trang danh sách toà nhà sau khi xóa toà nhà
     }
 
     @GetMapping("/{buildingId}/add-area")
