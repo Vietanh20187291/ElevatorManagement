@@ -78,7 +78,7 @@ function GUICheckValidCallInput(input){
         alertError("Invalid type of input")
         return false;
     }
-    if (isNaN(value) || value < 0 || value > numFloors) {
+    if (isNaN(value) || value < 0 || value > elevatorList[`0`].numFloors-1) {
         alertError("Invalid Floor Number")
         return false;
     }
@@ -95,7 +95,7 @@ function GUICarcallClick() {
     if (!valid) {
         return;
     }
-    MQTTcarCall(input,0)
+    MQTTcarCall(input,elevatorList[0].id)
     alertSuccess("Sent request successfully")
 
 }

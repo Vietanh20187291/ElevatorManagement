@@ -95,10 +95,14 @@ function MQTTOnMessageArrived(message) {
 
             highlightFloors(0, floors)
         }
+
         if (topic == slug + "/elvtopc/callhallup") {
+
             var payloadBytes = message.payloadBytes;
             var payloadHex = bytesToHex(payloadBytes);
-            highlightButtonUpFloors(signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2)))
+            var floors = signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2))
+            // alert(floors)
+            // highlightButtonUpFloors(signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2)))
         }
         if (topic == slug + "/elvtopc/callhalldown") {
             var payloadBytes = message.payloadBytes;
@@ -380,6 +384,7 @@ function highlightFloors(elevator_no,floorList) {
     }
 }
 function highlightButtonUpFloors(floorList) {
+    alert('highlightButtonUpFloors')
     let elevator_no = 1; // Giả sử là thang máy số 1, bạn có thể điều chỉnh nếu cần
 
     // Tắt tất cả các nút trước
@@ -387,7 +392,9 @@ function highlightButtonUpFloors(floorList) {
 
     // Bật sáng các nút trong danh sách floorList
     floorList.forEach(floor_no => {
-        pressButtonUp(floor_no)
+        var element = document.getElementById('choose-up ' + floor_no);
+        element.style.backgroundColor = 'orange';
+        // choose_outdoor_witches(floor_no, DIRECTION_UP).css('background', 'orange')
     });
 }
 function highlightButtonDownFloors(floorList) {

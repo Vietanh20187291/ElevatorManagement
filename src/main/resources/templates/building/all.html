@@ -17,7 +17,17 @@
 
     <!-- Loop through all buildings -->
     <div th:each="building : ${buildings}">
+<!--        <a th:href="@{/building/{buildingId}(buildingId=${building.id})}"-->
+<!--           style="text-decoration: none; color: inherit; display: inline-block;"-->
+<!--           onmouseover="this.style.textDecoration='none';"-->
+<!--           onmouseout="this.style.textDecoration='none';">-->
+<!--            Link-->
+<!--        </a>-->
         <div class="card mb-3">
+            <a th:href="@{/building/{buildingId}(buildingId=${building.id})}"
+               style="text-decoration: none; color: inherit;"
+               onmouseover="this.style.textDecoration='none';"
+               onmouseout="this.style.textDecoration='none';">
             <div class="card-header">
                 <h5 th:text="${building.name}"></h5>
             </div>
@@ -47,10 +57,10 @@
                     </div>
                 </div>
             </div>
+            </a>
         </div>
-    </div>
 
-    <a class="btn btn-secondary" href="/">Back to Home</a>
+    </div>
 </div>
 </body>
 </html>

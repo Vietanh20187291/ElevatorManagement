@@ -113,7 +113,7 @@ function GUICarcallClick() {
     if (!valid) {
         return;
     }
-    MQTTcarCall(input,0)
+    MQTTcarCall(input,elevatorList[0].id)
     alertSuccess("Sent request successfully")
 
 }
@@ -125,7 +125,7 @@ function GUICallupClick() {
     if (!valid) {
         return;
     }
-    MQTTcallUp(input, 0)
+    MQTTcallUp(input, elevatorList[0].id)
     alertSuccess("Sent request successfully")
 }
 
@@ -136,7 +136,7 @@ function GUICalldnClick() {
     if (!valid) {
         return;
     }
-    MQTTcallDn(input, 0)
+    MQTTcallDn(input, elevatorList[0].id)
     alertSuccess("Sent request successfully")
 }
 function GUIOpenDoorClick(){
@@ -145,7 +145,7 @@ function GUIOpenDoorClick(){
         alertError("Please connect to the server first")
         return;
     }
-    MQTTOpenDoor(0)
+    MQTTOpenDoor(elevatorList[0].id)
     alertSuccess("Sent request successfully")
 }
 
@@ -155,7 +155,7 @@ function GUICloseDoorClick() {
         alertError("Please connect to the server first")
         return;
     }
-    MQTTCloseDoor(0)
+    MQTTCloseDoor(elevatorList[0].id)
     alertSuccess("Sent request successfully")
 }
 

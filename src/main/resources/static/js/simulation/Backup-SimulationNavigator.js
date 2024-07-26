@@ -12,8 +12,6 @@ var numFloors = parseInt(document.getElementById("numFloors").value);
 
 function startConnect() {
 
-
-
     if (typeof path == "undefined") {
         path = '/mqtt';
     }
@@ -34,7 +32,6 @@ function startConnect() {
         onFailure: function (message) {
             alertError("Connection failed. Reload website to retry.");
             startConnect();
-            // setTimeout(MQTTconnect, reconnectTimeout);
 
         }
     };
@@ -106,7 +103,10 @@ function onMessageArrived(message) {
     if(topic == slug + "/elvtopc/callhallup"){
         var payloadBytes = message.payloadBytes;
         var payloadHex = bytesToHex(payloadBytes);
-        highlightButtonUpFloors(signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2)))
+        var floors = signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2))
+        highlightButtonUpFloors(floors)
+
+        // highlightButtonUpFloors(signalCalledFloorsToOutput(insertSpaceEveryNChars(payloadHex, 2)))
     }
     if(topic == slug + "/elvtopc/callhalldown"){
         var payloadBytes = message.payloadBytes;
@@ -161,8 +161,7 @@ function handleInput(input) {
     }else{
         set_indoor_direction_display(1, DIRECTION_STILL);
     }
-    // alert(d4)
-    // alert(d4.charAt(4))
+
     //Status based on d4
     // var payloadBytes = message.payloadBytes;
     // var payloadHex = bytesToHex(payloadBytes);
@@ -491,9 +490,14 @@ function highlightButtonUpFloors(floorList) {
     $('.choose-up').css({'background': 'white'});
 
     // Bật sáng các nút trong danh sách floorList
-    floorList.forEach(floor_no => {
-        pressButtonUp(floor_no)
-    });
+    try {
+        floorList.forEach(floor_no => {
+            var element = document.getElementById('choose-up-' + floor_no);
+            element.style.backgroundColor = 'orange';
+        });
+    }catch (e) {
+        console.log(e)
+    }
 }
 function highlightButtonDownFloors(floorList) {
     let elevator_no = 1; // Giả sử là thang máy số 1, bạn có thể điều chỉnh nếu cần
@@ -501,9 +505,13 @@ function highlightButtonDownFloors(floorList) {
     // Tắt tất cả các nút trước
     $('.choose-up').css({'background': 'white'});
 
-    // Bật sáng các nút trong danh sách floorList
-    floorList.forEach(floor_no => {
-        pressButtonDown(floor_no)
-    });
+    try {
+        floorList.forEach(floor_no => {
+            var element = document.getElementById('choose-down-' + floor_no);
+            element.style.backgroundColor = 'orange';
+        });
+    }catch (e) {
+        console.log(e)
+    }
 }
 

@@ -290,9 +290,9 @@ function divs_html_of_a_ceiling(floor_no, elevator_nums) {
 
 
 let template_of_div_elevator_window = '<div class="elevator-window mark-of-fno mark-of-fno-mark-of-eno">\n' +
-    '                        <button onclick="callupClick(mark-of-fno)" class="btn btn-default btn-circle  elevator-choose-take choose-up" type="button">▲\n' +
+    '                        <button onclick="callupClick(mark-of-fno)" class="btn btn-default btn-circle  elevator-choose-take choose-up" id="choose-up-mark-of-fno" type="button">▲\n' +
     '                        </button>\n' +
-    '                        <button onclick="calldnClick(mark-of-fno)" class="btn btn-default btn-circle  elevator-choose-take choose-down" type="button">▼\n' +
+    '                        <button onclick="calldnClick(mark-of-fno)" class="btn btn-default btn-circle  elevator-choose-take choose-down" id="choose-down-mark-of-fno" type="button">▼\n' +
     '                        </button>\n' +
     '\n' +
     '                        mark-of-elevator-main\n' +
