@@ -144,6 +144,7 @@ function MQTTOpenDoor(eleid){
 }
 
 function MQTTCloseDoor(eleid) {
+    alert(eleid)
     var elevator = elevatorList.find(elevator => elevator.id === eleid);
 
     var msg = new Uint8Array([0x02]);

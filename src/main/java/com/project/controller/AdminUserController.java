@@ -133,7 +133,7 @@ public class AdminUserController {
     }
     @PostMapping("/deactivate/{id}")
     public String deleteUser(HttpServletRequest request, @PathVariable Integer id, RedirectAttributes redirectAttributes) {
-        System.out.println("delete");
+
         try {
             userService.deactivateUser(id);
             redirectAttributes.addFlashAttribute("message", "User has been deactivated successfully");

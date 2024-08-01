@@ -57,8 +57,8 @@ public class LoginController {
 //                addToBlacklistAllUserTokens(user.getUserId());
                 User userDetail = userService.getUserByUsername(user.getUsername());
                 String jwtToken = jwtTokenService.generateToken(userDetail.getUserId(), userDetail.getRole(),userDetail.getBuilding().getId());
-                System.out.println("User "+userDetail.getUsername());
-                System.out.println("Role " + userDetail.getRole());
+//                System.out.println("User "+userDetail.getUsername());
+//                System.out.println("Role " + userDetail.getRole());
                 // Tạo cookie chứa token
                 Cookie tokenCookie = new Cookie("jwtToken", jwtToken);
                 tokenCookie.setPath("/");
@@ -83,7 +83,7 @@ public class LoginController {
                 response.addCookie(userCookie);
                 response.addCookie(roleCookie);
 
-                System.out.println("tokenCookie: " + tokenCookie.getValue());
+//                System.out.println("tokenCookie: " + tokenCookie.getValue());
                 if (userDetail.getRole().equals(UserRole.ADMIN)) {
                     return "redirect:/admin/user";
                 } else if (userDetail.getRole().equals(UserRole.MANAGER)) {
