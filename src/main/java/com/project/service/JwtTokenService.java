@@ -34,9 +34,9 @@ public class JwtTokenService {
 
         // Kiểm tra nếu HashSet không null và không rỗng
         if (tokens != null && !tokens.isEmpty()) {
-            System.out.println("Tokens for user " + userId + ":");
+//            System.out.println("Tokens for user " + userId + ":");
             for (String t : tokens) {
-                System.out.println(t);
+//                System.out.println(t);
                 addToBlacklist(t);
             }
         } else {
@@ -53,8 +53,8 @@ public class JwtTokenService {
         userTokensMap.computeIfAbsent(userId, k -> new HashSet<>()).add(token);
 
 
-        System.out.println("token 1: "+token);
-        System.out.println("user id "+userId);
+//        System.out.println("token 1: "+token);
+//        System.out.println("user id "+userId);
         return token;
     }
 
@@ -62,10 +62,10 @@ public class JwtTokenService {
 
     public boolean validateToken(String token) {
         try {
-            System.out.println("validate"+token);
-            System.out.println("result"+isBlacklisted(token));
+//            System.out.println("validate"+token);
+//            System.out.println("result"+isBlacklisted(token));
             if (isBlacklisted(token)) {
-                System.out.println("deny");
+//                System.out.println("deny");
                 return false;
             }
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
@@ -80,7 +80,7 @@ public class JwtTokenService {
         try {
             Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
             int id = Integer.parseInt(claims.getSubject());
-            System.out.println("id "+id);
+//            System.out.println("id "+id);
             return userService.getUserById(id);
         }catch (Exception e){
             throw new Exception(e.getMessage());
@@ -145,7 +145,7 @@ public class JwtTokenService {
 //        return tokens;
 //    }
     public void addToBlacklist(String token) {
-        System.out.println("add blacklist: "+token);
+//        System.out.println("add blacklist: "+token);
         synchronized (blacklist) {
             blacklist.put(token, getExpirationTime(token));
         }
@@ -155,7 +155,7 @@ public class JwtTokenService {
     }
 
     public boolean isBlacklisted(String token) {
-        System.out.println("check token "+token);
+//        System.out.println("check token "+token);
         for (Map.Entry<String, Long> entry : blacklist.entrySet()) {
             System.out.println("Black List: Key: " + entry.getKey() + ", Value: " + entry.getValue());
         }

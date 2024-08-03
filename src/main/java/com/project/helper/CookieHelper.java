@@ -13,6 +13,7 @@ public class CookieHelper {
         String jwtToken = null;
         String userId = null;
         String role = null;
+        String buildingId = null;
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -22,12 +23,15 @@ public class CookieHelper {
                     userId = cookie.getValue();
                 } else if (cookie.getName().equals("role")) {
                     role = cookie.getValue();
+                } else if (cookie.getName().equals("buildingId")) {
+                    buildingId = cookie.getValue();
                 }
             }
         }
         model.addAttribute("jwtToken", jwtToken);
         model.addAttribute("userId", userId);
         model.addAttribute("role", role);
+        model.addAttribute("buildingId", buildingId);
     }
 
     public String getJwtToken(HttpServletRequest request) {
