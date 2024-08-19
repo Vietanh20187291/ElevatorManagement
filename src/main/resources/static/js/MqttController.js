@@ -144,7 +144,7 @@ function MQTTOpenDoor(eleid){
 }
 
 function MQTTCloseDoor(eleid) {
-    alert(eleid)
+    // alert(eleid)
     var elevator = elevatorList.find(elevator => elevator.id === eleid);
 
     var msg = new Uint8Array([0x02]);
@@ -163,6 +163,10 @@ function MQTTcarCall(input, eleid) {
 
 function handleCallClick(input,topic) {
     var value = input;
+    var floorList = elevatorList[0].listFloors;
+    if (floorList!=null){
+        value = getFloorIndex(value, floorList);
+    }
 
     var floors = [];
     floors.push(value)
@@ -299,6 +303,17 @@ function handleInput(input,eleno) {
 
 
 }
+function getFloorIndex(floorName, FloorList) {
+    const listFloors = FloorList.split('->');
+    const index = listFloors.indexOf(floorName);
+
+    if (index !== -1) {
+        return index + 1;
+    } else {
+        alertError('Invalid Floor Input');
+        return null;
+    }
+}
 function convertHex(hexInput) {
     var decimalValue = parseInt(hexInput, 16);
     if (decimalValue == 0) {
@@ -385,7 +400,7 @@ function highlightFloors(elevator_no,floorList) {
     }
 }
 function highlightButtonUpFloors(floorList) {
-    alert('highlightButtonUpFloors')
+    // alert('highlightButtonUpFloors')
     let elevator_no = 1; // Giả sử là thang máy số 1, bạn có thể điều chỉnh nếu cần
 
     // Tắt tất cả các nút trước

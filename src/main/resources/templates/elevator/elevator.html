@@ -140,7 +140,7 @@
                             Elevator: <input id="elevator" class="input-info" name="elevator" readonly th:value="${elevatorList[0].name}">
                         </div>
                         <div class="text-start mb-3">
-                            Floors: <input class="input-info" id="numFloors" name="elevator" readonly th:value="${elevatorList[0].name}">
+                            Total Floors: <input class="input-info" id="numFloors" name="elevator" readonly th:value="${elevatorList[0].numFloors}">
                         </div>
                         <div class="text-start mb-3">
                             Status: <input id="connectStatus" class="input-info" name="connectStatus" readonly value="Disconnected">
@@ -174,7 +174,7 @@
                                     <td class="text-center">
                                         <div class="input-group justify-content-center"> <!-- Thêm justify-content-center để căn giữa -->
                                             <div class="input-group-prepend">
-                                                <input type="number" class="form-control input-floor-nums" id="callup" name="callup" min="1" max="${elevator.numFloors}" required>
+                                                <input type="text" class="form-control input-floor-nums" id="callup" name="callup" min="1" max="${elevator.numFloors}" required>
                                             </div>
                                         </div>
                                     </td>
@@ -189,7 +189,7 @@
                                     <td class="text-center">
                                         <div class="input-group justify-content-center">
                                             <div class="input-group-prepend">
-                                                <input type="number" class="form-control input-floor-nums" id="calldn" name="calldn" min="1" max="${elevator.numFloors}" required>
+                                                <input type="text" class="form-control input-floor-nums" id="calldn" name="calldn" min="1" max="${elevator.numFloors}" required>
                                             </div>
                                         </div>
                                     </td>
@@ -204,7 +204,7 @@
                                     <td class="text-center">
                                         <div class="input-group justify-content-center">
                                             <div class="input-group-prepend">
-                                                <input type="number" class="form-control input-floor-nums" id="carcall" name="carcall" min="1" max="${elevator.numFloors}" required>
+                                                <input type="text" class="form-control input-floor-nums" id="carcall" name="carcall" min="1" max="${elevator.numFloors}" required>
                                             </div>
                                         </div>
                                     </td>

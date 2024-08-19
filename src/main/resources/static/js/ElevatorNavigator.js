@@ -72,16 +72,16 @@ function GUICheckValidCallInput(input){
         alertError("Please connect to the server first")
         return false;
     }
-    try {
-        var value = parseInt(input);
-    }catch (e) {
-        alertError("Invalid type of input")
-        return false;
-    }
-    if (isNaN(value) || value < 0 || value > elevatorList[`0`].numFloors-1) {
-        alertError("Invalid Floor Number")
-        return false;
-    }
+    // try {
+    //     var value = parseInt(input);
+    // }catch (e) {
+    //     alertError("Invalid type of input")
+    //     return false;
+    // }
+    // if (isNaN(value) || value < 0 || value > elevatorList[`0`].numFloors-1) {
+    //     alertError("Invalid Floor Number")
+    //     return false;
+    // }
     return true;
 }
 function GUICarcallClick() {

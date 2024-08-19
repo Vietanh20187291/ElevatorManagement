@@ -45,11 +45,7 @@ public class BuildingController {
         model.addAttribute("building", new Building());
         return "building/add";
     }
-    @PostMapping("/add")
-    public String addBuilding(@ModelAttribute("building") Building building, HttpServletRequest request) {
-        buildingService.addBuilding(building);
-        return "redirect:/building/all";
-    }
+
     @GetMapping("/{buildingId}/edit")
     public String showEditBuildingForm(@PathVariable Integer buildingId, Model model, HttpServletRequest request) {
         cookieHelper.addCookieAttributes(request, model);
@@ -58,21 +54,53 @@ public class BuildingController {
         return "building/edit";
     }
 
-    @PostMapping("/{buildingId}/edit")
-    public String updateBuilding(@PathVariable Integer buildingId,
-                                 @ModelAttribute("building") Building building,
-                                 HttpServletRequest request) {
-        building.setId(buildingId);
-        buildingService.updateBuilding(building);
-        return "redirect:/building/" + buildingId;
+
+    @PostMapping("/add")
+    public String addBuilding(@ModelAttribute("building") Building building, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        try {
+            buildingService.addBuilding(building);
+            redirectAttributes.addFlashAttribute("message", "Building has been added successfully");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+            return "redirect:/building/all";
+        } catch (Exception e) {
+            String errorMessage = e.getMessage();
+            redirectAttributes.addFlashAttribute("message", errorMessage);
+            redirectAttributes.addFlashAttribute("messageType", "error");
+            return "redirect:/building/add";
+        }
     }
 
+    @PostMapping("/{buildingId}/edit")
+    public String updateBuilding(@PathVariable Integer buildingId, @ModelAttribute("building") Building building, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        try {
+            building.setId(buildingId);
+            buildingService.updateBuilding(building);
+            redirectAttributes.addFlashAttribute("message", "Building has been updated successfully");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+            return "redirect:/building/" + buildingId;
+        } catch (Exception e) {
+            String errorMessage = e.getMessage();
+            redirectAttributes.addFlashAttribute("message", errorMessage);
+            redirectAttributes.addFlashAttribute("messageType", "error");
+            return "redirect:/building/" + buildingId + "/edit";
+        }
+    }
 
     @PostMapping("/{buildingId}/delete")
-    public String deleteBuilding(@PathVariable Integer buildingId, HttpServletRequest request) {
-        buildingService.deleteBuilding(buildingId);
-        return "redirect:/building/all"; // Điều hướng đến trang danh sách toà nhà sau khi xóa toà nhà
+    public String deleteBuilding(@PathVariable Integer buildingId, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        try {
+            buildingService.deleteBuilding(buildingId);
+            redirectAttributes.addFlashAttribute("message", "Building has been deleted successfully");
+            redirectAttributes.addFlashAttribute("messageType", "success");
+            return "redirect:/building/all";
+        } catch (Exception e) {
+            String errorMessage = e.getMessage();
+            redirectAttributes.addFlashAttribute("message", errorMessage);
+            redirectAttributes.addFlashAttribute("messageType", "error");
+            return "redirect:/building/" + buildingId;
+        }
     }
+
 
     @GetMapping("/{buildingId}/add-area")
     public String showAddAreaForm(@PathVariable Integer buildingId, Model model, HttpServletRequest request) {
