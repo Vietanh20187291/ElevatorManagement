@@ -72,6 +72,12 @@ function GUICheckValidCallInput(input){
         alertError("Please connect to the server first")
         return false;
     }
+    let onoff = document.getElementById('onoff');
+    if (onoff.value == 'Unavailable') {
+        alertError("Elevator is unavailable")
+        return false;
+    }
+
     // try {
     //     var value = parseInt(input);
     // }catch (e) {
