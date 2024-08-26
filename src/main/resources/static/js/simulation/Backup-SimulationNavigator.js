@@ -320,6 +320,13 @@ $(document).ready(function () {
     startConnect();
 });
 
+function checkActiveElevator(){
+    if(document.getElementById("status").innerHTML == "INACTIVE"){
+        alertError("Elevator is inactive");
+        return false;
+    }
+return true;
+}
 function attClick() {
     var msg = "att activation";
     var topic = elevator + "/" + "att";
@@ -330,6 +337,9 @@ function attClick() {
 }
 
 function openDoorClick(){
+    if(!checkActiveElevator()){
+        return;
+    }
     var msg = new Uint8Array([0x01]);
     var topic = slug + "/pctoelv/status";
     Message = new Paho.MQTT.Message(msg.buffer);
@@ -339,6 +349,9 @@ function openDoorClick(){
 }
 
 function closeDoorClick() {
+    if(!checkActiveElevator()){
+        return;
+    }
     var msg = new Uint8Array([0x02]);
     var topic = slug + "/pctoelv/status";
     Message = new Paho.MQTT.Message(msg.buffer);
@@ -348,6 +361,9 @@ function closeDoorClick() {
 }
 
 function carcallClick(input) {
+    if(!checkActiveElevator()){
+        return;
+    }
     var topic = slug + "/pctoelv/callcar";
     handleCallClick(input,topic);
 
@@ -378,15 +394,18 @@ function handleCallClick(input,topic) {
 }
 
 function callupClick(input) {
-
+    if(!checkActiveElevator()){
+        return;
+    }
     var topic = slug + "/pctoelv/callhallup";
-
     handleCallClick(input,topic);
 }
 
 
 function calldnClick(input) {
-    // var msg = document.getElementById("calldn").value;
+    if(!checkActiveElevator()){
+        return;
+    }
     var topic = slug + "/pctoelv/callhalldown";
 
     handleCallClick(input,topic);
